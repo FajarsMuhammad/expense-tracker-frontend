@@ -1,3 +1,4 @@
+import { storeToRefs } from 'pinia'
 import { useWalletStore } from '@/stores/wallet'
 import { useUIStore } from '@/stores/ui'
 import { useRouter } from 'vue-router'
@@ -6,6 +7,9 @@ export function useWallet() {
   const walletStore = useWalletStore()
   const uiStore = useUIStore()
   const router = useRouter()
+
+  // Use storeToRefs to maintain reactivity
+  const { wallets, currentWallet, loading, canCreateWallet, walletCount } = storeToRefs(walletStore)
 
   async function loadWallets() {
     try {
@@ -65,11 +69,11 @@ export function useWallet() {
   }
 
   return {
-    wallets: walletStore.wallets,
-    currentWallet: walletStore.currentWallet,
-    loading: walletStore.loading,
-    canCreateWallet: walletStore.canCreateWallet,
-    walletCount: walletStore.walletCount,
+    wallets,
+    currentWallet,
+    loading,
+    canCreateWallet,
+    walletCount,
     loadWallets,
     loadWallet,
     handleCreateWallet,

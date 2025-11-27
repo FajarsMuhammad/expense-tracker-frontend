@@ -1,3 +1,4 @@
+import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 import { useUIStore } from '@/stores/ui'
@@ -6,6 +7,9 @@ export function useAuth() {
   const authStore = useAuthStore()
   const router = useRouter()
   const uiStore = useUIStore()
+
+  // Use storeToRefs to maintain reactivity
+  const { user, isAuthenticated, loading } = storeToRefs(authStore)
 
   async function handleLogin(credentials) {
     try {
@@ -36,9 +40,9 @@ export function useAuth() {
   }
 
   return {
-    user: authStore.user,
-    isAuthenticated: authStore.isAuthenticated,
-    loading: authStore.loading,
+    user,
+    isAuthenticated,
+    loading,
     handleLogin,
     handleRegister,
     handleLogout,

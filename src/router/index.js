@@ -37,6 +37,12 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
+    path: '/wallets/:id',
+    name: 'WalletDetail',
+    component: () => import('@/views/wallet/WalletDetailView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
     path: '/wallets/:id/edit',
     name: 'WalletEdit',
     component: () => import('@/views/wallet/WalletEditView.vue'),
@@ -49,8 +55,13 @@ const router = createRouter({
   routes,
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
+
+  // Initialize auth from localStorage if not already done
+  if (!authStore.token && !authStore.user) {
+    authStore.initializeAuth()
+  }
 
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     next('/login')

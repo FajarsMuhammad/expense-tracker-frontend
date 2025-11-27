@@ -1,18 +1,21 @@
 <template>
   <AppLayout>
     <div class="max-w-7xl mx-auto">
-      <div class="flex items-center justify-between mb-6">
-        <h1 class="text-3xl font-bold text-gray-900">My Wallets</h1>
+      <!-- Header Section -->
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <h1 class="text-2xl md:text-3xl font-bold text-gray-900">My Wallets</h1>
         <AppButton
           v-if="canCreateWallet"
           @click="$router.push('/wallets/create')"
+          class="w-full sm:w-auto"
         >
-          + Create Wallet
+          <span class="hidden sm:inline">+ Create Wallet</span>
+          <span class="sm:hidden">+ New Wallet</span>
         </AppButton>
-        <div v-else>
-          <p class="text-sm text-gray-600">
+        <div v-else class="text-center sm:text-right">
+          <p class="text-xs md:text-sm text-gray-600">
             Free users can only have 1 wallet.
-            <a href="#" class="text-primary-600 hover:underline">
+            <a href="#" class="text-primary-600 hover:underline block sm:inline mt-1 sm:mt-0">
               Upgrade to Premium
             </a>
           </p>

@@ -19,18 +19,19 @@ See [SWAGGER_DOCUMENTATION.md](swagger_documentation.md) for detailed instructio
 
 | Feature | Endpoints | Base Path | Authentication |
 |---------|-----------|-----------|----------------|
-| **Authentication** | Register, Login, Refresh Token | `/auth` | Public |
-| **User** | Get Current User | `/me` | Required |
-| **Wallets** | CRUD operations | `/wallets` | Required |
+| **Authentication** | Register, Login, Refresh Token | `/api/v1/auth` | Public |
+| **User** | Get Current User | `/api/v1/me` | Required |
+| **Wallets** | CRUD operations | `/api/v1/wallets` | Required |
 | **Categories** | CRUD operations, Filter by type | `/api/v1/categories` | Required |
-| **Dashboard** | Summary, Weekly trends | `/dashboard` | Required |
-| **Transactions** | ⚠️ Coming Soon | N/A | N/A |
+| **Dashboard** | Summary, Weekly trends | `/api/v1/dashboard` | Required |
+| **Transactions** | CRUD operations, Filter & pagination | `/api/v1/transactions` | Required |
 
 ### Quick Links
 - [Authentication](#authentication) - Register, Login, Refresh
 - [User](#user) - Get profile
 - [Wallets](#wallets) - Manage wallets
 - [Categories](#categories) - Manage income/expense categories
+- [Transactions](#transactions) - Manage income and expense transactions
 - [Dashboard](#dashboard) - View summaries and trends
 - [Error Responses](#error-responses) - Status codes and formats
 - [Testing with cURL](#testing-with-curl) - Command-line examples
@@ -41,7 +42,7 @@ See [SWAGGER_DOCUMENTATION.md](swagger_documentation.md) for detailed instructio
 
 ### Register
 ```http
-POST /auth/register
+POST /api/v1/auth/register
 Content-Type: application/json
 
 {
@@ -68,7 +69,7 @@ Content-Type: application/json
 
 ### Login
 ```http
-POST /auth/login
+POST /api/v1/auth/login
 Content-Type: application/json
 
 {
@@ -89,7 +90,7 @@ Content-Type: application/json
 
 ### Refresh Token
 ```http
-POST /auth/refresh
+POST /api/v1/auth/refresh
 Content-Type: application/json
 
 {
@@ -111,7 +112,7 @@ Content-Type: application/json
 
 ### Get Current User
 ```http
-GET /me
+GET /api/v1/me
 Authorization: Bearer {token}
 ```
 
@@ -128,7 +129,7 @@ Authorization: Bearer {token}
 
 ### List All Wallets
 ```http
-GET /wallets
+GET /api/v1/wallets
 Authorization: Bearer {token}
 ```
 
@@ -149,7 +150,7 @@ Authorization: Bearer {token}
 
 ### Get Single Wallet
 ```http
-GET /wallets/{id}
+GET /api/v1/wallets/{id}
 Authorization: Bearer {token}
 ```
 
@@ -168,7 +169,7 @@ Authorization: Bearer {token}
 
 ### Create Wallet
 ```http
-POST /wallets
+POST /api/v1/wallets
 Authorization: Bearer {token}
 Content-Type: application/json
 
@@ -209,7 +210,7 @@ Content-Type: application/json
 
 ### Update Wallet
 ```http
-PUT /wallets/{id}
+PUT /api/v1/wallets/{id}
 Authorization: Bearer {token}
 Content-Type: application/json
 
@@ -239,7 +240,7 @@ Content-Type: application/json
 
 ### Delete Wallet
 ```http
-DELETE /wallets/{id}
+DELETE /api/v1/wallets/{id}
 Authorization: Bearer {token}
 ```
 
@@ -376,7 +377,7 @@ Authorization: Bearer {token}
 
 ### Get Summary
 ```http
-GET /dashboard/summary?walletId={optional}
+GET /api/v1/dashboard/summary?walletId={optional}
 Authorization: Bearer {token}
 ```
 
@@ -428,7 +429,161 @@ Authorization: Bearer {token}
 
 ## Transactions
 
-> **⚠️ NOTE:** Transaction endpoints are currently being developed. The backend logic and DTOs are in place, but the REST API controller is not yet implemented. Check Swagger UI for the latest available endpoints.
+### List All Transactions
+```http
+GET /api/v1/transactions?walletId={optional}&categoryId={optional}&type={optional}&from={optional}&to={optional}&page={optional}&size={optional}
+Authorization: Bearer {token}
+```
+
+**Query Parameters:**
+- `walletId` (optional): Filter by wallet ID (UUID)
+- `categoryId` (optional): Filter by category ID (UUID)
+- `type` (optional): Filter by type. Values: `INCOME` or `EXPENSE`
+- `from` (optional): Filter transactions from date (format: `yyyy-MM-dd`)
+- `to` (optional): Filter transactions to date (format: `yyyy-MM-dd`)
+- `page` (optional): Page number, 0-based (default: `0`)
+- `size` (optional): Page size, max 100 (default: `20`)
+
+**Response:** `200 OK`
+```json
+{
+  "content": [
+    {
+      "id": "uuid",
+      "walletId": "uuid",
+      "walletName": "Main Wallet",
+      "categoryId": "uuid",
+      "categoryName": "Food",
+      "type": "EXPENSE",
+      "amount": 50000.0,
+      "note": "Lunch at restaurant",
+      "date": "2025-11-24T12:00:00Z",
+      "createdAt": "2025-11-24T12:00:00Z",
+      "updatedAt": "2025-11-24T12:00:00Z"
+    }
+  ],
+  "pageable": {
+    "pageNumber": 0,
+    "pageSize": 20
+  },
+  "totalElements": 100,
+  "totalPages": 5,
+  "last": false,
+  "first": true
+}
+```
+
+### Get Single Transaction
+```http
+GET /api/v1/transactions/{id}
+Authorization: Bearer {token}
+```
+
+**Response:** `200 OK`
+```json
+{
+  "id": "uuid",
+  "walletId": "uuid",
+  "walletName": "Main Wallet",
+  "categoryId": "uuid",
+  "categoryName": "Food",
+  "type": "EXPENSE",
+  "amount": 50000.0,
+  "note": "Lunch at restaurant",
+  "date": "2025-11-24T12:00:00Z",
+  "createdAt": "2025-11-24T12:00:00Z",
+  "updatedAt": "2025-11-24T12:00:00Z"
+}
+```
+
+### Create Transaction
+```http
+POST /api/v1/transactions
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "walletId": "uuid",
+  "categoryId": "uuid",
+  "type": "EXPENSE",
+  "amount": 50000.0,
+  "note": "Lunch at restaurant",
+  "date": "2025-11-24T12:00:00.000Z"
+}
+```
+
+**Validations:**
+- Wallet ID: required, must belong to user
+- Category ID: required, must be default or belong to user
+- Type: required, must be `INCOME` or `EXPENSE`
+- Amount: required, must be positive (> 0)
+- Note: optional, max 500 characters
+- Date: required
+
+**Response:** `201 Created`
+```json
+{
+  "id": "uuid",
+  "walletId": "uuid",
+  "walletName": "Main Wallet",
+  "categoryId": "uuid",
+  "categoryName": "Food",
+  "type": "EXPENSE",
+  "amount": 50000.0,
+  "note": "Lunch at restaurant",
+  "date": "2025-11-24T12:00:00Z",
+  "createdAt": "2025-11-24T12:00:00Z",
+  "updatedAt": "2025-11-24T12:00:00Z"
+}
+```
+
+### Update Transaction
+```http
+PUT /api/v1/transactions/{id}
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "walletId": "uuid",
+  "categoryId": "uuid",
+  "type": "EXPENSE",
+  "amount": 55000.0,
+  "note": "Lunch at restaurant (updated)",
+  "date": "2025-11-24T12:00:00.000Z"
+}
+```
+
+**Validations:**
+- Same as Create Transaction
+- User must own the transaction
+
+**Response:** `200 OK`
+```json
+{
+  "id": "uuid",
+  "walletId": "uuid",
+  "walletName": "Main Wallet",
+  "categoryId": "uuid",
+  "categoryName": "Food",
+  "type": "EXPENSE",
+  "amount": 55000.0,
+  "note": "Lunch at restaurant (updated)",
+  "date": "2025-11-24T12:00:00Z",
+  "createdAt": "2025-11-24T12:00:00Z",
+  "updatedAt": "2025-11-24T15:00:00Z"
+}
+```
+
+### Delete Transaction
+```http
+DELETE /api/v1/transactions/{id}
+Authorization: Bearer {token}
+```
+
+**Constraints:**
+- User must own the transaction
+
+**Response:** `204 No Content`
 
 ## Error Responses
 
@@ -449,7 +604,7 @@ All error responses follow a consistent format with the `ErrorResponse` DTO stru
   "status": 400,
   "error": "Bad Request",
   "message": "Wallet name must not be empty",
-  "path": "/wallets",
+  "path": "/api/v1/wallets",
   "correlationId": "abc-123-def",
   "validationErrors": {
     "name": "must not be blank"
@@ -472,7 +627,7 @@ All error responses follow a consistent format with the `ErrorResponse` DTO stru
   "status": 401,
   "error": "Unauthorized",
   "message": "User not authenticated",
-  "path": "/wallets",
+  "path": "/api/v1/wallets",
   "correlationId": "abc-123-def"
 }
 ```
@@ -489,7 +644,7 @@ All error responses follow a consistent format with the `ErrorResponse` DTO stru
   "status": 403,
   "error": "Forbidden",
   "message": "Wallet not found or access denied",
-  "path": "/wallets/uuid",
+  "path": "/api/v1/wallets/uuid",
   "correlationId": "abc-123-def"
 }
 ```
@@ -506,7 +661,7 @@ All error responses follow a consistent format with the `ErrorResponse` DTO stru
   "status": 400,
   "error": "Bad Request",
   "message": "Free users can only create 1 wallet. Upgrade to premium for unlimited wallets.",
-  "path": "/wallets",
+  "path": "/api/v1/wallets",
   "correlationId": "abc-123-def"
 }
 ```
@@ -530,7 +685,7 @@ All error responses follow a consistent format with the `ErrorResponse` DTO stru
   "status": 409,
   "error": "Conflict",
   "message": "Email already registered",
-  "path": "/auth/register",
+  "path": "/api/v1/auth/register",
   "correlationId": "abc-123-def"
 }
 ```
@@ -553,7 +708,7 @@ sudo apt-get install jq
 
 #### Register New User
 ```bash
-curl -X POST http://localhost:8081/auth/register \
+curl -X POST http://localhost:8081/api/v1/auth/register \
   -H "Content-Type: application/json" \
   -d '{
     "email": "newuser@example.com",
@@ -564,7 +719,7 @@ curl -X POST http://localhost:8081/auth/register \
 
 #### Login and Save Token
 ```bash
-TOKEN=$(curl -X POST http://localhost:8081/auth/login \
+TOKEN=$(curl -X POST http://localhost:8081/api/v1/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"user@example.com","password":"password123"}' \
   | jq -r '.token')
@@ -574,7 +729,7 @@ echo "Logged in with token: $TOKEN"
 
 #### Refresh Token
 ```bash
-NEW_TOKEN=$(curl -X POST http://localhost:8081/auth/refresh \
+NEW_TOKEN=$(curl -X POST http://localhost:8081/api/v1/auth/refresh \
   -H "Content-Type: application/json" \
   -d "{\"token\":\"$TOKEN\"}" \
   | jq -r '.token')
@@ -587,13 +742,13 @@ echo "Token refreshed: $TOKEN"
 
 #### List All Wallets
 ```bash
-curl -X GET http://localhost:8081/wallets \
+curl -X GET http://localhost:8081/api/v1/wallets \
   -H "Authorization: Bearer $TOKEN"
 ```
 
 #### Create Wallet
 ```bash
-curl -X POST http://localhost:8081/wallets \
+curl -X POST http://localhost:8081/api/v1/wallets \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -606,14 +761,14 @@ curl -X POST http://localhost:8081/wallets \
 #### Get Specific Wallet
 ```bash
 WALLET_ID="your-wallet-uuid"
-curl -X GET http://localhost:8081/wallets/$WALLET_ID \
+curl -X GET http://localhost:8081/api/v1/wallets/$WALLET_ID \
   -H "Authorization: Bearer $TOKEN"
 ```
 
 #### Update Wallet
 ```bash
 WALLET_ID="your-wallet-uuid"
-curl -X PUT http://localhost:8081/wallets/$WALLET_ID \
+curl -X PUT http://localhost:8081/api/v1/wallets/$WALLET_ID \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -626,7 +781,7 @@ curl -X PUT http://localhost:8081/wallets/$WALLET_ID \
 #### Delete Wallet
 ```bash
 WALLET_ID="your-wallet-uuid"
-curl -X DELETE http://localhost:8081/wallets/$WALLET_ID \
+curl -X DELETE http://localhost:8081/api/v1/wallets/$WALLET_ID \
   -H "Authorization: Bearer $TOKEN"
 ```
 
@@ -689,20 +844,20 @@ curl -X GET http://localhost:8081/dashboard/summary \
 
 # Specific wallet summary
 WALLET_ID="your-wallet-uuid"
-curl -X GET "http://localhost:8081/dashboard/summary?walletId=$WALLET_ID" \
+curl -X GET "http://localhost:8081/api/v1/dashboard/summary?walletId=$WALLET_ID" \
   -H "Authorization: Bearer $TOKEN"
 ```
 
 ### Complete Workflow Example
 ```bash
 # 1. Login
-TOKEN=$(curl -s -X POST http://localhost:8081/auth/login \
+TOKEN=$(curl -s -X POST http://localhost:8081/api/v1/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"user@example.com","password":"password123"}' \
   | jq -r '.token')
 
 # 2. Create a wallet
-WALLET_RESPONSE=$(curl -s -X POST http://localhost:8081/wallets \
+WALLET_RESPONSE=$(curl -s -X POST http://localhost:8081/api/v1/wallets \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"name":"Test Wallet","currency":"IDR","initialBalance":1000000}')
@@ -715,7 +870,7 @@ curl -s -X GET http://localhost:8081/api/v1/categories \
   -H "Authorization: Bearer $TOKEN" | jq
 
 # 4. Get dashboard summary
-curl -s -X GET "http://localhost:8081/dashboard/summary?walletId=$WALLET_ID" \
+curl -s -X GET "http://localhost:8081/api/v1/dashboard/summary?walletId=$WALLET_ID" \
   -H "Authorization: Bearer $TOKEN" | jq
 ```
 

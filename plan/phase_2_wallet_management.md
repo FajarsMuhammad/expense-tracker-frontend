@@ -555,11 +555,11 @@ function onSubmit() {
 
 ### 7. CurrencySelector Component
 
-- [ ] Create src/components/wallet/CurrencySelector.vue
-- [ ] Display all supported currencies
-- [ ] Show currency symbol and name
-- [ ] Add search/filter functionality
-- [ ] Make it reusable
+- [x] Create src/components/wallet/CurrencySelector.vue
+- [x] Display all supported currencies
+- [x] Show currency symbol and name
+- [ ] Add search/filter functionality (optional enhancement)
+- [x] Make it reusable
 
 **`src/components/wallet/CurrencySelector.vue`**
 

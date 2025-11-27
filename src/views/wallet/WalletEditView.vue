@@ -1,7 +1,7 @@
 <template>
   <AppLayout>
     <div class="max-w-2xl mx-auto">
-      <h1 class="text-3xl font-bold text-gray-900 mb-6">Edit Wallet</h1>
+      <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6">Edit Wallet</h1>
 
       <AppSkeleton v-if="loading" count="1" />
 
