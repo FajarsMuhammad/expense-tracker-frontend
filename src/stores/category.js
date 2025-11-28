@@ -9,19 +9,23 @@ export const useCategoryStore = defineStore('category', () => {
   const error = ref(null)
 
   const incomeCategories = computed(() => {
-    return categories.value.filter((c) => c.type === 'INCOME')
+    if (!Array.isArray(categories.value)) return []
+    return categories.value.filter((c) => c && c.type === 'INCOME')
   })
 
   const expenseCategories = computed(() => {
-    return categories.value.filter((c) => c.type === 'EXPENSE')
+    if (!Array.isArray(categories.value)) return []
+    return categories.value.filter((c) => c && c.type === 'EXPENSE')
   })
 
   const customCategories = computed(() => {
-    return categories.value.filter((c) => !c.isDefault)
+    if (!Array.isArray(categories.value)) return []
+    return categories.value.filter((c) => c && !c.isDefault)
   })
 
   const defaultCategories = computed(() => {
-    return categories.value.filter((c) => c.isDefault)
+    if (!Array.isArray(categories.value)) return []
+    return categories.value.filter((c) => c && c.isDefault)
   })
 
   async function fetchCategories(type = null) {
@@ -29,10 +33,11 @@ export const useCategoryStore = defineStore('category', () => {
     error.value = null
     try {
       const data = await categoryService.getAllCategories(type)
-      categories.value = data
-      return data
+      categories.value = Array.isArray(data) ? data : []
+      return categories.value
     } catch (err) {
       error.value = err.message
+      categories.value = []
       throw err
     } finally {
       loading.value = false

@@ -67,6 +67,24 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
+    path: '/transactions',
+    name: 'TransactionList',
+    component: () => import('@/views/transaction/TransactionListView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/transactions/create',
+    name: 'TransactionCreate',
+    component: () => import('@/views/transaction/TransactionCreateView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/transactions/:id/edit',
+    name: 'TransactionEdit',
+    component: () => import('@/views/transaction/TransactionEditView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
     path: '/premium',
     name: 'Premium',
     component: () => import('@/views/premium/PremiumView.vue'),

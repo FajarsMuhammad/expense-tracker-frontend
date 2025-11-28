@@ -26,9 +26,13 @@ export function useCategory() {
 
   async function handleCreateCategory(categoryData) {
     try {
+      // Load categories first to ensure we have the latest data
+      await categoryStore.fetchCategories()
+
       // Check for duplicate name
-      const duplicate = categoryStore.categories.find(
-        (c) => c.name.toLowerCase() === categoryData.name.toLowerCase() && c.type === categoryData.type
+      const categories = categoryStore.categories.value || categoryStore.categories
+      const duplicate = categories.find(
+        (c) => c && c.name && c.name.toLowerCase() === categoryData.name.toLowerCase() && c.type === categoryData.type
       )
 
       if (duplicate) {
@@ -36,12 +40,16 @@ export function useCategory() {
           message: `A ${categoryData.type.toLowerCase()} category with this name already exists`,
           type: 'error',
         })
-        return
+        return false
       }
 
       await categoryStore.createCategory(categoryData)
       uiStore.showToast({ message: 'Category created successfully!', type: 'success' })
+
+      // Reload categories before redirecting
+      await categoryStore.fetchCategories()
       router.push('/categories')
+      return true
     } catch (error) {
       uiStore.showToast({ message: error.message, type: 'error' })
       throw error
@@ -61,7 +69,8 @@ export function useCategory() {
 
   async function handleDeleteCategory(id) {
     try {
-      const category = categoryStore.categories.find((c) => c.id === id)
+      const categories = categoryStore.categories.value || categoryStore.categories
+      const category = categories.find((c) => c && c.id === id)
 
       if (category?.isDefault) {
         uiStore.showToast({

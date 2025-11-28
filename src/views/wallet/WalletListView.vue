@@ -17,7 +17,7 @@
         </AppButton>
       </div>
 
-      <AppSkeleton v-if="loading" count="3" />
+      <AppSkeleton v-if="loading" :count="3" />
 
       <AppEmpty
         v-else-if="!loading && wallets.length === 0"

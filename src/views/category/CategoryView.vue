@@ -28,7 +28,7 @@
         </button>
       </div>
 
-      <AppSkeleton v-if="loading" count="6" height="80px" />
+      <AppSkeleton v-if="loading" :count="6" height="80px" />
 
       <AppEmpty
         v-else-if="!loading && filteredCategories.length === 0"
@@ -68,7 +68,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onActivated } from 'vue'
 import { useRouter } from 'vue-router'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import AppButton from '@/components/common/AppButton.vue'
@@ -92,15 +92,45 @@ const showDeleteModal = ref(false)
 const categoryToDelete = ref(null)
 
 const filteredCategories = computed(() => {
-  const categoryList = Array.isArray(categories) ? categories : (categories?.value || [])
+  console.log('=== FILTERED CATEGORIES DEBUG ===')
+  console.log('categories (raw):', categories)
+  console.log('categories.value:', categories.value)
+  console.log('typeof categories:', typeof categories)
+  console.log('Array.isArray(categories):', Array.isArray(categories))
+  console.log('Array.isArray(categories.value):', Array.isArray(categories.value))
+
+  const categoryList = categories.value || []
+  console.log('categoryList:', categoryList)
+  console.log('categoryList.length:', categoryList.length)
+  console.log('selectedTab.value:', selectedTab.value)
+
   if (selectedTab.value === 'all') {
+    console.log('Returning all categories:', categoryList.length)
     return categoryList
   }
-  return categoryList.filter((c) => c.type === selectedTab.value)
+  const filtered = categoryList.filter((c) => c && c.type === selectedTab.value)
+  console.log('Filtered categories:', filtered.length)
+  return filtered
 })
 
-onMounted(() => {
-  loadCategories()
+onMounted(async () => {
+  console.log('=== ONMOUNTED ===')
+  console.log('Before load - categories:', categories)
+  console.log('Before load - categories.value:', categories.value)
+  console.log('Before load - loading:', loading)
+  console.log('Before load - loading.value:', loading.value)
+
+  await loadCategories()
+
+  console.log('After load - categories:', categories)
+  console.log('After load - categories.value:', categories.value)
+  console.log('After load - loading:', loading)
+  console.log('After load - loading.value:', loading.value)
+})
+
+onActivated(async () => {
+  console.log('=== ONACTIVATED ===')
+  await loadCategories()
 })
 
 function editCategory(category) {

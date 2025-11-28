@@ -1,7 +1,7 @@
 <template>
   <AppLayout>
     <div class="max-w-4xl mx-auto">
-      <AppSkeleton v-if="loading" count="1" height="300px" />
+      <AppSkeleton v-if="loading" :count="1" height="300px" />
 
       <div v-else-if="currentWallet">
         <!-- Header -->

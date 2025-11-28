@@ -3,7 +3,7 @@
     <div class="max-w-2xl mx-auto">
       <h1 class="text-2xl md:text-3xl font-bold mb-6">Edit Category</h1>
 
-      <AppSkeleton v-if="loading" count="1" height="300px" />
+      <AppSkeleton v-if="loading" :count="1" height="300px" />
 
       <AppCard v-else-if="currentCategory">
         <CategoryForm

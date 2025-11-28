@@ -33,7 +33,7 @@
       </div>
 
       <!-- Loading State -->
-      <AppSkeleton v-if="loading" count="4" height="120px" class="mb-6" />
+      <AppSkeleton v-if="loading" :count="4" height="120px" class="mb-6" />
 
       <!-- Dashboard Content -->
       <div v-else>
