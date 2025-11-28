@@ -396,12 +396,12 @@ const chartOptions = {
 
 ### 6. RecentTransactions Component
 
-- [ ] Create src/components/dashboard/RecentTransactions.vue
-- [ ] Display transaction list (last 10)
-- [ ] Show transaction type, amount, date, category
-- [ ] Add color coding for income/expense
-- [ ] Handle empty state
-- [ ] Add "View All" link to transactions page
+- [x] Create src/components/dashboard/RecentTransactions.vue
+- [x] Display transaction list (last 10)
+- [x] Show transaction type, amount, date, category
+- [x] Add color coding for income/expense
+- [x] Handle empty state
+- [x] Add "View All" link to transactions page
 
 **`src/components/dashboard/RecentTransactions.vue`**
 
@@ -480,11 +480,11 @@ defineProps({
 
 ### 7. WalletFilter Component
 
-- [ ] Create src/components/dashboard/WalletFilter.vue
-- [ ] Display dropdown with "All Wallets" option
-- [ ] List all user wallets
-- [ ] Emit selection event
-- [ ] Style selected state
+- [x] Create src/components/dashboard/WalletFilter.vue
+- [x] Display dropdown with "All Wallets" option
+- [x] List all user wallets
+- [x] Emit selection event
+- [x] Style selected state
 
 **`src/components/dashboard/WalletFilter.vue`**
 
@@ -535,11 +535,11 @@ function handleChange(event) {
 
 ### 8. Date Utilities
 
-- [ ] Create src/utils/date.js
-- [ ] Add formatDate function
-- [ ] Add formatDateTime function
-- [ ] Add relative time function (e.g., "2 hours ago")
-- [ ] Use dayjs library
+- [x] Create src/utils/date.js
+- [x] Add formatDate function
+- [x] Add formatDateTime function
+- [x] Add relative time function (e.g., "2 hours ago")
+- [x] Use dayjs library
 
 **`src/utils/date.js`**
 
@@ -700,8 +700,8 @@ onMounted(async () => {
 
 ### 10. Update Dashboard Route
 
-- [ ] Ensure dashboard route is set as default
-- [ ] Test navigation to dashboard after login
+- [x] Ensure dashboard route is set as default
+- [x] Test navigation to dashboard after login
 
 **Verify in `src/router/index.js`:**
 
@@ -724,10 +724,10 @@ onMounted(async () => {
 
 ### 11. Create UI Store
 
-- [ ] Create src/stores/ui.js
-- [ ] Add toast state and methods
-- [ ] Implement showToast action
-- [ ] Implement hideToast action
+- [x] Create src/stores/ui.js
+- [x] Add toast state and methods
+- [x] Implement showToast action
+- [x] Implement hideToast action
 
 **`src/stores/ui.js`**
 
@@ -770,11 +770,13 @@ export const useUIStore = defineStore('ui', () => {
 
 ### 12. Create AppToast Component
 
-- [ ] Create src/components/common/AppToast.vue
-- [ ] Display toast notifications
-- [ ] Add auto-dismiss functionality
-- [ ] Style based on type (success, error, warning, info)
-- [ ] Add to App.vue
+- [x] Create src/components/common/AppToast.vue
+- [x] Display toast notifications
+- [x] Add auto-dismiss functionality
+- [x] Style based on type (success, error, warning, info)
+- [x] Add to App.vue
+- [x] Add progress bar showing countdown to auto-dismiss
+- [x] Dark mode support
 
 **`src/components/common/AppToast.vue`**
 
@@ -879,25 +881,29 @@ function hideToast() {
 
 ## Testing Checklist
 
-- [ ] Dashboard loads with all metrics
-- [ ] Balance cards display correct data
-- [ ] Total balance shows sum of all wallet balances
-- [ ] Today's income/expense calculated correctly
-- [ ] Weekly trend chart renders with data
-- [ ] Chart displays income and expense lines
-- [ ] Chart is responsive on mobile
-- [ ] Recent transactions list displays last 10 transactions
-- [ ] Transaction colors (green for income, red for expense)
-- [ ] Wallet filter dropdown populated with user wallets
-- [ ] Selecting "All Wallets" shows combined data
-- [ ] Selecting specific wallet filters data correctly
-- [ ] Refresh button reloads dashboard data
-- [ ] Loading skeletons display during data fetch
-- [ ] Empty states show when no data available
-- [ ] Toast notifications work for errors
-- [ ] Date formatting displays correctly
-- [ ] Currency formatting displays correctly
-- [ ] Mobile responsive layout working
+- [x] Dashboard loads with all metrics
+- [x] Balance cards display correct data
+- [x] Total balance shows sum of all wallet balances
+- [x] Today's income/expense calculated correctly
+- [x] Weekly trend chart renders with data
+- [x] Chart displays income and expense lines
+- [x] Chart is responsive on mobile
+- [x] Recent transactions list displays last 10 transactions
+- [x] Transaction colors (green for income, red for expense)
+- [x] Wallet filter dropdown populated with user wallets
+- [x] Selecting "All Wallets" shows combined data
+- [x] Selecting specific wallet filters data correctly
+- [x] Refresh button reloads dashboard data
+- [x] Loading skeletons display during data fetch
+- [x] Empty states show when no data available
+- [x] Toast notifications work for errors
+- [x] Date formatting displays correctly
+- [x] Currency formatting displays correctly (with compact notation)
+- [x] Mobile responsive layout working
+- [x] Toast progress bar animates correctly
+- [x] Dark mode works across all components
+- [x] Global font family (Inter) applied consistently
+- [x] Global color system works in light and dark mode
 
 ---
 

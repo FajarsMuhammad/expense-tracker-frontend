@@ -3,23 +3,18 @@
     <div class="max-w-7xl mx-auto">
       <!-- Header Section -->
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <h1 class="text-2xl md:text-3xl font-bold text-gray-900">My Wallets</h1>
+        <h1 class="text-2xl md:text-3xl font-display font-bold text-neutral-900 dark:text-neutral-100">My Wallets</h1>
         <AppButton
-          v-if="canCreateWallet"
           @click="$router.push('/wallets/create')"
           class="w-full sm:w-auto"
+          :disabled="!canCreateWallet"
         >
-          <span class="hidden sm:inline">+ Create Wallet</span>
-          <span class="sm:hidden">+ New Wallet</span>
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          <span class="hidden sm:inline">Create Wallet</span>
+          <span class="sm:hidden">New Wallet</span>
         </AppButton>
-        <div v-else class="text-center sm:text-right">
-          <p class="text-xs md:text-sm text-gray-600">
-            Free users can only have 1 wallet.
-            <a href="#" class="text-primary-600 hover:underline block sm:inline mt-1 sm:mt-0">
-              Upgrade to Premium
-            </a>
-          </p>
-        </div>
       </div>
 
       <AppSkeleton v-if="loading" count="3" />
@@ -46,7 +41,7 @@
       </div>
 
       <AppModal v-model="showDeleteModal" title="Delete Wallet">
-        <p class="text-gray-600">
+        <p class="text-neutral-600 dark:text-neutral-400">
           Are you sure you want to delete "{{ walletToDelete?.name }}"? This action cannot be undone.
         </p>
         <template #footer>

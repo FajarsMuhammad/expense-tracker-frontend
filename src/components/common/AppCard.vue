@@ -1,12 +1,12 @@
 <template>
   <div :class="cardClasses">
-    <div v-if="$slots.header" class="px-6 py-4 border-b border-gray-200">
+    <div v-if="$slots.header" class="px-6 py-4 border-b border-neutral-200 dark:border-dark-border">
       <slot name="header" />
     </div>
     <div :class="bodyClasses">
       <slot />
     </div>
-    <div v-if="$slots.footer" class="px-6 py-4 border-t border-gray-200 bg-gray-50">
+    <div v-if="$slots.footer" class="px-6 py-4 border-t border-neutral-200 dark:border-dark-border bg-neutral-50 dark:bg-dark-surface">
       <slot name="footer" />
     </div>
   </div>
@@ -21,12 +21,12 @@ const props = defineProps({
 })
 
 const cardClasses = computed(() => {
-  const base = 'bg-white rounded-lg border border-gray-200'
+  const base = 'bg-white dark:bg-dark-card rounded-2xl border border-neutral-200/50 dark:border-dark-border transition-colors duration-300'
   const shadows = {
-    sm: 'shadow-sm',
-    md: 'shadow-md',
-    lg: 'shadow-lg',
-    xl: 'shadow-xl',
+    sm: 'shadow-soft',
+    md: 'shadow-soft-lg',
+    lg: 'shadow-soft-xl',
+    xl: 'shadow-soft-xl',
   }
   return [base, shadows[props.shadow]].join(' ')
 })

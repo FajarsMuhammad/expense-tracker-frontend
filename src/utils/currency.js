@@ -18,6 +18,30 @@ export function formatCurrency(amount, currency = 'IDR') {
   }).format(amount)
 }
 
+/**
+ * Format currency in compact notation (e.g., Rp 10M)
+ * @param {number} amount - The amount to format
+ * @param {string} currency - Currency code (IDR, USD, etc.)
+ * @returns {string} Formatted compact currency string
+ */
+export function formatCurrencyCompact(amount, currency = 'IDR') {
+  const format = CURRENCY_FORMATS[currency] || CURRENCY_FORMATS.IDR
+
+  try {
+    const formatted = new Intl.NumberFormat(format.locale, {
+      notation: 'compact',
+      compactDisplay: 'short',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 1,
+    }).format(amount)
+
+    return `${format.symbol} ${formatted}`
+  } catch (error) {
+    console.error('Error formatting compact currency:', error)
+    return `${format.symbol} ${amount}`
+  }
+}
+
 export const SUPPORTED_CURRENCIES = [
   { value: 'IDR', label: 'Indonesian Rupiah (Rp)', symbol: 'Rp' },
   { value: 'USD', label: 'US Dollar ($)', symbol: '$' },

@@ -6,6 +6,7 @@ export const useUIStore = defineStore('ui', () => {
     show: false,
     message: '',
     type: 'info', // 'success', 'error', 'warning', 'info'
+    duration: 3000,
   })
 
   function showToast({ message, type = 'info', duration = 3000 }) {
@@ -13,6 +14,7 @@ export const useUIStore = defineStore('ui', () => {
       show: true,
       message,
       type,
+      duration,
     }
 
     if (duration > 0) {

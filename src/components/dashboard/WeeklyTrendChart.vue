@@ -1,8 +1,8 @@
 <template>
   <AppCard>
-    <h3 class="text-lg font-semibold text-gray-900 mb-4">Weekly Trend</h3>
+    <h3 class="text-lg font-display font-semibold text-neutral-900 dark:text-neutral-100 mb-4">Weekly Trend</h3>
 
-    <div v-if="!hasData" class="py-12 text-center text-gray-500">
+    <div v-if="!hasData" class="py-12 text-center text-neutral-500 dark:text-neutral-400">
       No transaction data available for the past week
     </div>
 
@@ -49,18 +49,20 @@ const chartData = computed(() => {
       {
         label: 'Income',
         data: props.data.map((item) => item.income),
-        borderColor: '#10b981',
-        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+        borderColor: '#10b981',  // Vibrant emerald
+        backgroundColor: 'rgba(16, 185, 129, 0.15)',
         fill: true,
         tension: 0.4,
+        borderWidth: 2,
       },
       {
         label: 'Expense',
         data: props.data.map((item) => item.expense),
-        borderColor: '#ef4444',
-        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+        borderColor: '#f43f5e',  // Vibrant rose
+        backgroundColor: 'rgba(244, 63, 94, 0.15)',
         fill: true,
         tension: 0.4,
+        borderWidth: 2,
       },
     ],
   }

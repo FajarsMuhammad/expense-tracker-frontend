@@ -48,6 +48,30 @@ const routes = [
     component: () => import('@/views/wallet/WalletEditView.vue'),
     meta: { requiresAuth: true },
   },
+  {
+    path: '/categories',
+    name: 'Categories',
+    component: () => import('@/views/category/CategoryView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/categories/create',
+    name: 'CategoryCreate',
+    component: () => import('@/views/category/CategoryCreateView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/categories/:id/edit',
+    name: 'CategoryEdit',
+    component: () => import('@/views/category/CategoryEditView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/premium',
+    name: 'Premium',
+    component: () => import('@/views/premium/PremiumView.vue'),
+    meta: { requiresAuth: true },
+  },
 ]
 
 const router = createRouter({

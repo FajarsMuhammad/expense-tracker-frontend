@@ -9,7 +9,7 @@
           <div class="flex items-center gap-3 md:gap-4">
             <button
               @click="$router.push('/wallets')"
-              class="text-gray-600 hover:text-gray-900 transition-colors flex-shrink-0"
+              class="text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 transition-colors flex-shrink-0"
               aria-label="Back to wallets"
             >
               <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -21,7 +21,7 @@
                 />
               </svg>
             </button>
-            <h1 class="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 truncate">
+            <h1 class="text-xl md:text-2xl lg:text-3xl font-bold truncate">
               {{ currentWallet.name }}
             </h1>
           </div>
@@ -51,43 +51,43 @@
         <!-- Balance Card -->
         <AppCard class="mb-6">
           <div class="text-center py-6 md:py-8">
-            <p class="text-xs md:text-sm text-gray-500 mb-2">Current Balance</p>
+            <p class="text-xs md:text-sm text-muted mb-2">Current Balance</p>
             <p class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2 break-all" :class="balanceColor">
               {{ formattedBalance }}
             </p>
-            <p class="text-sm md:text-base text-gray-600">{{ currentWallet.currency }}</p>
+            <p class="text-sm md:text-base">{{ currentWallet.currency }}</p>
           </div>
         </AppCard>
 
         <!-- Wallet Information -->
         <AppCard>
-          <h2 class="text-lg md:text-xl font-semibold text-gray-900 mb-4">Wallet Information</h2>
+          <h2 class="text-lg md:text-xl font-semibold mb-4">Wallet Information</h2>
           <div class="space-y-4">
-            <div class="flex justify-between py-3 border-b border-gray-100">
-              <span class="text-gray-600">Wallet Name</span>
-              <span class="font-medium text-gray-900">{{ currentWallet.name }}</span>
+            <div class="flex justify-between py-3 border-b border-neutral-100 dark:border-dark-border">
+              <span class="text-muted">Wallet Name</span>
+              <span class="font-medium">{{ currentWallet.name }}</span>
             </div>
-            <div class="flex justify-between py-3 border-b border-gray-100">
-              <span class="text-gray-600">Currency</span>
-              <span class="font-medium text-gray-900">
+            <div class="flex justify-between py-3 border-b border-neutral-100 dark:border-dark-border">
+              <span class="text-muted">Currency</span>
+              <span class="font-medium">
                 {{ currencyLabel }}
               </span>
             </div>
-            <div class="flex justify-between py-3 border-b border-gray-100">
-              <span class="text-gray-600">Initial Balance</span>
-              <span class="font-medium text-gray-900">
+            <div class="flex justify-between py-3 border-b border-neutral-100 dark:border-dark-border">
+              <span class="text-muted">Initial Balance</span>
+              <span class="font-medium">
                 {{ formatCurrency(currentWallet.initialBalance, currentWallet.currency) }}
               </span>
             </div>
-            <div class="flex justify-between py-3 border-b border-gray-100">
-              <span class="text-gray-600">Current Balance</span>
+            <div class="flex justify-between py-3 border-b border-neutral-100 dark:border-dark-border">
+              <span class="text-muted">Current Balance</span>
               <span class="font-medium" :class="balanceColor">
                 {{ formattedBalance }}
               </span>
             </div>
             <div class="flex justify-between py-3">
-              <span class="text-gray-600">Created At</span>
-              <span class="font-medium text-gray-900">
+              <span class="text-muted">Created At</span>
+              <span class="font-medium">
                 {{ formatDate(currentWallet.createdAt) }}
               </span>
             </div>
@@ -96,7 +96,7 @@
 
         <!-- Delete Confirmation Modal -->
         <AppModal v-model="showDeleteModal" title="Delete Wallet">
-          <p class="text-gray-600">
+          <p>
             Are you sure you want to delete "{{ currentWallet.name }}"? This action cannot be
             undone and will remove all associated transactions.
           </p>
@@ -154,9 +154,9 @@ const formattedBalance = computed(() => {
 })
 
 const balanceColor = computed(() => {
-  if (!currentWallet.value) return 'text-gray-900'
+  if (!currentWallet.value) return ''
   const balance = currentWallet.value.currentBalance ?? currentWallet.value.initialBalance ?? 0
-  return balance >= 0 ? 'text-green-600' : 'text-red-600'
+  return balance >= 0 ? 'text-income dark:text-income-light' : 'text-expense dark:text-expense-light'
 })
 
 const currencyLabel = computed(() => {

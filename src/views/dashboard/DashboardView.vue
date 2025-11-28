@@ -3,7 +3,7 @@
     <div class="max-w-7xl mx-auto">
       <!-- Header -->
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <h1 class="text-2xl md:text-3xl font-bold text-gray-900">Dashboard</h1>
+        <h1 class="text-2xl md:text-3xl font-display font-bold text-neutral-900 dark:text-neutral-100">Dashboard</h1>
         <AppButton
           variant="secondary"
           size="sm"

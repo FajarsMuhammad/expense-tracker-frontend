@@ -3,7 +3,53 @@
 @tailwind utilities;
 
 @layer base {
+  /* Global font family */
+  * {
+    @apply font-sans;
+  }
+
+  /* Body background and text color - adapts to light/dark mode */
   body {
-    @apply bg-gray-50 text-gray-900;
+    @apply bg-neutral-50 text-neutral-900 dark:bg-dark-bg dark:text-neutral-100 font-sans antialiased;
+  }
+
+  /* Default heading colors */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply text-neutral-900 dark:text-neutral-50;
+  }
+
+  /* Default paragraph and text colors */
+  p,
+  span,
+  div {
+    @apply text-neutral-700 dark:text-neutral-300;
+  }
+
+  /* Link colors */
+  a {
+    @apply text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300;
+  }
+
+  /* Input and form elements */
+  input,
+  textarea,
+  select {
+    @apply text-neutral-900 dark:text-neutral-100 bg-white dark:bg-dark-surface;
+  }
+
+  /* Strong/bold text */
+  strong,
+  b {
+    @apply text-neutral-900 dark:text-neutral-50 font-semibold;
+  }
+
+  /* Muted/secondary text */
+  .text-muted {
+    @apply text-neutral-500 dark:text-neutral-400;
   }
 }
