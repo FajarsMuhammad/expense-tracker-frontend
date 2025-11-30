@@ -93,11 +93,8 @@ const categoryToDelete = ref(null)
 
 const filteredCategories = computed(() => {
   console.log('=== FILTERED CATEGORIES DEBUG ===')
-  console.log('categories (raw):', categories)
+  console.log('categories (ref):', categories)
   console.log('categories.value:', categories.value)
-  console.log('typeof categories:', typeof categories)
-  console.log('Array.isArray(categories):', Array.isArray(categories))
-  console.log('Array.isArray(categories.value):', Array.isArray(categories.value))
 
   const categoryList = categories.value || []
   console.log('categoryList:', categoryList)
@@ -108,6 +105,7 @@ const filteredCategories = computed(() => {
     console.log('Returning all categories:', categoryList.length)
     return categoryList
   }
+
   const filtered = categoryList.filter((c) => c && c.type === selectedTab.value)
   console.log('Filtered categories:', filtered.length)
   return filtered
@@ -116,16 +114,12 @@ const filteredCategories = computed(() => {
 onMounted(async () => {
   console.log('=== ONMOUNTED ===')
   console.log('Before load - categories:', categories)
-  console.log('Before load - categories.value:', categories.value)
   console.log('Before load - loading:', loading)
-  console.log('Before load - loading.value:', loading.value)
 
   await loadCategories()
 
   console.log('After load - categories:', categories)
-  console.log('After load - categories.value:', categories.value)
   console.log('After load - loading:', loading)
-  console.log('After load - loading.value:', loading.value)
 })
 
 onActivated(async () => {

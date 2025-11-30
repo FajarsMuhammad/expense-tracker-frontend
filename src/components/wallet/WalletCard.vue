@@ -70,9 +70,9 @@ const props = defineProps({
 
 defineEmits(['view', 'edit', 'delete'])
 
-// Compact format for display
+// format for display
 const compactBalance = computed(() => {
-  return formatCurrencyCompact(props.wallet.currentBalance || 0, props.wallet.currency)
+  return formatCurrency(props.wallet.currentBalance || 0, props.wallet.currency)
 })
 
 // Full format for tooltip

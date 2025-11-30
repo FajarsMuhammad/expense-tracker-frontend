@@ -2,7 +2,7 @@
   <AppLayout>
     <div class="max-w-7xl mx-auto">
       <!-- Header Section -->
-      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+      <div class="flex items-center justify-between mb-6">
         <h1 class="text-2xl md:text-3xl font-display font-bold text-neutral-900 dark:text-neutral-100">My Wallets</h1>
         <AppButton
           @click="$router.push('/wallets/create')"

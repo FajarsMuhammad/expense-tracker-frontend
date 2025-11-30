@@ -1,12 +1,18 @@
 <template>
   <Teleport to="body">
     <Transition name="toast">
-      <div v-if="toast.show" class="fixed top-4 right-4 z-50 max-w-md">
+      <!-- langsung pakai uiStore.toast.show -->
+      <div v-if="uiStore.toast.show" class="fixed top-4 right-4 z-50 max-w-md">
         <div :class="toastClasses" class="relative overflow-hidden">
           <div class="flex items-center gap-3 px-6 py-4">
             <!-- Icon -->
             <div class="flex-shrink-0">
-              <svg v-if="toast.type === 'success'" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <svg
+                v-if="uiStore.toast.type === 'success'"
+                class="w-5 h-5"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
                 <path
                   fill-rule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -14,7 +20,7 @@
                 />
               </svg>
               <svg
-                v-else-if="toast.type === 'error'"
+                v-else-if="uiStore.toast.type === 'error'"
                 class="w-5 h-5"
                 fill="currentColor"
                 viewBox="0 0 20 20"
@@ -26,7 +32,7 @@
                 />
               </svg>
               <svg
-                v-else-if="toast.type === 'warning'"
+                v-else-if="uiStore.toast.type === 'warning'"
                 class="w-5 h-5"
                 fill="currentColor"
                 viewBox="0 0 20 20"
@@ -47,7 +53,9 @@
             </div>
 
             <!-- Message -->
-            <p class="text-sm font-medium flex-1">{{ toast.message }}</p>
+            <p class="text-sm font-medium flex-1">
+              {{ uiStore.toast.message }}
+            </p>
 
             <!-- Close Button -->
             <button
@@ -65,7 +73,7 @@
           </div>
 
           <!-- Progress Bar -->
-          <div v-if="toast.duration > 0" class="absolute bottom-0 left-0 w-full h-[3px]">
+          <div v-if="uiStore.toast.duration > 0" class="absolute bottom-0 left-0 w-full h-[3px]">
             <div :class="progressBarClasses" :style="progressBarStyle"></div>
           </div>
         </div>
@@ -79,9 +87,9 @@ import { computed } from 'vue'
 import { useUIStore } from '@/stores/ui'
 
 const uiStore = useUIStore()
-const toast = uiStore.toast
 
 const toastClasses = computed(() => {
+  const t = uiStore.toast
   const classes = {
     success:
       'bg-green-50 text-green-800 border border-green-200 dark:bg-green-900/20 dark:text-green-200 dark:border-green-800',
@@ -89,25 +97,28 @@ const toastClasses = computed(() => {
       'bg-red-50 text-red-800 border border-red-200 dark:bg-red-900/20 dark:text-red-200 dark:border-red-800',
     warning:
       'bg-yellow-50 text-yellow-800 border border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-200 dark:border-yellow-800',
-    info: 'bg-blue-50 text-blue-800 border border-blue-200 dark:bg-blue-900/20 dark:text-blue-200 dark:border-blue-800',
+    info:
+      'bg-blue-50 text-blue-800 border border-blue-200 dark:bg-blue-900/20 dark:text-blue-200 dark:border-blue-800',
   }
-  return [classes[toast.value.type] || classes.info, 'rounded-2xl shadow-soft-xl'].join(' ')
+  return [classes[t.type] || classes.info, 'rounded-2xl shadow-soft-xl'].join(' ')
 })
 
 const progressBarClasses = computed(() => {
+  const t = uiStore.toast
   const classes = {
     success: 'bg-income',
     error: 'bg-expense',
     warning: 'bg-warning',
     info: 'bg-primary-500',
   }
-  return [classes[toast.value.type] || classes.info, 'h-full rounded-b-2xl'].join(' ')
+  return [classes[t.type] || classes.info, 'h-full rounded-b-2xl'].join(' ')
 })
 
 const progressBarStyle = computed(() => {
-  if (toast.value.duration <= 0) return {}
+  const t = uiStore.toast
+  if (!t.duration || t.duration <= 0) return {}
   return {
-    animation: `progress-shrink ${toast.value.duration}ms linear`,
+    animation: `progress-shrink ${t.duration}ms linear`,
   }
 })
 

@@ -2,8 +2,8 @@
   <AppLayout>
     <div class="max-w-7xl mx-auto">
       <!-- Header Section -->
-      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <h1 class="text-2xl md:text-3xl font-display font-bold text-neutral-900 dark:text-neutral-100">
+      <!-- <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <h1 class="text-2xl md:text-3xl font-bold">
           Transactions
         </h1>
         <AppButton
@@ -15,6 +15,16 @@
           </svg>
           <span class="hidden sm:inline">Add Transaction</span>
           <span class="sm:hidden">New</span>
+        </AppButton>
+      </div> -->
+
+      <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl md:text-3xl font-bold">Transactions</h1>
+        <AppButton @click="$router.push('/transactions/create')">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          Add Transaction
         </AppButton>
       </div>
 

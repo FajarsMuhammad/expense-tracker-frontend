@@ -7,6 +7,9 @@
         <slot />
       </main>
     </div>
+
+    <!-- Global toast -->
+    <AppToast />
   </div>
 </template>
 
@@ -14,6 +17,7 @@
 import { ref } from 'vue'
 import AppHeader from './AppHeader.vue'
 import AppSidebar from './AppSidebar.vue'
+import AppToast from '@/components/common/AppToast.vue'
 
 const sidebarOpen = ref(false)
 

@@ -1,36 +1,34 @@
+// src/stores/ui.js
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
 
-export const useUIStore = defineStore('ui', () => {
-  const toast = ref({
-    show: false,
-    message: '',
-    type: 'info', // 'success', 'error', 'warning', 'info'
-    duration: 3000,
-  })
+export const useUIStore = defineStore('ui', {
+  state: () => ({
+    toast: {
+      show: false,
+      message: '',
+      type: 'info',
+      duration: 3000,
+    },
+  }),
 
-  function showToast({ message, type = 'info', duration = 3000 }) {
-    toast.value = {
-      show: true,
-      message,
-      type,
-      duration,
-    }
+  actions: {
+    showToast({ message, type = 'info', duration = 3000 }) {
+      console.log('🔥 showToast CALLED:', { message, type, duration })
 
-    if (duration > 0) {
-      setTimeout(() => {
-        hideToast()
-      }, duration)
-    }
-  }
+      this.toast.show = true
+      this.toast.message = message
+      this.toast.type = type
+      this.toast.duration = duration
 
-  function hideToast() {
-    toast.value.show = false
-  }
+      if (duration > 0) {
+        setTimeout(() => {
+          this.toast.show = false
+        }, duration)
+      }
+    },
 
-  return {
-    toast,
-    showToast,
-    hideToast,
-  }
+    hideToast() {
+      this.toast.show = false
+    },
+  },
 })
