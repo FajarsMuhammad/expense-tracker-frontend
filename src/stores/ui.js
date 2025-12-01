@@ -13,7 +13,6 @@ export const useUIStore = defineStore('ui', {
 
   actions: {
     showToast({ message, type = 'info', duration = 3000 }) {
-      console.log('🔥 showToast CALLED:', { message, type, duration })
 
       this.toast.show = true
       this.toast.message = message

@@ -92,38 +92,22 @@ const showDeleteModal = ref(false)
 const categoryToDelete = ref(null)
 
 const filteredCategories = computed(() => {
-  console.log('=== FILTERED CATEGORIES DEBUG ===')
-  console.log('categories (ref):', categories)
-  console.log('categories.value:', categories.value)
 
   const categoryList = categories.value || []
-  console.log('categoryList:', categoryList)
-  console.log('categoryList.length:', categoryList.length)
-  console.log('selectedTab.value:', selectedTab.value)
 
   if (selectedTab.value === 'all') {
-    console.log('Returning all categories:', categoryList.length)
     return categoryList
   }
 
   const filtered = categoryList.filter((c) => c && c.type === selectedTab.value)
-  console.log('Filtered categories:', filtered.length)
   return filtered
 })
 
 onMounted(async () => {
-  console.log('=== ONMOUNTED ===')
-  console.log('Before load - categories:', categories)
-  console.log('Before load - loading:', loading)
-
   await loadCategories()
-
-  console.log('After load - categories:', categories)
-  console.log('After load - loading:', loading)
 })
 
 onActivated(async () => {
-  console.log('=== ONACTIVATED ===')
   await loadCategories()
 })
 

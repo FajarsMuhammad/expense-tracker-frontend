@@ -282,7 +282,7 @@ npm install -D rollup-plugin-visualizer
 
 ---
 
-## Deployment Options
+## Deployment Options (Skip)
 
 ### Option 1: Vercel (Recommended for Quick Deploy)
 
@@ -372,7 +372,7 @@ server {
 
 ---
 
-## Post-Deployment
+## Post-Deployment (Skip)
 
 ### 9. Post-Deployment Verification
 
