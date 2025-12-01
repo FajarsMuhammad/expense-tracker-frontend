@@ -3,12 +3,12 @@
     <AppHeader @toggle-sidebar="toggleSidebar" />
     <div class="flex">
       <AppSidebar :is-open="sidebarOpen" @close="closeSidebar" />
+
       <main class="flex-1 w-full pt-20 md:pt-24 px-6 md:px-8 lg:px-12 pb-8 md:ml-64 transition-all duration-300 animate-fade-in">
         <slot />
       </main>
     </div>
 
-    <!-- Global toast -->
     <AppToast />
   </div>
 </template>

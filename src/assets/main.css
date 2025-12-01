@@ -1,55 +1,116 @@
+/* src/assets/css/main.css */
+
+/* Tailwind base imports */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ==============
+   Base styles
+   ==============
+   Assumptions:
+   - tailwind.config.js memiliki `fontFamily.display` => ['Poppins', ...]
+   - index.html sudah memuat Google Fonts / preload
+*/
+
+/* Definisikan family Poppins sekali untuk dipakai di sini */
+:root {
+  --font-poppins: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-inter: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+}
+
 @layer base {
-  /* Global font family */
-  * {
-    @apply font-sans;
+  /* Make the entire app use Poppins as the default (if you want Inter for body, ubah ke --font-inter) */
+  html, body {
+    font-family: var(--font-poppins);
+    min-height: 100%;
   }
 
-  /* Body background and text color - adapts to light/dark mode */
+  /* Layout + colors */
   body {
-    @apply bg-neutral-50 text-neutral-900 dark:bg-dark-bg dark:text-neutral-100 font-sans antialiased;
+    @apply bg-neutral-50 dark:bg-dark-bg text-neutral-900 dark:text-neutral-100;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Default heading colors */
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    @apply text-neutral-900 dark:text-neutral-50;
+  /* Headings: ensure color contrast and weight */
+  h1, h2, h3, h4, h5, h6 {
+    color: theme('colors.neutral.900');
+    /* dark mode fallback */
+    /* color will be overridden by dark: classes at runtime if you use them */
+    font-weight: 600;
+    line-height: 1.2;
   }
 
-  /* Default paragraph and text colors */
-  p,
-  span,
-  div {
+  /* Body copy */
+  p, span, li, a, label {
     @apply text-neutral-700 dark:text-neutral-300;
+    line-height: 1.5;
   }
 
-  /* Link colors */
+  /* Links */
   a {
-    @apply text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300;
+    @apply text-primary-600 hover:text-primary-700;
   }
 
-  /* Input and form elements */
+  /* Inputs, selects, textarea, buttons should also use Poppins and inherit text colors */
   input,
   textarea,
-  select {
-    @apply text-neutral-900 dark:text-neutral-100 bg-white dark:bg-dark-surface;
+  select,
+  button {
+    /* gunakan font-family langsung — jangan @apply font-display (circular) */
+    font-family: var(--font-poppins);
+    @apply bg-white dark:bg-dark-surface text-neutral-900 dark:text-neutral-100;
+    @apply border border-neutral-300 dark:border-dark-border;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary-500;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Strong/bold text */
-  strong,
-  b {
-    @apply text-neutral-900 dark:text-neutral-50 font-semibold;
-  }
-
-  /* Muted/secondary text */
+  /* Small / muted text */
   .text-muted {
     @apply text-neutral-500 dark:text-neutral-400;
   }
+
+  /* Dropdown menu styles (local utils used in your components) */
+  .dropdown-menu {
+    @apply bg-white dark:bg-dark-card rounded-lg border border-neutral-200 dark:border-neutral-700 shadow-lg p-1;
+  }
+
+  .dropdown-menu input {
+    font-family: var(--font-poppins);
+    @apply bg-white dark:bg-dark-surface text-neutral-900 dark:text-neutral-100;
+  }
+
+  .dropdown-panel button {
+    border: none !important;
+  }
+
+  /* Hilangkan border pada container inner (yang punya border) kecuali outer panel */
+  .dropdown-panel > div {
+    border: none !important;
+  }
+
+  /* Utility class to apply Poppins anywhere (use direct font-family) */
+  .font-display {
+    font-family: var(--font-poppins);
+  }
+
+  /* Minor helpers (feel free to expand) */
+  .ui-card {
+    @apply bg-white dark:bg-dark-card rounded-2xl shadow-sm p-4;
+  }
+
+  /* Prevent global div styling pitfalls (do not style * or div globally) */
+  /* IMPORTANT: avoid `* { @apply ... }` or global div selectors that may break inputs */
+}
+
+/* If you want additional component-level overrides, add them below */
+/* Example: style the main container width used in your layout */
+.container-xl {
+  max-width: 56rem; /* 896px */
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }

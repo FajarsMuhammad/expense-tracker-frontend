@@ -13,6 +13,7 @@
   "dependencies": {
     "@headlessui/vue": "^1.7.23",
     "@heroicons/vue": "^2.2.0",
+    "@popperjs/core": "^2.11.8",
     "@vueuse/core": "^14.0.0",
     "axios": "^1.13.2",
     "chart.js": "^4.5.1",
@@ -25,6 +26,8 @@
     "yup": "^1.7.1"
   },
   "devDependencies": {
+    "@tailwindcss/forms": "^0.5.10",
+    "@tailwindcss/typography": "^0.5.19",
     "@vitejs/plugin-vue": "^6.0.1",
     "autoprefixer": "^10.4.22",
     "eslint": "^9.39.1",

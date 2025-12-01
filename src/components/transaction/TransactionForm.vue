@@ -35,42 +35,146 @@
       <p v-if="errors.type" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ errors.type }}</p>
     </div>
 
-    <!-- Wallet Selector -->
+    <!-- Wallet Selector (custom dropdown) -->
     <div>
       <label for="wallet" class="block text-sm font-medium mb-1">
         Wallet <span class="text-red-500">*</span>
       </label>
-      <select
-        id="wallet"
-        v-model="formData.walletId"
-        class="w-full px-4 py-2 border border-neutral-300 dark:border-dark-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-dark-surface"
-        required
-      >
-        <option value="">Select wallet</option>
-        <option v-for="wallet in wallets" :key="wallet.id" :value="wallet.id">
-          {{ wallet.name }} ({{ wallet.currency }})
-        </option>
-      </select>
+
+      <DropdownBase class="relative">
+        <!-- Trigger: destructure slot props here -->
+        <template #trigger="{ toggle, isOpen }">
+          <button
+            type="button"
+            @click.stop="toggle"
+            :aria-expanded="String(isOpen)"
+            class="w-full flex items-center justify-between px-4 py-2 border border-neutral-300 dark:border-dark-border rounded-lg bg-white dark:bg-dark-surface focus:outline-none focus:ring-2 focus:ring-primary-500"
+            id="wallet-dropdown"
+          >
+            <span class="truncate">
+              {{ walletLabel }}
+            </span>
+            <svg class="w-4 h-4 text-neutral-500 ml-2" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+              <path d="M6 8l4 4 4-4" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"/>
+            </svg>
+          </button>
+        </template>
+
+        <!-- Menu: destructure slot props here -->
+        <template #menu="{ close }">
+          <div
+            class="mt-2 w-full bg-surface-card border border-surface rounded-lg shadow-surface-lg z-50 p-2"
+            role="menu"
+            aria-labelledby="wallet-dropdown"
+            @click.stop
+          >
+            <!-- optional search -->
+            <div class="px-2 pb-2">
+              <input
+                v-model="walletQuery"
+                type="search"
+                placeholder="Search wallets..."
+                class="w-full px-3 py-2 rounded-md border border-neutral-200 dark:border-dark-border bg-white dark:bg-dark-surface text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+              />
+            </div>
+
+            <div class="max-h-44 overflow-auto">
+              <button
+                class="w-full text-left px-3 py-2 rounded-md hover:bg-surface-muted"
+                :class="!formData.walletId ? 'font-medium' : ''"
+                @click.stop.prevent="selectWallet('', close)"
+              >
+                Select wallet
+              </button>
+
+              <template v-for="wallet in filteredWallets" :key="wallet.id">
+                <button
+                  class="w-full text-left px-3 py-2 rounded-md hover:bg-surface-muted flex items-center justify-between"
+                  @click.stop.prevent="selectWallet(wallet.id, close)"
+                >
+                  <span class="truncate">{{ wallet.name }} ({{ wallet.currency }})</span>
+                  <span class="text-xs text-muted">{{ wallet.balance !== undefined ? formatCurrency(wallet.balance, wallet.currency) : '' }}</span>
+                </button>
+              </template>
+
+              <div v-if="filteredWallets.length === 0" class="px-3 py-2 text-sm text-muted">No wallets found</div>
+            </div>
+          </div>
+        </template>
+      </DropdownBase>
+
       <p v-if="errors.walletId" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ errors.walletId }}</p>
     </div>
 
-    <!-- Category Selector -->
+    <!-- Category Selector (custom dropdown) -->
     <div>
       <label for="category" class="block text-sm font-medium mb-1">
         Category <span class="text-red-500">*</span>
       </label>
-      <select
-        id="category"
-        v-model="formData.categoryId"
-        class="w-full px-4 py-2 border border-neutral-300 dark:border-dark-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-dark-surface"
-        :disabled="!formData.type"
-        required
-      >
-        <option value="">{{ formData.type ? 'Select category' : 'Select type first' }}</option>
-        <option v-for="category in filteredCategories" :key="category.id" :value="category.id">
-          {{ category.name }}
-        </option>
-      </select>
+
+      <DropdownBase class="relative">
+        <template #trigger="{ toggle, isOpen }">
+          <button
+            type="button"
+            @click.stop="toggle"
+            :disabled="!formData.type"
+            :aria-expanded="String(isOpen)"
+            class="w-full flex items-center justify-between px-4 py-2 border border-neutral-300 dark:border-dark-border rounded-lg bg-white dark:bg-dark-surface focus:outline-none focus:ring-2 focus:ring-primary-500 disabled:opacity-60"
+            id="category-dropdown"
+            :aria-disabled="String(!formData.type)"
+          >
+            <span class="truncate">
+              {{ categoryLabel }}
+            </span>
+            <svg class="w-4 h-4 text-neutral-500 ml-2" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+              <path d="M6 8l4 4 4-4" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"/>
+            </svg>
+          </button>
+        </template>
+
+        <template #menu="{ close }">
+          <div
+            class="mt-2 w-full bg-surface-card border border-surface rounded-lg shadow-surface-lg z-50 p-2"
+            role="menu"
+            aria-labelledby="category-dropdown"
+            @click.stop
+          >
+            <!-- optional search -->
+            <div class="px-2 pb-2">
+              <input
+                v-model="categoryQuery"
+                type="search"
+                placeholder="Search categories..."
+                class="w-full px-3 py-2 rounded-md border border-neutral-200 dark:border-dark-border bg-white dark:bg-dark-surface text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                :disabled="!formData.type"
+              />
+            </div>
+
+            <div class="max-h-44 overflow-auto">
+              <button
+                class="w-full text-left px-3 py-2 rounded-md hover:bg-surface-muted"
+                :class="!formData.categoryId ? 'font-medium' : ''"
+                @click.stop.prevent="selectCategory('', close)"
+              >
+                Select category
+              </button>
+
+              <template v-for="category in filteredCategoriesByQuery" :key="category.id">
+                <button
+                  class="w-full text-left px-3 py-2 rounded-md hover:bg-surface-muted flex items-center gap-2"
+                  @click.stop.prevent="selectCategory(category.id, close)"
+                >
+                  <span class="truncate">{{ category.name }}</span>
+                  <span class="ml-auto text-xs text-muted">{{ category.type }}</span>
+                </button>
+              </template>
+
+              <div v-if="filteredCategoriesByQuery.length === 0" class="px-3 py-2 text-sm text-muted">No categories</div>
+            </div>
+          </div>
+        </template>
+      </DropdownBase>
+
       <p v-if="errors.categoryId" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ errors.categoryId }}</p>
     </div>
 
@@ -135,6 +239,7 @@
 import { ref, computed, watch } from 'vue'
 import AppInput from '@/components/common/AppInput.vue'
 import AppButton from '@/components/common/AppButton.vue'
+import DropdownBase from '@/components/common/DropdownBase.vue'
 
 const props = defineProps({
   transaction: {
@@ -165,12 +270,7 @@ const maxDate = computed(() => {
   return today.toISOString().split('T')[0]
 })
 
-// Filter categories based on selected type
-const filteredCategories = computed(() => {
-  if (!formData.value.type) return []
-  return props.categories.filter(c => c.type === formData.value.type)
-})
-
+// Form state
 const formData = ref({
   type: '',
   walletId: '',
@@ -181,6 +281,42 @@ const formData = ref({
 })
 
 const errors = ref({})
+
+// small search queries for dropdowns
+const walletQuery = ref('')
+const categoryQuery = ref('')
+
+// Filter categories based on selected type
+const filteredCategories = computed(() => {
+  if (!formData.value.type) return []
+  return props.categories.filter(c => c.type === formData.value.type)
+})
+
+// used by dropdown search
+const filteredWallets = computed(() => {
+  if (!walletQuery.value) return props.wallets
+  const q = walletQuery.value.toLowerCase()
+  return props.wallets.filter(w => (w.name || '').toLowerCase().includes(q) || (w.currency || '').toLowerCase().includes(q))
+})
+
+const filteredCategoriesByQuery = computed(() => {
+  const base = filteredCategories.value
+  if (!categoryQuery.value) return base
+  const q = categoryQuery.value.toLowerCase()
+  return base.filter(c => (c.name || '').toLowerCase().includes(q))
+})
+
+// Labels for triggers
+const walletLabel = computed(() => {
+  if (!formData.value.walletId) return 'Select wallet'
+  const w = props.wallets.find(x => x.id === formData.value.walletId)
+  return w ? `${w.name} (${w.currency})` : 'Select wallet'
+})
+const categoryLabel = computed(() => {
+  if (!formData.value.categoryId) return formData.value.type ? 'Select category' : 'Select type first'
+  const c = props.categories.find(x => x.id === formData.value.categoryId)
+  return c ? c.name : (formData.value.type ? 'Select category' : 'Select type first')
+})
 
 // Initialize form with transaction data if in edit mode
 watch(
@@ -233,6 +369,25 @@ function setType(type) {
   }
 }
 
+function selectWallet(id, close) {
+  formData.value.walletId = id || ''
+  if (typeof close === 'function') close()
+}
+
+function selectCategory(id, close) {
+  formData.value.categoryId = id || ''
+  if (typeof close === 'function') close()
+}
+
+function formatCurrency(amount = 0, currency = '') {
+  try {
+    // simple formatting, adapt to your needs / i18n
+    return new Intl.NumberFormat(undefined, { style: 'currency', currency: currency || 'USD', maximumFractionDigits: 0 }).format(amount)
+  } catch (e) {
+    return amount
+  }
+}
+
 function validateForm() {
   errors.value = {}
 
@@ -277,3 +432,17 @@ function onSubmit() {
   })
 }
 </script>
+
+<style scoped>
+/* small tweaks for dropdown content */
+.bg-surface-card { background-color: var(--surface-card); }
+.border-surface { border-color: var(--border); }
+.shadow-surface-lg { box-shadow: var(--shadow-soft-lg); }
+
+/* transition used by DropdownBase; make sure names match your DropdownBase transitions */
+.fade-scale-enter-from { opacity: 0; transform: scale(0.98) translateY(-6px); }
+.fade-scale-enter-to { opacity: 1; transform: scale(1) translateY(0); }
+.fade-scale-leave-from { opacity: 1; transform: scale(1) translateY(0); }
+.fade-scale-leave-to { opacity: 0; transform: scale(0.98) translateY(-6px); }
+.fade-scale-enter-active, .fade-scale-leave-active { transition: all 140ms ease; }
+</style>
