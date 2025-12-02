@@ -50,6 +50,14 @@ export const API_ENDPOINTS = {
     BY_ID: (id) => `/transactions/${id}`,
   },
 
+  // Debts
+  DEBTS: {
+    BASE: '/debts',
+    BY_ID: (id) => `/debts/${id}`,
+    PAYMENTS: (id) => `/debts/${id}/payments`,
+    MARK_PAID: (id) => `/debts/${id}/mark-paid`,
+  },
+
   // Dashboard
   DASHBOARD: {
     SUMMARY: '/dashboard/summary',
@@ -109,6 +117,23 @@ export const CATEGORY_TYPES = {
   EXPENSE: 'EXPENSE',
 }
 
+/**
+ * Debt types
+ */
+export const DEBT_TYPES = {
+  PAYABLE: 'PAYABLE',
+  RECEIVABLE: 'RECEIVABLE',
+}
+
+/**
+ * Debt status
+ */
+export const DEBT_STATUS = {
+  OPEN: 'OPEN',
+  PARTIAL: 'PARTIAL',
+  PAID: 'PAID',
+}
+
 export default {
   API_BASE_URL,
   API_VERSION,
@@ -119,4 +144,6 @@ export default {
   SUPPORTED_CURRENCIES,
   TRANSACTION_TYPES,
   CATEGORY_TYPES,
+  DEBT_TYPES,
+  DEBT_STATUS,
 }

@@ -76,15 +76,28 @@
           <WeeklyTrendChart :data="summary.weeklyTrend || []" />
         </div>
 
-        <!-- Recent Transactions -->
-        <RecentTransactions :transactions="summary.recentTransactions || []" />
+        <!-- Two Column Grid: Recent Transactions & Debt Summary -->
+        <div class="grid gap-6 lg:grid-cols-2">
+          <!-- Recent Transactions -->
+          <RecentTransactions :transactions="summary.recentTransactions || []" />
+
+          <!-- Debt Summary -->
+          <DebtSummaryCard
+            :total-payable="debtTotalPayable"
+            :total-receivable="debtTotalReceivable"
+            :net-position="debtNetPosition"
+            :overdue-count="debtOverdueCount"
+            :total-debts="debtTotalDebts"
+            :loading="debtLoading"
+          />
+        </div>
       </div>
     </div>
   </AppLayout>
 </template>
 
 <script setup>
-import { onMounted, defineAsyncComponent } from 'vue'
+import { onMounted, computed, defineAsyncComponent } from 'vue'
 import { storeToRefs } from 'pinia'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import AppButton from '@/components/common/AppButton.vue'
@@ -92,8 +105,10 @@ import AppSkeleton from '@/components/common/AppSkeleton.vue'
 import BalanceCard from '@/components/dashboard/BalanceCard.vue'
 import RecentTransactions from '@/components/dashboard/RecentTransactions.vue'
 import WalletFilter from '@/components/dashboard/WalletFilter.vue'
+import DebtSummaryCard from '@/components/debt/DebtSummaryCard.vue'
 import { useDashboard } from '@/composables/useDashboard'
 import { useWalletStore } from '@/stores/wallet'
+import { useDebt } from '@/composables/useDebt'
 
 // Lazy load Chart.js component
 const WeeklyTrendChart = defineAsyncComponent(() =>
@@ -105,6 +120,20 @@ const { summary, selectedWalletId, loading, netToday, loadDashboard, handleRefre
 const walletStore = useWalletStore()
 const { wallets } = storeToRefs(walletStore)
 
+// Debt data
+const {
+  loading: debtLoading,
+  totalPayable: debtTotalPayable,
+  totalReceivable: debtTotalReceivable,
+  netPosition: debtNetPosition,
+  overdueDebts,
+  totalDebts: debtTotalDebts,
+  loadDebts,
+} = useDebt()
+
+// Computed for overdue count
+const debtOverdueCount = computed(() => overdueDebts.value.length)
+
 // SVG Icons
 const walletIcon = `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>`
 const incomeIcon = `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12" /></svg>`
@@ -114,5 +143,6 @@ const netIcon = `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><pat
 onMounted(async () => {
   await walletStore.fetchWallets()
   await loadDashboard()
+  await loadDebts()
 })
 </script>
