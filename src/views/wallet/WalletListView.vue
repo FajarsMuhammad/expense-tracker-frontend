@@ -40,21 +40,16 @@
         />
       </div>
 
-      <AppModal v-model="showDeleteModal" title="Delete Wallet">
-        <p class="text-neutral-600 dark:text-neutral-400">
-          Are you sure you want to delete "{{ walletToDelete?.name }}"? This action cannot be undone.
-        </p>
-        <template #footer>
-          <div class="flex gap-3">
-            <AppButton variant="danger" :loading="loading" @click="handleDelete">
-              Delete
-            </AppButton>
-            <AppButton variant="secondary" @click="showDeleteModal = false">
-              Cancel
-            </AppButton>
-          </div>
-        </template>
-      </AppModal>
+      <AppConfirmDialog
+        v-model="showDeleteModal"
+        title="Delete Wallet"
+        :message="`Are you sure you want to delete &quot;${walletToDelete?.name}&quot;? This action cannot be undone.`"
+        variant="danger"
+        confirm-text="Delete"
+        :loading="loading"
+        @confirm="handleDelete"
+        @cancel="showDeleteModal = false"
+      />
     </div>
   </AppLayout>
 </template>
@@ -64,7 +59,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import AppButton from '@/components/common/AppButton.vue'
-import AppModal from '@/components/common/AppModal.vue'
+import AppConfirmDialog from '@/components/common/AppConfirmDialog.vue'
 import AppSkeleton from '@/components/common/AppSkeleton.vue'
 import AppEmpty from '@/components/common/AppEmpty.vue'
 import WalletCard from '@/components/wallet/WalletCard.vue'

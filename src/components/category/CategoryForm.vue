@@ -7,6 +7,7 @@
       placeholder="e.g., Freelance, Groceries, Transportation"
       required
       :error="errors.name"
+      @blur="validateField('name')"
     />
 
     <div>
@@ -19,6 +20,7 @@
         class="w-full px-4 py-2 border border-neutral-300 dark:border-dark-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-dark-surface"
         :disabled="isEditMode"
         required
+        @blur="validateField('type')"
       >
         <option value="">Select type</option>
         <option value="INCOME">Income</option>
@@ -67,6 +69,8 @@ const formData = ref({
 })
 
 const errors = ref({})
+const hasAttemptedSubmit = ref(false)
+const touchedFields = ref(new Set())
 
 onMounted(() => {
   if (props.category) {
@@ -77,21 +81,46 @@ onMounted(() => {
   }
 })
 
+function validateField(fieldName) {
+  // Only validate on blur if user has attempted submit OR field was previously touched
+  if (!hasAttemptedSubmit.value && !touchedFields.value.has(fieldName)) {
+    return
+  }
+
+  // Mark field as touched
+  touchedFields.value.add(fieldName)
+
+  // Clear previous error for this field
+  if (errors.value[fieldName]) {
+    delete errors.value[fieldName]
+  }
+
+  // Validate specific field
+  if (fieldName === 'name' && !formData.value.name?.trim()) {
+    errors.value.name = 'Category name is required'
+  } else if (fieldName === 'type' && !formData.value.type) {
+    errors.value.type = 'Please select a type'
+  }
+}
+
 function validateForm() {
-  errors.value = {}
+  const newErrors = {}
 
   if (!formData.value.name?.trim()) {
-    errors.value.name = 'Category name is required'
+    newErrors.name = 'Category name is required'
   }
 
   if (!formData.value.type) {
-    errors.value.type = 'Please select a type'
+    newErrors.type = 'Please select a type'
   }
 
-  return Object.keys(errors.value).length === 0
+  errors.value = newErrors
+  return Object.keys(newErrors).length === 0
 }
 
 function onSubmit() {
+  hasAttemptedSubmit.value = true
+
   if (!validateForm()) return
 
   emit('submit', {

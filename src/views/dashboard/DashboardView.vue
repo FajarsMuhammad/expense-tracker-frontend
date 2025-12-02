@@ -84,17 +84,21 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, defineAsyncComponent } from 'vue'
 import { storeToRefs } from 'pinia'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import AppButton from '@/components/common/AppButton.vue'
 import AppSkeleton from '@/components/common/AppSkeleton.vue'
 import BalanceCard from '@/components/dashboard/BalanceCard.vue'
-import WeeklyTrendChart from '@/components/dashboard/WeeklyTrendChart.vue'
 import RecentTransactions from '@/components/dashboard/RecentTransactions.vue'
 import WalletFilter from '@/components/dashboard/WalletFilter.vue'
 import { useDashboard } from '@/composables/useDashboard'
 import { useWalletStore } from '@/stores/wallet'
+
+// Lazy load Chart.js component
+const WeeklyTrendChart = defineAsyncComponent(() =>
+  import('@/components/dashboard/WeeklyTrendChart.vue')
+)
 
 const { summary, selectedWalletId, loading, netToday, loadDashboard, handleRefresh, handleWalletFilter } = useDashboard()
 
