@@ -147,5 +147,4 @@ const chartOptions = {
 .bg-expense {
   background: linear-gradient(180deg, #fb7185, #f43f5e);
 }
-/* Reuse small utility classes you're already using */
 </style>
