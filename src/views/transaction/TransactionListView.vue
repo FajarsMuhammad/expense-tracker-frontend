@@ -18,14 +18,21 @@
         </AppButton>
       </div> -->
 
-      <div class="flex items-center justify-between mb-6">
-        <h1 class="text-2xl md:text-3xl font-bold">Transactions</h1>
-        <AppButton @click="$router.push('/transactions/create')">
-          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-          </svg>
+      <!-- Header -->
+      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
+        <div>
+          <h1 class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">Transactions</h1>
+          <p class="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
+            Track your income and expenses
+          </p>
+        </div>
+        <router-link
+          to="/transactions/create"
+          class="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-6 py-3 font-medium text-white shadow-sm transition-all hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:bg-primary-500 dark:hover:bg-primary-600"
+        >
+          <PlusIcon class="size-5" />
           Add Transaction
-        </AppButton>
+        </router-link>
       </div>
 
       <!-- Filters Section (Collapsible) -->
@@ -104,6 +111,7 @@ import AppButton from '@/components/common/AppButton.vue'
 import AppConfirmDialog from '@/components/common/AppConfirmDialog.vue'
 import TransactionFilters from '@/components/transaction/TransactionFilters.vue'
 import TransactionList from '@/components/transaction/TransactionList.vue'
+import { PlusIcon } from '@heroicons/vue/24/outline'
 import { useTransaction } from '@/composables/useTransaction'
 import { useWallet } from '@/composables/useWallet'
 import { useCategory } from '@/composables/useCategory'
