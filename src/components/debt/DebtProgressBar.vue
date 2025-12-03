@@ -44,12 +44,11 @@ import { computed } from 'vue'
 const props = defineProps({
   paidAmount: {
     type: Number,
-    required: true,
     default: 0,
   },
   totalAmount: {
     type: Number,
-    required: true,
+    default: 1,
     validator: (value) => value > 0,
   },
 })

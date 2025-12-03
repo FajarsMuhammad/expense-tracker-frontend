@@ -30,7 +30,7 @@ import {
 const props = defineProps({
   status: {
     type: String,
-    required: true,
+    default: 'OPEN',
     validator: (value) => ['OPEN', 'PARTIAL', 'PAID'].includes(value),
   },
   isOverdue: {

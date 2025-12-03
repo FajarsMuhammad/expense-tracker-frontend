@@ -23,10 +23,11 @@ export default {
   async getAllDebts(params = {}) {
     const queryParams = new URLSearchParams()
 
-    // Add filters
+    // Add filters (only if they have valid values)
     if (params.type) queryParams.append('type', params.type)
     if (params.status) queryParams.append('status', params.status)
-    if (params.overdue !== undefined) queryParams.append('overdue', params.overdue)
+    // Only append overdue if it's explicitly true or false (not null/undefined)
+    if (typeof params.overdue === 'boolean') queryParams.append('overdue', params.overdue)
 
     // Add pagination
     queryParams.append('page', params.page ?? 0)

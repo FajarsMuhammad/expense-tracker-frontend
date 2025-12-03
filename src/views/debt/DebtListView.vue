@@ -124,7 +124,7 @@
 
     <!-- Delete Confirmation Dialog -->
     <AppConfirmDialog
-      v-if="showDeleteDialog"
+      v-model="showDeleteDialog"
       title="Delete Debt"
       :message="`Are you sure you want to delete debt for ${debtToDelete?.counterpartyName}? This action cannot be undone.`"
       confirm-text="Delete"

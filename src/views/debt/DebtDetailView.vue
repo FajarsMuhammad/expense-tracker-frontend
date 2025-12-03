@@ -20,7 +20,7 @@
             </button>
             <div>
               <h1 class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">
-                {{ currentDebt.counterpartyName }}
+                {{ currentDebt?.counterpartyName }}
               </h1>
               <div class="mt-2 flex items-center gap-2">
                 <span
@@ -30,7 +30,7 @@
                   <component :is="typeIcon" class="size-4" />
                   {{ typeLabel }}
                 </span>
-                <DebtStatusBadge :status="currentDebt.status" :is-overdue="currentDebt.isOverdue" />
+                <DebtStatusBadge v-if="currentDebt" :status="currentDebt.status" :is-overdue="currentDebt.isOverdue" />
               </div>
             </div>
           </div>
@@ -67,26 +67,26 @@
                 <div class="flex items-center justify-between">
                   <span class="text-sm text-neutral-600 dark:text-neutral-400">Total Amount</span>
                   <span class="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
-                    {{ formatCurrency(currentDebt.totalAmount) }}
+                    {{ formatCurrency(currentDebt?.totalAmount) }}
                   </span>
                 </div>
 
                 <div class="flex items-center justify-between">
                   <span class="text-sm text-neutral-600 dark:text-neutral-400">Paid Amount</span>
                   <span class="text-lg font-semibold text-green-600 dark:text-green-400">
-                    {{ formatCurrency(currentDebt.paidAmount) }}
+                    {{ formatCurrency(currentDebt?.paidAmount) }}
                   </span>
                 </div>
 
                 <div class="flex items-center justify-between border-t border-neutral-200 pt-4 dark:border-neutral-700">
                   <span class="font-medium text-neutral-700 dark:text-neutral-300">Remaining Amount</span>
                   <span :class="remainingAmountColor" class="text-2xl font-bold">
-                    {{ formatCurrency(currentDebt.remainingAmount) }}
+                    {{ formatCurrency(currentDebt?.remainingAmount) }}
                   </span>
                 </div>
 
                 <!-- Progress Bar -->
-                <div class="pt-2">
+                <div v-if="currentDebt" class="pt-2">
                   <DebtProgressBar :paid-amount="currentDebt.paidAmount" :total-amount="currentDebt.totalAmount" />
                 </div>
               </div>
@@ -100,7 +100,7 @@
                 <div class="flex items-start justify-between">
                   <span class="text-sm text-neutral-600 dark:text-neutral-400">Due Date</span>
                   <span :class="dueDateColor" class="text-right text-sm font-semibold">
-                    {{ formatDate(currentDebt.dueDate) }}
+                    {{ formatDate(currentDebt?.dueDate) }}
                     <span class="block text-xs">{{ daysUntilDue }}</span>
                   </span>
                 </div>
@@ -108,34 +108,34 @@
                 <div class="flex items-start justify-between">
                   <span class="text-sm text-neutral-600 dark:text-neutral-400">Payments Made</span>
                   <span class="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-                    {{ currentDebt.paymentCount || 0 }}
+                    {{ currentDebt?.paymentCount || 0 }}
                   </span>
                 </div>
 
                 <div class="flex items-start justify-between">
                   <span class="text-sm text-neutral-600 dark:text-neutral-400">Created</span>
                   <span class="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-                    {{ formatDateTime(currentDebt.createdAt) }}
+                    {{ formatDateTime(currentDebt?.createdAt) }}
                   </span>
                 </div>
 
                 <div class="flex items-start justify-between">
                   <span class="text-sm text-neutral-600 dark:text-neutral-400">Last Updated</span>
                   <span class="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-                    {{ formatDateTime(currentDebt.updatedAt) }}
+                    {{ formatDateTime(currentDebt?.updatedAt) }}
                   </span>
                 </div>
 
-                <div v-if="currentDebt.note" class="border-t border-neutral-200 pt-3 dark:border-neutral-700">
+                <div v-if="currentDebt?.note" class="border-t border-neutral-200 pt-3 dark:border-neutral-700">
                   <p class="mb-1 text-sm font-medium text-neutral-700 dark:text-neutral-300">Note</p>
-                  <p class="text-sm text-neutral-600 dark:text-neutral-400">{{ currentDebt.note }}</p>
+                  <p class="text-sm text-neutral-600 dark:text-neutral-400">{{ currentDebt?.note }}</p>
                 </div>
               </div>
             </div>
 
             <!-- Mark as Paid Button -->
             <button
-              v-if="currentDebt.status !== DEBT_STATUS.PAID"
+              v-if="currentDebt?.status !== DEBT_STATUS.PAID"
               @click="showMarkPaidDialog = true"
               class="w-full rounded-lg bg-green-600 px-6 py-3 font-medium text-white transition-colors hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:bg-green-500 dark:hover:bg-green-600"
             >
@@ -151,7 +151,7 @@
               <div class="mb-4 flex items-center justify-between">
                 <h2 class="text-lg font-semibold text-neutral-900 dark:text-neutral-100">Payment History</h2>
                 <button
-                  v-if="currentDebt.status !== DEBT_STATUS.PAID"
+                  v-if="currentDebt?.status !== DEBT_STATUS.PAID"
                   @click="showPaymentModal = true"
                   class="rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600"
                 >
@@ -160,7 +160,7 @@
                 </button>
               </div>
 
-              <PaymentHistory :payments="currentDebt.payments" />
+              <PaymentHistory :payments="currentDebt?.payments" />
             </div>
           </div>
         </div>
@@ -173,13 +173,13 @@
     </div>
 
     <!-- Add Payment Modal -->
-    <AppModal v-if="showPaymentModal" title="Add Payment" @close="showPaymentModal = false">
-      <PaymentForm :debt="currentDebt" :loading="loading" @submit="handleAddPayment" @cancel="showPaymentModal = false" />
+    <AppModal v-model="showPaymentModal" title="Add Payment">
+      <PaymentForm :debt="currentDebt" :loading="loading" @submit="handleAddPaymentSubmit" @cancel="showPaymentModal = false" />
     </AppModal>
 
     <!-- Delete Confirmation Dialog -->
     <AppConfirmDialog
-      v-if="showDeleteDialog"
+      v-model="showDeleteDialog"
       title="Delete Debt"
       :message="`Are you sure you want to delete this debt? This action cannot be undone.`"
       confirm-text="Delete"
@@ -190,7 +190,7 @@
 
     <!-- Mark as Paid Confirmation Dialog -->
     <AppConfirmDialog
-      v-if="showMarkPaidDialog"
+      v-model="showMarkPaidDialog"
       title="Mark as Paid"
       :message="`Are you sure you want to mark this debt as fully paid? This will set the remaining amount to zero.`"
       confirm-text="Mark as Paid"
@@ -304,16 +304,19 @@ async function confirmDelete() {
 async function handleAddPaymentSubmit(paymentData) {
   await handleAddPayment(route.params.id, paymentData)
   showPaymentModal.value = false
+  // Reload to ensure all calculated fields are fresh
   await loadDebt(route.params.id)
 }
 
 async function confirmMarkAsPaid() {
   await handleMarkAsPaid(route.params.id)
   showMarkPaidDialog.value = false
+  // Reload to ensure all calculated fields are fresh
   await loadDebt(route.params.id)
 }
 
 function formatCurrency(amount) {
+  if (!amount && amount !== 0) return 'Rp 0'
   return new Intl.NumberFormat('id-ID', {
     style: 'currency',
     currency: 'IDR',
@@ -323,7 +326,9 @@ function formatCurrency(amount) {
 }
 
 function formatDate(dateString) {
+  if (!dateString) return '-'
   const date = new Date(dateString)
+  if (isNaN(date.getTime())) return '-'
   return new Intl.DateTimeFormat('id-ID', {
     year: 'numeric',
     month: 'long',
@@ -332,7 +337,9 @@ function formatDate(dateString) {
 }
 
 function formatDateTime(dateString) {
+  if (!dateString) return '-'
   const date = new Date(dateString)
+  if (isNaN(date.getTime())) return '-'
   return new Intl.DateTimeFormat('id-ID', {
     year: 'numeric',
     month: 'short',
