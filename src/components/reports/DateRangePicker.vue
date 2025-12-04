@@ -177,7 +177,8 @@ function applyPreset(preset) {
   const today = new Date()
   let startDate, endDate
 
-  endDate = today.toISOString().split('T')[0]
+  // Initialize as Date objects
+  endDate = new Date(today)
 
   switch (preset) {
     case '7d':
@@ -199,6 +200,7 @@ function applyPreset(preset) {
       return
   }
 
+  // Convert both Date objects to YYYY-MM-DD format
   const formattedStart = startDate.toISOString().split('T')[0]
   const formattedEnd = endDate.toISOString().split('T')[0]
 
