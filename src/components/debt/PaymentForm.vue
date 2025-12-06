@@ -14,35 +14,17 @@
     </div>
 
     <!-- Payment Amount -->
-    <div class="space-y-2">
-      <label for="amount" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">
-        Payment Amount <span class="text-red-500">*</span>
-      </label>
-      <div class="relative">
-        <span
-          class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-neutral-500 dark:text-neutral-400"
-        >
-          Rp
-        </span>
-        <input
-          id="amount"
-          v-model.number="formData.amount"
-          type="number"
-          min="0"
-          :max="debt.remainingAmount"
-          step="1"
-          placeholder="0"
-          :class="errors.amount ? inputErrorClass : inputClass"
-          class="block w-full rounded-lg py-2.5 pl-12 pr-4 text-sm shadow-sm transition-colors focus:outline-none focus:ring-2"
-        />
-      </div>
-      <p class="text-xs text-neutral-500 dark:text-neutral-400">
-        Maximum: {{ formatCurrency(debt.remainingAmount) }}
-      </p>
-      <p v-if="errors.amount" class="text-sm text-red-600 dark:text-red-400">
-        {{ errors.amount }}
-      </p>
-    </div>
+    <CurrencyInput
+      id="amount"
+      v-model="formData.amount"
+      label="Payment Amount"
+      placeholder="0"
+      required
+      :min="1"
+      :max="debt.remainingAmount"
+      :hint="`Maximum: ${formatCurrency(debt.remainingAmount)}`"
+      :error="errors.amount"
+    />
 
     <!-- Payment Date/Time -->
     <div class="space-y-2">
@@ -102,8 +84,13 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { InformationCircleIcon } from '@heroicons/vue/24/outline'
+import CurrencyInput from '@/components/common/CurrencyInput.vue'
+import { formatCurrency } from '@/utils/currency'
+import { useUIStore } from '@/stores/ui'
+
+const uiStore = useUIStore()
 
 const props = defineProps({
   debt: {
@@ -145,6 +132,23 @@ function getCurrentDateTime() {
   return now.toISOString().slice(0, 16)
 }
 
+// Watch for amount changes and show toast if exceeds remaining amount
+watch(
+  () => formData.value.amount,
+  (newAmount) => {
+    if (newAmount && newAmount > props.debt.remainingAmount) {
+      uiStore.showToast({
+        type: 'error',
+        message: `Payment amount cannot exceed remaining amount (${formatCurrency(props.debt.remainingAmount)})`,
+      })
+      errors.value.amount = `Cannot exceed ${formatCurrency(props.debt.remainingAmount)}`
+    } else if (errors.value.amount && newAmount <= props.debt.remainingAmount) {
+      // Clear error when amount is valid again
+      errors.value.amount = ''
+    }
+  }
+)
+
 function validateForm() {
   errors.value = {
     amount: '',
@@ -155,20 +159,36 @@ function validateForm() {
 
   if (!formData.value.amount || formData.value.amount <= 0) {
     errors.value.amount = 'Amount must be greater than 0'
+    uiStore.showToast({
+      type: 'warning',
+      message: 'Payment amount must be greater than 0',
+    })
     isValid = false
   } else if (formData.value.amount > props.debt.remainingAmount) {
     errors.value.amount = `Amount cannot exceed remaining amount (${formatCurrency(props.debt.remainingAmount)})`
+    uiStore.showToast({
+      type: 'error',
+      message: `Payment amount cannot exceed remaining amount (${formatCurrency(props.debt.remainingAmount)})`,
+    })
     isValid = false
   }
 
   if (!formData.value.paidAt) {
     errors.value.paidAt = 'Payment date is required'
+    uiStore.showToast({
+      type: 'warning',
+      message: 'Payment date is required',
+    })
     isValid = false
   } else {
     const paymentDate = new Date(formData.value.paidAt)
     const now = new Date()
     if (paymentDate > now) {
       errors.value.paidAt = 'Payment date cannot be in the future'
+      uiStore.showToast({
+        type: 'warning',
+        message: 'Payment date cannot be in the future',
+      })
       isValid = false
     }
   }
@@ -180,14 +200,5 @@ function handleSubmit() {
   if (!validateForm()) return
 
   emit('submit', { ...formData.value })
-}
-
-function formatCurrency(amount) {
-  return new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount)
 }
 </script>

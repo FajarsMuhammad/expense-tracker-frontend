@@ -55,31 +55,15 @@
     </div>
 
     <!-- Total Amount -->
-    <div class="space-y-2">
-      <label for="totalAmount" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">
-        Total Amount <span class="text-red-500">*</span>
-      </label>
-      <div class="relative">
-        <span
-          class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-neutral-500 dark:text-neutral-400"
-        >
-          Rp
-        </span>
-        <input
-          id="totalAmount"
-          v-model.number="formData.totalAmount"
-          type="number"
-          min="0"
-          step="1"
-          placeholder="0"
-          :class="errors.totalAmount ? inputErrorClass : inputClass"
-          class="block w-full rounded-lg py-2.5 pl-12 pr-4 text-sm shadow-sm transition-colors focus:outline-none focus:ring-2"
-        />
-      </div>
-      <p v-if="errors.totalAmount" class="text-sm text-red-600 dark:text-red-400">
-        {{ errors.totalAmount }}
-      </p>
-    </div>
+    <CurrencyInput
+      id="totalAmount"
+      v-model="formData.totalAmount"
+      label="Total Amount"
+      placeholder="0"
+      required
+      :min="1"
+      :error="errors.totalAmount"
+    />
 
     <!-- Due Date -->
     <div class="space-y-2">
@@ -142,6 +126,7 @@
 import { ref, computed, watch } from 'vue'
 import { ArrowUpCircleIcon, ArrowDownCircleIcon } from '@heroicons/vue/24/outline'
 import { DEBT_TYPES } from '@/config/api.config'
+import CurrencyInput from '@/components/common/CurrencyInput.vue'
 
 const props = defineProps({
   debt: {

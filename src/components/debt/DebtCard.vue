@@ -157,7 +157,19 @@ function formatCurrency(amount) {
 }
 
 function formatDate(dateString) {
+  // Handle null, undefined, or empty string
+  if (!dateString) {
+    return 'N/A'
+  }
+
   const date = new Date(dateString)
+
+  // Check if date is valid
+  if (isNaN(date.getTime())) {
+    console.warn('Invalid date:', dateString)
+    return 'Invalid date'
+  }
+
   return new Intl.DateTimeFormat('id-ID', {
     year: 'numeric',
     month: 'short',

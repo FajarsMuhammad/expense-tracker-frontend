@@ -176,7 +176,7 @@ async function onSubmit() {
     await handleLogin({
       email: email.value,
       password: password.value,
-      remember: remember.value,
+     //remember: remember.value,
     })
   } catch (err) {
     console.error(err)

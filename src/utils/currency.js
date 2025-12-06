@@ -56,3 +56,68 @@ export function getCurrencySymbol(currency) {
   const curr = SUPPORTED_CURRENCIES.find((c) => c.value === currency)
   return curr?.symbol || ''
 }
+
+/**
+ * Format number with thousand separator (dots for Indonesian)
+ * @param {number|string} value - The value to format
+ * @returns {string} Formatted string (e.g., "1.000.000")
+ */
+export function formatNumber(value) {
+  // Handle null, undefined, empty string
+  if (value === null || value === undefined || value === '') {
+    return ''
+  }
+
+  // Convert to string and remove any existing formatting
+  const stringValue = String(value).replace(/\./g, '')
+
+  // Parse to number
+  const number = parseFloat(stringValue)
+
+  // Check if it's a valid number
+  if (isNaN(number)) {
+    return ''
+  }
+
+  // Format with thousand separator (Indonesian style)
+  return number.toLocaleString('id-ID', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  })
+}
+
+/**
+ * Parse formatted number string to actual number
+ * @param {string} formattedValue - The formatted string (e.g., "1.000.000")
+ * @returns {number|null} The actual number (e.g., 1000000) or null if invalid
+ */
+export function parseNumber(formattedValue) {
+  // Handle null, undefined, empty string
+  if (formattedValue === null || formattedValue === undefined || formattedValue === '') {
+    return null
+  }
+
+  // Remove thousand separators (dots) and convert to number
+  const stringValue = String(formattedValue).replace(/\./g, '')
+  const number = parseFloat(stringValue)
+
+  // Return null for invalid numbers
+  return isNaN(number) ? null : number
+}
+
+/**
+ * Validate if input is a valid number input
+ * Allows digits only (dots will be auto-formatted)
+ * @param {string} value - The input value
+ * @returns {boolean} True if valid
+ */
+export function isValidNumberInput(value) {
+  // Allow empty
+  if (value === '') return true
+
+  // Remove dots for validation
+  const withoutDots = value.replace(/\./g, '')
+
+  // Check if remaining is all digits
+  return /^\d+$/.test(withoutDots)
+}

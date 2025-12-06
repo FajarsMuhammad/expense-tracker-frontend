@@ -29,13 +29,11 @@
       <p v-if="errors.currency" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ errors.currency }}</p>
     </div>
 
-    <AppInput
+    <CurrencyInput
       id="initialBalance"
-      v-model.number="formData.initialBalance"
-      type="number"
-      step="0.01"
+      v-model="formData.initialBalance"
       :label="isEditMode ? 'Balance' : 'Initial Balance'"
-      placeholder="0.00"
+      placeholder="0"
       :hint="isEditMode ? 'Update wallet balance' : 'Optional: Leave blank for 0 balance'"
       :error="errors.initialBalance"
       @blur="validateField('initialBalance')"
@@ -56,6 +54,7 @@
 import { ref, watch, computed } from 'vue'
 import AppInput from '@/components/common/AppInput.vue'
 import AppButton from '@/components/common/AppButton.vue'
+import CurrencyInput from '@/components/common/CurrencyInput.vue'
 import { SUPPORTED_CURRENCIES } from '@/utils/currency'
 
 const props = defineProps({

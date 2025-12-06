@@ -179,15 +179,13 @@
     </div>
 
     <!-- Amount Input -->
-    <AppInput
+    <CurrencyInput
       id="amount"
-      v-model.number="formData.amount"
-      type="number"
-      step="0.01"
-      min="0.01"
+      v-model="formData.amount"
       label="Amount"
-      placeholder="0.00"
+      placeholder="0"
       required
+      :min="1"
       :error="errors.amount"
     />
 
@@ -240,6 +238,7 @@ import { ref, computed, watch } from 'vue'
 import AppInput from '@/components/common/AppInput.vue'
 import AppButton from '@/components/common/AppButton.vue'
 import DropdownBase from '@/components/common/DropdownBase.vue'
+import CurrencyInput from '@/components/common/CurrencyInput.vue'
 
 const props = defineProps({
   transaction: {

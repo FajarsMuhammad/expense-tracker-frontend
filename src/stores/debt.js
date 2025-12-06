@@ -192,14 +192,19 @@ export const useDebtStore = defineStore('debt', () => {
     error.value = null
     try {
       const data = await debtService.addPayment(id, paymentData)
+
+      // Backend returns { payment, updatedDebt }
+      // Extract the updatedDebt from response
+      const updatedDebt = data.updatedDebt || data
+
       // Update the debt in the list
       const index = debts.value.findIndex((d) => d.id === id)
       if (index !== -1) {
-        debts.value[index] = data
+        debts.value[index] = updatedDebt
       }
       // Update current debt if it's the same
       if (currentDebt.value?.id === id) {
-        currentDebt.value = data
+        currentDebt.value = updatedDebt
       }
       return data
     } catch (err) {

@@ -44,7 +44,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, watch } from 'vue'
 import AppInput from '@/components/common/AppInput.vue'
 import AppButton from '@/components/common/AppButton.vue'
 
@@ -61,7 +61,7 @@ const props = defineProps({
 
 const emit = defineEmits(['submit', 'cancel'])
 
-const isEditMode = !!props.category
+const isEditMode = computed(() => !!props.category)
 
 const formData = ref({
   name: '',
@@ -72,14 +72,29 @@ const errors = ref({})
 const hasAttemptedSubmit = ref(false)
 const touchedFields = ref(new Set())
 
-onMounted(() => {
-  if (props.category) {
-    formData.value = {
-      name: props.category.name,
-      type: props.category.type,
+// Watch for category prop changes to update form data
+watch(
+  () => props.category,
+  (newCategory) => {
+    if (newCategory) {
+      formData.value = {
+        name: newCategory.name || '',
+        type: newCategory.type || '',
+      }
+    } else {
+      // Reset form for create mode
+      formData.value = {
+        name: '',
+        type: '',
+      }
     }
-  }
-})
+    // Reset validation state when category changes
+    errors.value = {}
+    hasAttemptedSubmit.value = false
+    touchedFields.value = new Set()
+  },
+  { immediate: true }
+)
 
 function validateField(fieldName) {
   // Only validate on blur if user has attempted submit OR field was previously touched
