@@ -1,0 +1,254 @@
+<template>
+  <form @submit.prevent="handleSubmit" class="space-y-6">
+    <!-- Debt Type -->
+    <div class="space-y-2">
+      <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">
+        Debt Type <span class="text-red-500">*</span>
+      </label>
+      <div class="grid grid-cols-2 gap-4">
+        <button
+          type="button"
+          @click="formData.type = DEBT_TYPES.PAYABLE"
+          :class="formData.type === DEBT_TYPES.PAYABLE ? selectedPayableClass : unselectedClass"
+          class="flex items-center justify-center gap-2 rounded-lg border-2 px-6 py-4 font-medium transition-all"
+        >
+          <ArrowUpCircleIcon class="size-6" />
+          <div class="text-left">
+            <div class="font-bold">Payable</div>
+            <div class="text-xs opacity-90">You owe money</div>
+          </div>
+        </button>
+        <button
+          type="button"
+          @click="formData.type = DEBT_TYPES.RECEIVABLE"
+          :class="formData.type === DEBT_TYPES.RECEIVABLE ? selectedReceivableClass : unselectedClass"
+          class="flex items-center justify-center gap-2 rounded-lg border-2 px-6 py-4 font-medium transition-all"
+        >
+          <ArrowDownCircleIcon class="size-6" />
+          <div class="text-left">
+            <div class="font-bold">Receivable</div>
+            <div class="text-xs opacity-90">You are owed money</div>
+          </div>
+        </button>
+      </div>
+      <p v-if="errors.type" class="text-sm text-red-600 dark:text-red-400">
+        {{ errors.type }}
+      </p>
+    </div>
+
+    <!-- Counterparty Name -->
+    <div class="space-y-2">
+      <label for="counterpartyName" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">
+        Counterparty Name <span class="text-red-500">*</span>
+      </label>
+      <input
+        id="counterpartyName"
+        v-model="formData.counterpartyName"
+        type="text"
+        placeholder="Enter person or company name"
+        :class="errors.counterpartyName ? inputErrorClass : inputClass"
+        class="block w-full rounded-lg px-4 py-2.5 text-sm shadow-sm transition-colors focus:outline-none focus:ring-2"
+      />
+      <p v-if="errors.counterpartyName" class="text-sm text-red-600 dark:text-red-400">
+        {{ errors.counterpartyName }}
+      </p>
+    </div>
+
+    <!-- Total Amount -->
+    <div class="space-y-2">
+      <label for="totalAmount" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">
+        Total Amount <span class="text-red-500">*</span>
+      </label>
+      <div class="relative">
+        <span
+          class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-neutral-500 dark:text-neutral-400"
+        >
+          Rp
+        </span>
+        <input
+          id="totalAmount"
+          v-model.number="formData.totalAmount"
+          type="number"
+          min="0"
+          step="1"
+          placeholder="0"
+          :class="errors.totalAmount ? inputErrorClass : inputClass"
+          class="block w-full rounded-lg py-2.5 pl-12 pr-4 text-sm shadow-sm transition-colors focus:outline-none focus:ring-2"
+        />
+      </div>
+      <p v-if="errors.totalAmount" class="text-sm text-red-600 dark:text-red-400">
+        {{ errors.totalAmount }}
+      </p>
+    </div>
+
+    <!-- Due Date -->
+    <div class="space-y-2">
+      <label for="dueDate" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">
+        Due Date <span class="text-red-500">*</span>
+      </label>
+      <input
+        id="dueDate"
+        v-model="formData.dueDate"
+        type="date"
+        :min="minDate"
+        :class="errors.dueDate ? inputErrorClass : inputClass"
+        class="block w-full rounded-lg px-4 py-2.5 text-sm shadow-sm transition-colors focus:outline-none focus:ring-2"
+      />
+      <p v-if="errors.dueDate" class="text-sm text-red-600 dark:text-red-400">
+        {{ errors.dueDate }}
+      </p>
+    </div>
+
+    <!-- Note -->
+    <div class="space-y-2">
+      <label for="note" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">
+        Note <span class="text-neutral-400">(Optional)</span>
+      </label>
+      <textarea
+        id="note"
+        v-model="formData.note"
+        rows="4"
+        maxlength="500"
+        placeholder="Add any additional details about this debt..."
+        :class="inputClass"
+        class="block w-full rounded-lg px-4 py-2.5 text-sm shadow-sm transition-colors focus:outline-none focus:ring-2"
+      ></textarea>
+      <p class="text-xs text-neutral-500 dark:text-neutral-400">
+        {{ formData.note?.length || 0 }}/500 characters
+      </p>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex gap-4 border-t border-neutral-200 pt-6 dark:border-neutral-700">
+      <button
+        type="button"
+        @click="$emit('cancel')"
+        class="flex-1 rounded-lg border border-neutral-300 bg-white px-6 py-3 font-medium text-neutral-700 transition-colors hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:border-neutral-600 dark:bg-dark-bg dark:text-neutral-300 dark:hover:bg-neutral-800"
+      >
+        Cancel
+      </button>
+      <button
+        type="submit"
+        :disabled="loading"
+        class="flex-1 rounded-lg bg-primary-600 px-6 py-3 font-medium text-white transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-primary-500 dark:hover:bg-primary-600"
+      >
+        {{ loading ? 'Saving...' : isEditMode ? 'Update Debt' : 'Create Debt' }}
+      </button>
+    </div>
+  </form>
+</template>
+
+<script setup>
+import { ref, computed, watch } from 'vue'
+import { ArrowUpCircleIcon, ArrowDownCircleIcon } from '@heroicons/vue/24/outline'
+import { DEBT_TYPES } from '@/config/api.config'
+
+const props = defineProps({
+  debt: {
+    type: Object,
+    default: null,
+  },
+  loading: {
+    type: Boolean,
+    default: false,
+  },
+})
+
+const emit = defineEmits(['submit', 'cancel'])
+
+const isEditMode = computed(() => !!props.debt)
+
+const formData = ref({
+  type: null,
+  counterpartyName: '',
+  totalAmount: null,
+  dueDate: '',
+  note: '',
+})
+
+const errors = ref({
+  type: '',
+  counterpartyName: '',
+  totalAmount: '',
+  dueDate: '',
+})
+
+const minDate = computed(() => {
+  const today = new Date()
+  return today.toISOString().split('T')[0]
+})
+
+// Class constants
+const inputClass =
+  'border-neutral-300 bg-white text-neutral-900 focus:border-primary-500 focus:ring-primary-500 dark:border-neutral-600 dark:bg-dark-bg dark:text-neutral-100 dark:focus:border-primary-400'
+const inputErrorClass =
+  'border-red-500 bg-white text-neutral-900 focus:border-red-500 focus:ring-red-500 dark:border-red-500 dark:bg-dark-bg dark:text-neutral-100'
+const selectedPayableClass =
+  'border-red-600 bg-red-50 text-red-700 dark:border-red-500 dark:bg-red-900/20 dark:text-red-300'
+const selectedReceivableClass =
+  'border-green-600 bg-green-50 text-green-700 dark:border-green-500 dark:bg-green-900/20 dark:text-green-300'
+const unselectedClass =
+  'border-neutral-300 bg-white text-neutral-700 hover:border-neutral-400 dark:border-neutral-600 dark:bg-dark-card dark:text-neutral-300 dark:hover:border-neutral-500'
+
+// Watch for debt prop changes (edit mode)
+watch(
+  () => props.debt,
+  (newDebt) => {
+    if (newDebt) {
+      formData.value = {
+        type: newDebt.type,
+        counterpartyName: newDebt.counterpartyName,
+        totalAmount: newDebt.totalAmount,
+        dueDate: newDebt.dueDate.split('T')[0], // Convert ISO to YYYY-MM-DD
+        note: newDebt.note || '',
+      }
+    }
+  },
+  { immediate: true }
+)
+
+function validateForm() {
+  errors.value = {
+    type: '',
+    counterpartyName: '',
+    totalAmount: '',
+    dueDate: '',
+  }
+
+  let isValid = true
+
+  if (!formData.value.type) {
+    errors.value.type = 'Please select a debt type'
+    isValid = false
+  }
+
+  if (!formData.value.counterpartyName || formData.value.counterpartyName.trim() === '') {
+    errors.value.counterpartyName = 'Counterparty name is required'
+    isValid = false
+  }
+
+  if (!formData.value.totalAmount || formData.value.totalAmount <= 0) {
+    errors.value.totalAmount = 'Amount must be greater than 0'
+    isValid = false
+  }
+
+  if (!formData.value.dueDate) {
+    errors.value.dueDate = 'Due date is required'
+    isValid = false
+  }
+
+  return isValid
+}
+
+function handleSubmit() {
+  if (!validateForm()) return
+
+  // Convert due date to end of day (23:59:59)
+  const dueDateWithTime = `${formData.value.dueDate}T23:59:59`
+
+  emit('submit', {
+    ...formData.value,
+    dueDate: dueDateWithTime,
+  })
+}
+</script>

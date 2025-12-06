@@ -417,9 +417,10 @@ function validateForm() {
 function onSubmit() {
   if (!validateForm()) return
 
-  // Convert date to ISO format for API
-  const dateObj = new Date(formData.value.date)
-  dateObj.setHours(12, 0, 0, 0) // Set to noon to avoid timezone issues
+  const [year, month, day] = formData.value.date.split('-').map(Number)
+  const dateObj = new Date()
+  dateObj.setFullYear(year, month - 1, day)
+
   const isoDate = dateObj.toISOString()
 
   emit('submit', {

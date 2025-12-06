@@ -50,10 +50,34 @@ export const API_ENDPOINTS = {
     BY_ID: (id) => `/transactions/${id}`,
   },
 
+  // Debts
+  DEBTS: {
+    BASE: '/debts',
+    BY_ID: (id) => `/debts/${id}`,
+    PAYMENTS: (id) => `/debts/${id}/payments`,
+    MARK_PAID: (id) => `/debts/${id}/mark-paid`,
+  },
+
   // Dashboard
   DASHBOARD: {
     SUMMARY: '/dashboard/summary',
     SUMMARY_BY_WALLET: (walletId) => `/dashboard/summary?walletId=${walletId}`,
+  },
+
+  // Reports
+  REPORTS: {
+    SUMMARY: '/reports/summary',
+    TRANSACTIONS: '/reports/transactions',
+    DEBTS: '/reports/debts',
+    CATEGORY_BREAKDOWN: '/reports/category-breakdown',
+    TREND: '/reports/trend',
+  },
+
+  // Export
+  EXPORT: {
+    TRANSACTIONS: '/export/transactions',
+    DEBTS: '/export/debts',
+    SUMMARY: '/export/summary',
   },
 }
 
@@ -109,6 +133,50 @@ export const CATEGORY_TYPES = {
   EXPENSE: 'EXPENSE',
 }
 
+/**
+ * Debt types
+ */
+export const DEBT_TYPES = {
+  PAYABLE: 'PAYABLE',
+  RECEIVABLE: 'RECEIVABLE',
+}
+
+/**
+ * Debt status
+ */
+export const DEBT_STATUS = {
+  OPEN: 'OPEN',
+  PARTIAL: 'PARTIAL',
+  PAID: 'PAID',
+}
+
+/**
+ * Export formats
+ */
+export const EXPORT_FORMATS = {
+  CSV: 'CSV',
+  EXCEL: 'EXCEL',
+  PDF: 'PDF',
+}
+
+/**
+ * Export types
+ */
+export const EXPORT_TYPES = {
+  TRANSACTIONS: 'TRANSACTIONS',
+  DEBTS: 'DEBTS',
+  SUMMARY: 'SUMMARY',
+}
+
+/**
+ * Granularity for trend data
+ */
+export const GRANULARITY = {
+  DAILY: 'DAILY',
+  WEEKLY: 'WEEKLY',
+  MONTHLY: 'MONTHLY',
+}
+
 export default {
   API_BASE_URL,
   API_VERSION,
@@ -119,4 +187,9 @@ export default {
   SUPPORTED_CURRENCIES,
   TRANSACTION_TYPES,
   CATEGORY_TYPES,
+  DEBT_TYPES,
+  DEBT_STATUS,
+  EXPORT_FORMATS,
+  EXPORT_TYPES,
+  GRANULARITY,
 }

@@ -1,31 +1,42 @@
 <template>
   <AppLayout>
-    <div class="max-w-2xl mx-auto">
-      <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6">Edit Wallet</h1>
+    <div class="mx-auto max-w-3xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
+      <!-- Header with Back Button -->
+      <FormHeader title="Edit Wallet" description="Update wallet information" />
 
-      <AppSkeleton v-if="loading" :count="1" />
+      <!-- Loading Skeleton -->
+      <div v-if="loading && !currentWallet" class="rounded-lg bg-white p-6 shadow-sm dark:bg-dark-card sm:p-8">
+        <AppSkeleton class="h-96" />
+      </div>
 
-      <AppCard v-else-if="currentWallet">
+      <!-- Form Card -->
+      <div v-else-if="currentWallet" class="rounded-lg bg-white p-6 shadow-sm dark:bg-dark-card sm:p-8">
         <WalletForm
           :wallet="currentWallet"
           :loading="loading"
           @submit="handleSubmit"
-          @cancel="$router.push('/wallets')"
+          @cancel="handleCancel"
         />
-      </AppCard>
+      </div>
+
+      <!-- Error State -->
+      <div v-else class="rounded-lg bg-red-50 p-6 text-center dark:bg-red-900/10">
+        <p class="text-red-700 dark:text-red-300">Wallet not found</p>
+      </div>
     </div>
   </AppLayout>
 </template>
 
 <script setup>
 import { watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import AppLayout from '@/components/layout/AppLayout.vue'
-import AppCard from '@/components/common/AppCard.vue'
 import AppSkeleton from '@/components/common/AppSkeleton.vue'
+import FormHeader from '@/components/common/FormHeader.vue'
 import WalletForm from '@/components/wallet/WalletForm.vue'
 import { useWallet } from '@/composables/useWallet'
 
+const router = useRouter()
 const route = useRoute()
 const { currentWallet, loading, loadWallet, handleUpdateWallet } = useWallet()
 
@@ -42,5 +53,9 @@ watch(
 
 async function handleSubmit(walletData) {
   await handleUpdateWallet(route.params.id, walletData)
+}
+
+function handleCancel() {
+  router.back()
 }
 </script>

@@ -85,6 +85,36 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
+    path: '/debts',
+    name: 'DebtList',
+    component: () => import('@/views/debt/DebtListView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/debts/create',
+    name: 'DebtCreate',
+    component: () => import('@/views/debt/DebtCreateView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/debts/:id',
+    name: 'DebtDetail',
+    component: () => import('@/views/debt/DebtDetailView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/debts/:id/edit',
+    name: 'DebtEdit',
+    component: () => import('@/views/debt/DebtEditView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/reports',
+    name: 'Reports',
+    component: () => import('@/views/reports/ReportsPage.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
     path: '/premium',
     name: 'Premium',
     component: () => import('@/views/premium/PremiumView.vue'),

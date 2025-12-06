@@ -1,14 +1,21 @@
 <template>
   <AppLayout>
     <div class="max-w-7xl mx-auto">
-      <div class="flex items-center justify-between mb-6">
-        <h1 class="text-2xl md:text-3xl font-bold">Categories</h1>
-        <AppButton @click="$router.push('/categories/create')">
-          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-          </svg>
+      <!-- Header -->
+      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
+        <div>
+          <h1 class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">Categories</h1>
+          <p class="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
+            Organize your transactions with custom categories
+          </p>
+        </div>
+        <router-link
+          to="/categories/create"
+          class="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-6 py-3 font-medium text-white shadow-sm transition-all hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:bg-primary-500 dark:hover:bg-primary-600"
+        >
+          <PlusIcon class="size-5" />
           Create Category
-        </AppButton>
+        </router-link>
       </div>
 
       <!-- Type Filter Tabs -->
@@ -70,6 +77,7 @@ import AppConfirmDialog from '@/components/common/AppConfirmDialog.vue'
 import AppSkeleton from '@/components/common/AppSkeleton.vue'
 import AppEmpty from '@/components/common/AppEmpty.vue'
 import CategoryList from '@/components/category/CategoryList.vue'
+import { PlusIcon } from '@heroicons/vue/24/outline'
 import { useCategory } from '@/composables/useCategory'
 
 const router = useRouter()

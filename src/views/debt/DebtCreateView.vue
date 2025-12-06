@@ -2,15 +2,11 @@
   <AppLayout>
     <div class="mx-auto max-w-3xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
       <!-- Header with Back Button -->
-      <FormHeader title="Create Wallet" description="Add a new wallet to track your finances" />
+      <FormHeader title="Create Debt" description="Add a new payable or receivable debt" />
 
       <!-- Form Card -->
       <div class="rounded-lg bg-white p-6 shadow-sm dark:bg-dark-card sm:p-8">
-        <WalletForm
-          :loading="loading"
-          @submit="handleSubmit"
-          @cancel="handleCancel"
-        />
+        <DebtForm :loading="loading" @submit="handleSubmit" @cancel="handleCancel" />
       </div>
     </div>
   </AppLayout>
@@ -18,17 +14,16 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
+import { useDebt } from '@/composables/useDebt'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import FormHeader from '@/components/common/FormHeader.vue'
-import WalletForm from '@/components/wallet/WalletForm.vue'
-import { useWallet } from '@/composables/useWallet'
+import DebtForm from '@/components/debt/DebtForm.vue'
 
 const router = useRouter()
+const { loading, handleCreateDebt } = useDebt()
 
-const { loading, handleCreateWallet } = useWallet()
-
-async function handleSubmit(walletData) {
-  await handleCreateWallet(walletData)
+async function handleSubmit(debtData) {
+  await handleCreateDebt(debtData)
 }
 
 function handleCancel() {
