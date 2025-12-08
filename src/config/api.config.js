@@ -79,6 +79,12 @@ export const API_ENDPOINTS = {
     DEBTS: '/export/debts',
     SUMMARY: '/export/summary',
   },
+
+  // Subscriptions
+  SUBSCRIPTIONS: '/subscriptions',
+
+  // Payments
+  PAYMENTS: '/payments',
 }
 
 /**
@@ -177,6 +183,55 @@ export const GRANULARITY = {
   MONTHLY: 'MONTHLY',
 }
 
+/**
+ * Subscription tiers
+ */
+export const SUBSCRIPTION_TIERS = {
+  FREE: 'FREE',
+  PREMIUM: 'PREMIUM',
+}
+
+/**
+ * Subscription status
+ */
+export const SUBSCRIPTION_STATUS = {
+  ACTIVE: 'ACTIVE',
+  TRIAL: 'TRIAL',
+  EXPIRED: 'EXPIRED',
+  CANCELLED: 'CANCELLED',
+  PENDING: 'PENDING',
+}
+
+/**
+ * Payment status
+ */
+export const PAYMENT_STATUS = {
+  PENDING: 'PENDING',
+  SUCCESS: 'SUCCESS',
+  FAILED: 'FAILED',
+  EXPIRED: 'EXPIRED',
+  CANCELLED: 'CANCELLED',
+  REFUNDED: 'REFUNDED',
+}
+
+/**
+ * Payment methods
+ */
+export const PAYMENT_METHODS = {
+  CREDIT_CARD: 'CREDIT_CARD',
+  DEBIT_CARD: 'DEBIT_CARD',
+  GOPAY: 'GOPAY',
+  QRIS: 'QRIS',
+  BCA_VA: 'BCA_VA',
+  BNI_VA: 'BNI_VA',
+  BRI_VA: 'BRI_VA',
+  MANDIRI_VA: 'MANDIRI_VA',
+  PERMATA_VA: 'PERMATA_VA',
+  CIMB_VA: 'CIMB_VA',
+  INDOMARET: 'INDOMARET',
+  ALFAMART: 'ALFAMART',
+}
+
 export default {
   API_BASE_URL,
   API_VERSION,
@@ -192,4 +247,8 @@ export default {
   EXPORT_FORMATS,
   EXPORT_TYPES,
   GRANULARITY,
+  SUBSCRIPTION_TIERS,
+  SUBSCRIPTION_STATUS,
+  PAYMENT_STATUS,
+  PAYMENT_METHODS,
 }
