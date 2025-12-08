@@ -103,9 +103,10 @@ export default {
     const exportData = response.data
 
     // Auto-download if base64 data is returned
-    if (exportData.base64Data) {
+    if (exportData.base64Content || exportData.base64Data) {
       const mimeType = getMimeType(exportRequest.format)
-      downloadBase64File(exportData.base64Data, exportData.fileName, mimeType)
+      const base64Data = exportData.base64Content || exportData.base64Data
+      downloadBase64File(base64Data, exportData.fileName, mimeType)
     }
 
     return exportData
@@ -132,9 +133,10 @@ export default {
     const exportData = response.data
 
     // Auto-download if base64 data is returned
-    if (exportData.base64Data) {
+    if (exportData.base64Content || exportData.base64Data) {
       const mimeType = getMimeType(exportRequest.format)
-      downloadBase64File(exportData.base64Data, exportData.fileName, mimeType)
+      const base64Data = exportData.base64Content || exportData.base64Data
+      downloadBase64File(base64Data, exportData.fileName, mimeType)
     }
 
     return exportData
@@ -161,9 +163,10 @@ export default {
     const exportData = response.data
 
     // Auto-download if base64 data is returned
-    if (exportData.base64Data) {
+    if (exportData.base64Content || exportData.base64Data) {
       const mimeType = getMimeType(exportRequest.format)
-      downloadBase64File(exportData.base64Data, exportData.fileName, mimeType)
+      const base64Data = exportData.base64Content || exportData.base64Data
+      downloadBase64File(base64Data, exportData.fileName, mimeType)
     }
 
     return exportData
