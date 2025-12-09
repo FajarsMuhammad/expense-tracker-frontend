@@ -9,23 +9,40 @@
             Manage your financial accounts and balances
           </p>
         </div>
+        <!-- Desktop Add Button -->
         <button
           v-if="!canCreateWallet"
           disabled
-          class="inline-flex items-center gap-2 rounded-lg bg-neutral-400 px-6 py-3 font-medium text-white shadow-sm cursor-not-allowed opacity-60 dark:bg-neutral-600"
+          class="hidden md:inline-flex items-center gap-2 rounded-lg bg-neutral-400 px-6 py-3 font-medium text-white shadow-sm cursor-not-allowed opacity-60 dark:bg-neutral-600"
         >
           <PlusIcon class="size-5" />
-          Create Wallet
+          Add
         </button>
         <router-link
           v-else
           to="/wallets/create"
-          class="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-6 py-3 font-medium text-white shadow-sm transition-all hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:bg-primary-500 dark:hover:bg-primary-600"
+          class="hidden md:inline-flex items-center gap-2 rounded-lg bg-primary-600 px-6 py-3 font-medium text-white shadow-sm transition-all hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:bg-primary-500 dark:hover:bg-primary-600"
         >
           <PlusIcon class="size-5" />
-          Create Wallet
+          Add
         </router-link>
       </div>
+
+      <!-- Mobile Floating Action Button -->
+      <button
+        v-if="!canCreateWallet"
+        disabled
+        class="md:hidden fixed bottom-6 right-6 z-40 flex items-center justify-center w-14 h-14 bg-neutral-400 rounded-full shadow-2xl cursor-not-allowed opacity-60"
+      >
+        <PlusIcon class="size-7 text-white stroke-[3]" />
+      </button>
+      <router-link
+        v-else
+        to="/wallets/create"
+        class="md:hidden fixed bottom-6 right-6 z-40 flex items-center justify-center w-14 h-14 bg-gradient-to-r from-primary-600 to-primary-500 rounded-full shadow-2xl shadow-primary-500/50 transition-all duration-300 hover:shadow-primary-500/70 hover:scale-110 active:scale-95"
+      >
+        <PlusIcon class="size-7 text-white stroke-[3]" />
+      </router-link>
 
       <AppSkeleton v-if="loading" :count="3" />
 

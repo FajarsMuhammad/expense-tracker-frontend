@@ -64,20 +64,20 @@
     </div>
 
     <!-- Action Buttons -->
-    <div class="flex gap-4 border-t border-neutral-200 pt-6 dark:border-neutral-700">
-      <button
-        type="button"
-        @click="$emit('cancel')"
-        class="flex-1 rounded-lg border border-neutral-300 bg-white px-6 py-3 font-medium text-neutral-700 transition-colors hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:border-neutral-600 dark:bg-dark-bg dark:text-neutral-300 dark:hover:bg-neutral-800"
-      >
-        Cancel
-      </button>
+    <div class="flex gap-2 md:gap-3 border-t border-neutral-200 pt-6 dark:border-neutral-700">
       <button
         type="submit"
         :disabled="loading"
-        class="flex-1 rounded-lg bg-primary-600 px-6 py-3 font-medium text-white transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-primary-500 dark:hover:bg-primary-600"
+        class="flex-1 rounded-lg bg-primary-600 px-6 py-2 md:py-3 text-xs md:text-sm font-medium text-white transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-primary-500 dark:hover:bg-primary-600"
       >
-        {{ loading ? 'Adding...' : 'Add Payment' }}
+        {{ loading ? 'Saving...' : 'Save' }}
+      </button>
+      <button
+        type="button"
+        @click="$emit('cancel')"
+        class="flex-1 rounded-lg border border-neutral-300 bg-white px-6 py-2 md:py-3 text-xs md:text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:border-neutral-600 dark:bg-dark-bg dark:text-neutral-300 dark:hover:bg-neutral-800"
+      >
+        Cancel
       </button>
     </div>
   </form>

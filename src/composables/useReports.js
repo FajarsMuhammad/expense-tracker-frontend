@@ -153,7 +153,17 @@ export function useReports() {
         reportsStore.fetchTrendData(params),
       ])
 
-      // Check if any requests failed
+      // Check if any requests failed with 403 (premium required)
+      const forbidden = results.find((r) => r.status === 'rejected' && r.reason?.response?.status === 403)
+      if (forbidden) {
+        // Return error info so component can show upgrade modal
+        return {
+          error: 'PREMIUM_REQUIRED',
+          message: forbidden.reason?.response?.data?.message || 'Reports are available for Premium users only',
+        }
+      }
+
+      // Check if any other requests failed
       const failures = results.filter((r) => r.status === 'rejected')
       if (failures.length > 0) {
         // Show warning if some data failed to load, but don't block the UI
@@ -163,11 +173,14 @@ export function useReports() {
           type: 'warning',
         })
       }
+
+      return { error: null }
     } catch (error) {
       uiStore.showToast({
         message: error.message || 'Failed to load reports',
         type: 'error',
       })
+      return { error: 'UNKNOWN', message: error.message }
     }
   }
 

@@ -9,14 +9,23 @@
             Organize your transactions with custom categories
           </p>
         </div>
+        <!-- Desktop Add Button -->
         <router-link
           to="/categories/create"
-          class="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-6 py-3 font-medium text-white shadow-sm transition-all hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:bg-primary-500 dark:hover:bg-primary-600"
+          class="hidden md:inline-flex items-center gap-2 rounded-lg bg-primary-600 px-6 py-3 font-medium text-white shadow-sm transition-all hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:bg-primary-500 dark:hover:bg-primary-600"
         >
           <PlusIcon class="size-5" />
-          Create Category
+          Add
         </router-link>
       </div>
+
+      <!-- Mobile Floating Action Button -->
+      <router-link
+        to="/categories/create"
+        class="md:hidden fixed bottom-6 right-6 z-40 flex items-center justify-center w-14 h-14 bg-gradient-to-r from-primary-600 to-primary-500 rounded-full shadow-2xl shadow-primary-500/50 transition-all duration-300 hover:shadow-primary-500/70 hover:scale-110 active:scale-95"
+      >
+        <PlusIcon class="size-7 text-white stroke-[3]" />
+      </router-link>
 
       <!-- Type Filter Tabs -->
       <div class="flex gap-2 mb-6">

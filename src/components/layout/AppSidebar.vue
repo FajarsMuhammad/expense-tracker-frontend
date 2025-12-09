@@ -45,7 +45,7 @@
     </div>
 
     <!-- Navigation -->
-    <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+    <nav class="flex-1 px-4 pt-8 pb-6 space-y-2 overflow-y-auto">
       <router-link
         v-for="item in navItems"
         :key="item.path"

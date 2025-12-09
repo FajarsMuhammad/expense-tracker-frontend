@@ -1,15 +1,15 @@
 <template>
   <AppCard class="cursor-pointer transition-all duration-300 hover:shadow-lg group" @click="$emit('view', debt)">
-    <div class="space-y-4">
+    <div class="space-y-3 md:space-y-4">
       <!-- Header: Type Badge + Status -->
-      <div class="flex items-start justify-between gap-3">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
         <!-- Debt Type Badge -->
         <span
           :class="typeClasses"
-          class="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold uppercase tracking-wide"
+          class="inline-flex items-center gap-1 md:gap-1.5 rounded-lg px-2 md:px-2.5 py-1 md:py-1.5 text-xs font-bold uppercase tracking-wide"
         >
-          <component :is="typeIcon" class="size-4" />
-          {{ typeLabel }}
+          <component :is="typeIcon" class="size-3.5 md:size-4" />
+          <span class="text-[10px] md:text-xs">{{ typeLabel }}</span>
         </span>
 
         <!-- Status Badge with Overdue -->
@@ -18,25 +18,25 @@
 
       <!-- Counterparty Name -->
       <div>
-        <h3 class="text-xl font-bold text-neutral-900 dark:text-neutral-100">
+        <h3 class="text-sm md:text-base lg:text-lg font-bold text-neutral-900 dark:text-neutral-100 break-words">
           {{ debt.counterpartyName }}
         </h3>
       </div>
 
       <!-- Amounts Section -->
-      <div class="space-y-3">
+      <div class="space-y-2 md:space-y-3">
         <!-- Total & Remaining Amounts -->
-        <div class="flex items-center justify-between">
-          <div class="space-y-1">
-            <p class="text-xs text-neutral-500 dark:text-neutral-400">Total Amount</p>
-            <p class="text-lg font-semibold text-neutral-700 dark:text-neutral-300">
+        <div class="grid grid-cols-2 gap-2 md:gap-3">
+          <div class="space-y-0.5 md:space-y-1 min-w-0 overflow-hidden">
+            <p class="text-[10px] md:text-xs text-neutral-500 dark:text-neutral-400">Total Amount</p>
+            <p class="text-[10px] md:text-xs lg:text-sm font-semibold text-neutral-700 dark:text-neutral-300 break-all leading-tight">
               {{ formatCurrency(debt.totalAmount) }}
             </p>
           </div>
 
-          <div class="space-y-1 text-right">
-            <p class="text-xs text-neutral-500 dark:text-neutral-400">Remaining</p>
-            <p :class="remainingAmountColor" class="text-lg font-bold">
+          <div class="space-y-0.5 md:space-y-1 text-right min-w-0 overflow-hidden">
+            <p class="text-[10px] md:text-xs text-neutral-500 dark:text-neutral-400">Remaining</p>
+            <p :class="remainingAmountColor" class="text-[10px] md:text-xs lg:text-sm font-bold break-all leading-tight">
               {{ formatCurrency(debt.remainingAmount) }}
             </p>
           </div>
@@ -47,17 +47,17 @@
       </div>
 
       <!-- Due Date & Payment Count -->
-      <div class="flex items-center justify-between border-t border-neutral-200 pt-3 dark:border-neutral-700">
-        <div class="flex items-center gap-1.5 text-sm">
-          <CalendarDaysIcon class="size-4 text-neutral-400" />
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-t border-neutral-200 pt-2 md:pt-3 dark:border-neutral-700">
+        <div class="flex items-center gap-1 md:gap-1.5 text-[10px] md:text-xs">
+          <CalendarDaysIcon class="size-3 md:size-3.5 text-neutral-400 flex-shrink-0" />
           <span class="text-neutral-600 dark:text-neutral-400">Due:</span>
           <span :class="dueDateColor" class="font-semibold">
             {{ formatDate(debt.dueDate) }}
           </span>
         </div>
 
-        <div v-if="debt.paymentCount > 0" class="flex items-center gap-1.5 text-sm">
-          <BanknotesIcon class="size-4 text-neutral-400" />
+        <div v-if="debt.paymentCount > 0" class="flex items-center gap-1 md:gap-1.5 text-[10px] md:text-xs">
+          <BanknotesIcon class="size-3 md:size-3.5 text-neutral-400 flex-shrink-0" />
           <span class="text-neutral-600 dark:text-neutral-400">
             {{ debt.paymentCount }} {{ debt.paymentCount === 1 ? 'payment' : 'payments' }}
           </span>
@@ -65,26 +65,26 @@
       </div>
 
       <!-- Note Preview -->
-      <div v-if="debt.note" class="border-t border-neutral-200 pt-3 dark:border-neutral-700">
-        <p class="line-clamp-2 text-sm text-neutral-600 dark:text-neutral-400">
+      <div v-if="debt.note" class="border-t border-neutral-200 pt-2 md:pt-3 dark:border-neutral-700">
+        <p class="line-clamp-2 text-xs md:text-sm text-neutral-600 dark:text-neutral-400">
           {{ debt.note }}
         </p>
       </div>
 
-      <!-- Action Buttons (shown on hover) -->
+      <!-- Action Buttons (shown on hover on desktop, always visible on mobile) -->
       <div
-        class="flex gap-2 border-t border-neutral-200 pt-3 opacity-0 transition-opacity duration-200 group-hover:opacity-100 dark:border-neutral-700"
+        class="flex gap-1.5 md:gap-2 border-t border-neutral-200 pt-2 md:pt-3 opacity-100 lg:opacity-0 transition-opacity duration-200 lg:group-hover:opacity-100 dark:border-neutral-700"
       >
         <button
           @click.stop="$emit('edit', debt)"
-          class="flex-1 rounded-lg bg-neutral-100 px-4 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
+          class="flex-1 rounded-lg bg-neutral-100 px-2 md:px-3 py-1.5 md:py-2 text-[10px] md:text-xs font-medium text-neutral-700 transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
           title="Edit debt"
         >
           Edit
         </button>
         <button
           @click.stop="$emit('delete', debt)"
-          class="flex-1 rounded-lg bg-red-100 px-4 py-2 text-sm font-medium text-red-700 transition-colors hover:bg-red-200 dark:bg-red-900/20 dark:text-red-300 dark:hover:bg-red-900/30"
+          class="flex-1 rounded-lg bg-red-100 px-2 md:px-3 py-1.5 md:py-2 text-[10px] md:text-xs font-medium text-red-700 transition-colors hover:bg-red-200 dark:bg-red-900/20 dark:text-red-300 dark:hover:bg-red-900/30"
           title="Delete debt"
         >
           Delete

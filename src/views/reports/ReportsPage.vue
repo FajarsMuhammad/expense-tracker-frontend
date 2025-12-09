@@ -1,12 +1,12 @@
 <template>
   <AppLayout>
     <!-- Page Header -->
-    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div class="mb-3 md:mb-4 lg:mb-6 flex flex-col gap-2 md:gap-3 sm:flex-row sm:items-center sm:justify-between">
       <div>
-        <h1 class="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
+        <h1 class="text-base md:text-lg lg:text-xl font-bold text-neutral-900 dark:text-neutral-100">
           Financial Reports
         </h1>
-        <p class="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
+        <p class="mt-0.5 md:mt-1 text-[10px] md:text-xs text-neutral-600 dark:text-neutral-400">
           View your financial summary and export data
         </p>
       </div>
@@ -20,7 +20,7 @@
     </div>
 
     <!-- Date Range Picker -->
-    <div class="mb-6">
+    <div class="mb-3 md:mb-4 lg:mb-5">
       <DateRangePicker
         v-model:start-date="dateRange.startDate"
         v-model:end-date="dateRange.endDate"
@@ -29,7 +29,7 @@
     </div>
 
     <!-- Summary Cards Grid -->
-    <div class="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="mb-4 md:mb-5 lg:mb-6 grid grid-cols-1 gap-2 md:gap-3 lg:gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <SummaryCard
         title="Total Income"
         :value="totalIncome"
@@ -68,31 +68,31 @@
     </div>
 
     <!-- Category Breakdown Section -->
-    <div v-if="hasCategoryBreakdown" class="mb-8">
+    <div v-if="hasCategoryBreakdown" class="mb-4 md:mb-5 lg:mb-6">
       <AppCard>
-        <div class="mb-4 flex items-center justify-between">
-          <h2 class="text-lg font-bold text-neutral-900 dark:text-neutral-100">
+        <div class="mb-2 md:mb-3 flex items-center justify-between">
+          <h2 class="text-sm md:text-base font-bold text-neutral-900 dark:text-neutral-100">
             Category Breakdown
           </h2>
         </div>
 
-        <div class="space-y-3">
+        <div class="space-y-2 md:space-y-2.5">
           <div
             v-for="category in topCategories"
             :key="category.categoryId"
-            class="flex items-center gap-4"
+            class="flex items-center gap-2 md:gap-3"
           >
             <!-- Progress Bar -->
-            <div class="flex-1">
-              <div class="mb-1 flex items-center justify-between">
-                <span class="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+            <div class="flex-1 min-w-0">
+              <div class="mb-0.5 md:mb-1 flex items-center justify-between gap-1.5 md:gap-2">
+                <span class="text-[10px] md:text-xs font-medium text-neutral-700 dark:text-neutral-300 truncate">
                   {{ category.categoryName }}
                 </span>
-                <span class="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+                <span class="text-[10px] md:text-xs font-semibold text-neutral-900 dark:text-neutral-100 flex-shrink-0">
                   {{ formatCurrency(category.totalAmount) }}
                 </span>
               </div>
-              <div class="h-2.5 w-full overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700">
+              <div class="h-1.5 md:h-2 w-full overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700">
                 <div
                   class="h-full rounded-full bg-gradient-to-r from-primary-500 to-blue-500 transition-all duration-500"
                   :style="{ width: `${category.percentage}%` }"
@@ -101,8 +101,8 @@
             </div>
 
             <!-- Percentage -->
-            <div class="text-right">
-              <span class="text-sm font-medium text-neutral-600 dark:text-neutral-400">
+            <div class="text-right flex-shrink-0">
+              <span class="text-[10px] md:text-xs font-medium text-neutral-600 dark:text-neutral-400">
                 {{ category.percentage.toFixed(1) }}%
               </span>
             </div>
@@ -110,10 +110,10 @@
         </div>
 
         <!-- Show all categories link -->
-        <div v-if="categoryBreakdown.length > 5" class="mt-4 text-center">
+        <div v-if="categoryBreakdown.length > 5" class="mt-2 md:mt-3 text-center">
           <button
             type="button"
-            class="text-sm font-medium text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
+            class="text-[10px] md:text-xs font-medium text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
             @click="showAllCategories = !showAllCategories"
           >
             {{ showAllCategories ? 'Show Less' : `Show All ${categoryBreakdown.length} Categories` }}
@@ -123,20 +123,20 @@
     </div>
 
     <!-- Trend Chart Section (Placeholder) -->
-    <div v-if="hasTrendData" class="mb-8">
+    <div v-if="hasTrendData" class="mb-4 md:mb-5 lg:mb-6">
       <AppCard>
-        <div class="mb-4 flex items-center justify-between">
-          <h2 class="text-lg font-bold text-neutral-900 dark:text-neutral-100">
+        <div class="mb-2 md:mb-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 md:gap-3">
+          <h2 class="text-sm md:text-base font-bold text-neutral-900 dark:text-neutral-100">
             Income vs Expense Trend
           </h2>
 
           <!-- Granularity Selector -->
-          <div class="flex gap-1 rounded-lg border border-neutral-300 p-1 dark:border-neutral-600">
+          <div class="flex gap-0.5 rounded-lg border border-neutral-300 p-0.5 dark:border-neutral-600">
             <button
               v-for="gran in granularityOptions"
               :key="gran.value"
               type="button"
-              class="rounded px-3 py-1 text-xs font-medium transition-colors"
+              class="rounded px-1.5 md:px-2 py-0.5 md:py-1 text-[9px] md:text-[10px] font-medium transition-colors"
               :class="
                 filters.granularity === gran.value
                   ? 'bg-primary-600 text-white dark:bg-primary-500'
@@ -151,19 +151,19 @@
 
         <!-- Simple Table View (Placeholder for chart) -->
         <div class="overflow-x-auto">
-          <table class="w-full text-sm">
+          <table class="w-full text-[10px] md:text-xs">
             <thead class="border-b border-neutral-200 dark:border-neutral-700">
               <tr>
-                <th class="pb-3 pr-4 text-left font-medium text-neutral-700 dark:text-neutral-300">
+                <th class="pb-1.5 md:pb-2 pr-1.5 md:pr-2 text-left font-medium text-neutral-700 dark:text-neutral-300">
                   Date
                 </th>
-                <th class="pb-3 pr-4 text-right font-medium text-neutral-700 dark:text-neutral-300">
+                <th class="pb-1.5 md:pb-2 pr-1.5 md:pr-2 text-right font-medium text-neutral-700 dark:text-neutral-300">
                   Income
                 </th>
-                <th class="pb-3 pr-4 text-right font-medium text-neutral-700 dark:text-neutral-300">
+                <th class="pb-1.5 md:pb-2 pr-1.5 md:pr-2 text-right font-medium text-neutral-700 dark:text-neutral-300">
                   Expense
                 </th>
-                <th class="pb-3 text-right font-medium text-neutral-700 dark:text-neutral-300">
+                <th class="pb-1.5 md:pb-2 text-right font-medium text-neutral-700 dark:text-neutral-300">
                   Balance
                 </th>
               </tr>
@@ -174,16 +174,16 @@
                 :key="index"
                 class="hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
               >
-                <td class="py-3 pr-4 text-neutral-900 dark:text-neutral-100">
+                <td class="py-1.5 md:py-2 pr-1.5 md:pr-2 text-neutral-900 dark:text-neutral-100">
                   {{ formatDate(item.date) }}
                 </td>
-                <td class="py-3 pr-4 text-right font-medium text-green-600 dark:text-green-400">
+                <td class="py-1.5 md:py-2 pr-1.5 md:pr-2 text-right font-medium text-green-600 dark:text-green-400">
                   {{ formatCurrency(item.income) }}
                 </td>
-                <td class="py-3 pr-4 text-right font-medium text-red-600 dark:text-red-400">
+                <td class="py-1.5 md:py-2 pr-1.5 md:pr-2 text-right font-medium text-red-600 dark:text-red-400">
                   {{ formatCurrency(item.expense) }}
                 </td>
-                <td class="py-3 text-right font-semibold" :class="getNetBalanceColor(item.balance)">
+                <td class="py-1.5 md:py-2 text-right font-semibold" :class="getNetBalanceColor(item.balance)">
                   {{ formatCurrency(item.balance) }}
                 </td>
               </tr>
@@ -212,6 +212,22 @@
         Select a date range to view your financial reports
       </p>
     </div>
+
+    <!-- Upgrade Modal -->
+    <UpgradeModal
+      :is-open="showUpgradeModal"
+      title="Premium Feature"
+      :message="upgradeMessage"
+      :features="[
+        'Financial summary reports',
+        'Trend analytics & charts',
+        'Category breakdown insights',
+        'Unlimited export formats (Excel, PDF)',
+        'Advanced date range filters',
+        'Priority support'
+      ]"
+      @close="showUpgradeModal = false"
+    />
   </AppLayout>
 </template>
 
@@ -223,6 +239,7 @@ import AppCard from '@/components/common/AppCard.vue'
 import SummaryCard from '@/components/reports/SummaryCard.vue'
 import DateRangePicker from '@/components/reports/DateRangePicker.vue'
 import ExportButton from '@/components/reports/ExportButton.vue'
+import UpgradeModal from '@/components/subscription/UpgradeModal.vue'
 import { useReports } from '@/composables/useReports'
 import { useExport } from '@/composables/useExport'
 import { useExportStore } from '@/stores/export'
@@ -261,6 +278,8 @@ const dateRange = ref({
 })
 
 const showAllCategories = ref(false)
+const showUpgradeModal = ref(false)
+const upgradeMessage = ref('')
 
 const granularityOptions = [
   { label: 'Daily', value: GRANULARITY.DAILY },
@@ -271,7 +290,13 @@ const granularityOptions = [
 // Methods
 async function handleDateRangeChange({ startDate, endDate }) {
   dateRange.value = { startDate, endDate }
-  await loadAllReports({ startDate, endDate })
+  const result = await loadAllReports({ startDate, endDate })
+
+  // Check if reports require premium
+  if (result?.error === 'PREMIUM_REQUIRED') {
+    upgradeMessage.value = result.message
+    showUpgradeModal.value = true
+  }
 }
 
 async function handleExport(format) {
@@ -292,7 +317,7 @@ function formatDate(dateString) {
 }
 
 // Lifecycle
-onMounted(() => {
+onMounted(async () => {
   // Set default to last 30 days
   const today = new Date()
   const thirtyDaysAgo = new Date(today)
@@ -303,9 +328,15 @@ onMounted(() => {
     endDate: today.toISOString().split('T')[0],
   }
 
-  loadAllReports({
+  const result = await loadAllReports({
     startDate: dateRange.value.startDate,
     endDate: dateRange.value.endDate,
   })
+
+  // Check if reports require premium on initial load
+  if (result?.error === 'PREMIUM_REQUIRED') {
+    upgradeMessage.value = result.message
+    showUpgradeModal.value = true
+  }
 })
 </script>
