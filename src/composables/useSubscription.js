@@ -40,29 +40,42 @@ export function useSubscription() {
   }
 
   /**
-   * Upgrade to premium with payment or trial activation
+   * Upgrade to premium with payment flow
+   * Follow the correct flow:
+   * 1. POST /subscriptions/upgrade → Get pricing info
+   * 2. POST /payments/subscription → Create payment & get snapToken
+   * 3. Open Midtrans Snap UI
+   * 4. GET /subscriptions/me → Verify upgrade
    */
   async function upgradeToPremium(durationMonths = 1) {
     try {
       // Load Midtrans first
       await subscriptionStore.loadMidtrans()
 
-      // Attempt upgrade
-      const response = await subscriptionStore.upgradeSubscription({ durationMonths })
+      // Step 1: Get upgrade information
+      const upgradeInfo = await subscriptionStore.getUpgradeInfo({ durationMonths })
 
-      // Check if trial was activated
-      if (response.status === 'TRIAL') {
+      // Check if user already premium
+      if (upgradeInfo.premium) {
         uiStore.showToast({
-          type: 'success',
-          message: `Trial activated! Enjoy ${response.daysRemaining} days of premium features.`,
+          type: 'info',
+          message: 'You already have an active premium subscription.',
         })
-        return { success: true, isTrial: true }
+        return { success: false, alreadyPremium: true }
       }
 
-      // Payment required - open Midtrans
-      if (response.snapToken) {
+      // Log upgrade info for debugging
+      console.log('Upgrade info:', upgradeInfo)
+
+      // Step 2: Create payment transaction
+      const paymentResponse = await subscriptionStore.createSubscriptionPayment({
+        idempotencyKey: `upgrade-${Date.now()}-${Math.random().toString(36).substring(7)}`,
+      })
+
+      // Step 3: Open Midtrans payment page
+      if (paymentResponse.snapToken) {
         return new Promise((resolve) => {
-          subscriptionStore.openPayment(response.snapToken, {
+          subscriptionStore.openPayment(paymentResponse.snapToken, {
             onSuccess: async (result) => {
               console.log('Payment successful:', result)
               uiStore.showToast({
@@ -70,10 +83,10 @@ export function useSubscription() {
                 message: 'Payment successful! Your premium subscription is now active.',
               })
 
-              // Reload subscription data
+              // Step 4: Verify subscription upgraded
               await loadSubscription()
 
-              resolve({ success: true, isTrial: false, result })
+              resolve({ success: true, result })
             },
             onPending: (result) => {
               console.log('Payment pending:', result)
@@ -99,7 +112,7 @@ export function useSubscription() {
         })
       }
 
-      throw new Error('No payment token received')
+      throw new Error('No payment token received from backend')
     } catch (err) {
       const message = err.response?.data?.message || err.message || 'Failed to upgrade subscription'
       uiStore.showToast({

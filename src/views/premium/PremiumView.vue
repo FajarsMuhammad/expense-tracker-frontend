@@ -4,7 +4,7 @@
       <!-- Current Subscription Status -->
       <div v-if="!loading && subscription" class="mb-8">
         <!-- Premium Active -->
-        <div v-if="isActive" class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-green-500 to-green-600 p-6 shadow-glow-income">
+        <div v-if="isPremium && isActive" class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-green-500 to-green-600 p-6 shadow-glow-income">
           <div class="flex items-center justify-between">
             <div>
               <div class="flex items-center gap-2 mb-2">
@@ -20,7 +20,7 @@
         </div>
 
         <!-- Trial Period -->
-        <div v-else-if="isTrial" class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-yellow-400 to-yellow-500 p-6 shadow-glow-income">
+        <div v-else-if="isPremium && isTrial" class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-yellow-400 to-yellow-500 p-6 shadow-glow-income">
           <div class="flex items-center justify-between">
             <div class="flex-1">
               <div class="flex items-center gap-2 mb-2">

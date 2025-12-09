@@ -81,10 +81,18 @@ export const API_ENDPOINTS = {
   },
 
   // Subscriptions
-  SUBSCRIPTIONS: '/subscriptions',
+  SUBSCRIPTIONS: {
+    BASE: '/subscriptions',
+    ME: '/subscriptions/me',
+    UPGRADE: '/subscriptions/upgrade',
+    TRIAL_ELIGIBILITY: '/subscriptions/trial-eligibility',
+  },
 
   // Payments
-  PAYMENTS: '/payments',
+  PAYMENTS: {
+    BASE: '/payments',
+    SUBSCRIPTION: '/payments/subscription',
+  },
 }
 
 /**

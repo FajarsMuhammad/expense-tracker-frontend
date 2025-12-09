@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import * as subscriptionService from '@/services/subscription.service'
+import * as paymentService from '@/services/payment.service'
 import { SUBSCRIPTION_TIERS, SUBSCRIPTION_STATUS } from '@/config/api.config'
 
 export const useSubscriptionStore = defineStore('subscription', () => {
@@ -13,15 +14,27 @@ export const useSubscriptionStore = defineStore('subscription', () => {
   const midtransLoaded = ref(false)
 
   // Computed
+  // Use values from backend if available, otherwise compute client-side
   const isPremium = computed(() => {
+    // Backend includes isPremium field
+    if (subscription.value?.isPremium !== undefined) {
+      return subscription.value.isPremium
+    }
+    // Fallback: compute based on tier
     return subscription.value?.tier === SUBSCRIPTION_TIERS.PREMIUM
   })
 
   const isFree = computed(() => {
-    return !subscription.value || subscription.value?.tier === SUBSCRIPTION_TIERS.FREE
+    // Inverse of isPremium
+    return !isPremium.value
   })
 
   const isTrial = computed(() => {
+    // Backend includes isTrial field
+    if (subscription.value?.isTrial !== undefined) {
+      return subscription.value.isTrial
+    }
+    // Fallback: compute based on status
     return subscription.value?.status === SUBSCRIPTION_STATUS.TRIAL
   })
 
@@ -59,26 +72,49 @@ export const useSubscriptionStore = defineStore('subscription', () => {
     }
   }
 
-  async function upgradeSubscription(data = {}) {
+  /**
+   * Get upgrade information
+   * @param {Object} data - Upgrade request data
+   * @returns {Promise<Object>} Upgrade information (pricing, etc)
+   */
+  async function getUpgradeInfo(data = {}) {
     loading.value = true
     error.value = null
 
     try {
-      const response = await subscriptionService.upgradeSubscription({
+      const response = await subscriptionService.getUpgradeInfo({
         tier: SUBSCRIPTION_TIERS.PREMIUM,
         durationMonths: data.durationMonths || 1,
-        idempotencyKey: data.idempotencyKey,
       })
-
-      // If trial activated, update subscription state
-      if (response.status === SUBSCRIPTION_STATUS.TRIAL) {
-        subscription.value = response
-      }
 
       return response
     } catch (err) {
-      error.value = err.response?.data?.message || 'Failed to upgrade subscription'
-      console.error('Error upgrading subscription:', err)
+      error.value = err.response?.data?.message || 'Failed to get upgrade information'
+      console.error('Error getting upgrade info:', err)
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
+  /**
+   * Create subscription payment
+   * @param {Object} data - Payment request data
+   * @returns {Promise<Object>} Payment response with snapToken
+   */
+  async function createSubscriptionPayment(data = {}) {
+    loading.value = true
+    error.value = null
+
+    try {
+      const response = await paymentService.createSubscriptionPayment({
+        idempotencyKey: data.idempotencyKey,
+      })
+
+      return response
+    } catch (err) {
+      error.value = err.response?.data?.message || 'Failed to create payment'
+      console.error('Error creating subscription payment:', err)
       throw err
     } finally {
       loading.value = false
@@ -110,7 +146,7 @@ export const useSubscriptionStore = defineStore('subscription', () => {
     paymentLoading.value = true
 
     try {
-      const data = await subscriptionService.getPaymentHistory(params)
+      const data = await paymentService.getPaymentHistory(params)
       paymentHistory.value = data.content || data
       return data
     } catch (err) {
@@ -123,7 +159,7 @@ export const useSubscriptionStore = defineStore('subscription', () => {
 
   async function cancelPayment(paymentId) {
     try {
-      const data = await subscriptionService.cancelPayment(paymentId)
+      const data = await paymentService.cancelPayment(paymentId)
       // Refresh payment history
       await fetchPaymentHistory()
       return data
@@ -175,7 +211,8 @@ export const useSubscriptionStore = defineStore('subscription', () => {
 
     // Actions
     fetchSubscription,
-    upgradeSubscription,
+    getUpgradeInfo,
+    createSubscriptionPayment,
     loadMidtrans,
     openPayment,
     fetchPaymentHistory,

@@ -146,11 +146,23 @@ export function useReports() {
   async function loadAllReports(params = {}) {
     try {
       // Load reports in parallel for better performance
-      await Promise.all([
+      // Using Promise.allSettled to show partial data even if some requests fail
+      const results = await Promise.allSettled([
         reportsStore.fetchSummary(params),
         reportsStore.fetchCategoryBreakdown(params),
         reportsStore.fetchTrendData(params),
       ])
+
+      // Check if any requests failed
+      const failures = results.filter((r) => r.status === 'rejected')
+      if (failures.length > 0) {
+        // Show warning if some data failed to load, but don't block the UI
+        const failedCount = failures.length
+        uiStore.showToast({
+          message: `${failedCount} report section${failedCount > 1 ? 's' : ''} failed to load`,
+          type: 'warning',
+        })
+      }
     } catch (error) {
       uiStore.showToast({
         message: error.message || 'Failed to load reports',

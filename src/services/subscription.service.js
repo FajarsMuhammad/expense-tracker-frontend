@@ -1,11 +1,9 @@
 import apiClient from '@/services/api'
 import { API_ENDPOINTS } from '@/config/api.config'
 
-const ENDPOINTS = API_ENDPOINTS
-
 /**
  * Subscription Service
- * Handles all subscription and payment-related API calls
+ * Handles all subscription-related API calls
  */
 
 /**
@@ -13,56 +11,22 @@ const ENDPOINTS = API_ENDPOINTS
  * @returns {Promise<Object>} Subscription data
  */
 export async function getCurrentSubscription() {
-  const response = await apiClient.get(`${ENDPOINTS.SUBSCRIPTIONS}/me`)
+  const response = await apiClient.get(API_ENDPOINTS.SUBSCRIPTIONS.ME)
   return response.data
 }
 
 /**
- * Upgrade subscription to premium
+ * Get upgrade information (pricing, eligibility, etc)
  * @param {Object} data - Upgrade request data
  * @param {string} data.tier - Target tier (e.g., 'PREMIUM')
  * @param {number} data.durationMonths - Duration in months (default: 1)
- * @param {string} data.idempotencyKey - Optional idempotency key for preventing duplicate payments
- * @returns {Promise<Object>} Payment response or trial activation response
+ * @returns {Promise<Object>} Upgrade information
  */
-export async function upgradeSubscription(data) {
-  const response = await apiClient.post(`${ENDPOINTS.SUBSCRIPTIONS}/upgrade`, {
+export async function getUpgradeInfo(data) {
+  const response = await apiClient.post(API_ENDPOINTS.SUBSCRIPTIONS.UPGRADE, {
     tier: data.tier || 'PREMIUM',
     durationMonths: data.durationMonths || 1,
-    idempotencyKey: data.idempotencyKey || `upgrade-${Date.now()}-${Math.random().toString(36).substring(7)}`,
   })
-  return response.data
-}
-
-/**
- * Get payment transaction history
- * @param {Object} params - Query parameters
- * @param {number} params.page - Page number
- * @param {number} params.size - Page size
- * @returns {Promise<Object>} Payment transactions
- */
-export async function getPaymentHistory(params = {}) {
-  const response = await apiClient.get(ENDPOINTS.PAYMENTS, { params })
-  return response.data
-}
-
-/**
- * Get specific payment transaction
- * @param {string} paymentId - Payment transaction ID
- * @returns {Promise<Object>} Payment transaction details
- */
-export async function getPaymentById(paymentId) {
-  const response = await apiClient.get(`${ENDPOINTS.PAYMENTS}/${paymentId}`)
-  return response.data
-}
-
-/**
- * Cancel pending payment
- * @param {string} paymentId - Payment transaction ID
- * @returns {Promise<Object>} Cancellation response
- */
-export async function cancelPayment(paymentId) {
-  const response = await apiClient.post(`${ENDPOINTS.PAYMENTS}/${paymentId}/cancel`)
   return response.data
 }
 
@@ -71,7 +35,7 @@ export async function cancelPayment(paymentId) {
  * @returns {Promise<Object>} Trial eligibility status
  */
 export async function checkTrialEligibility() {
-  const response = await apiClient.get(`${ENDPOINTS.SUBSCRIPTIONS}/trial-eligibility`)
+  const response = await apiClient.get(API_ENDPOINTS.SUBSCRIPTIONS.TRIAL_ELIGIBILITY)
   return response.data
 }
 
@@ -150,10 +114,7 @@ export function openMidtransPayment(snapToken, callbacks = {}) {
 
 export default {
   getCurrentSubscription,
-  upgradeSubscription,
-  getPaymentHistory,
-  getPaymentById,
-  cancelPayment,
+  getUpgradeInfo,
   checkTrialEligibility,
   loadMidtransScript,
   openMidtransPayment,
