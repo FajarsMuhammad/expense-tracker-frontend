@@ -194,6 +194,46 @@ export function useDebt() {
     }
   }
 
+  async function handleUpdatePayment(debtId, paymentId, paymentData) {
+    try {
+      // Validation
+      if (!paymentData.amount || paymentData.amount <= 0) {
+        uiStore.showToast({ message: 'Payment amount must be greater than 0', type: 'warning' })
+        return
+      }
+
+      if (!paymentData.paidAt) {
+        uiStore.showToast({ message: 'Please select payment date', type: 'warning' })
+        return
+      }
+
+      // Check if payment date is in the future
+      const paymentDate = new Date(paymentData.paidAt)
+      const now = new Date()
+
+      if (paymentDate > now) {
+        uiStore.showToast({ message: 'Payment date cannot be in the future', type: 'warning' })
+        return
+      }
+
+      await debtStore.updatePayment(debtId, paymentId, paymentData)
+      uiStore.showToast({ message: 'Payment updated successfully!', type: 'success' })
+    } catch (error) {
+      uiStore.showToast({ message: error.message, type: 'error' })
+      throw error
+    }
+  }
+
+  async function handleDeletePayment(debtId, paymentId) {
+    try {
+      await debtStore.deletePayment(debtId, paymentId)
+      uiStore.showToast({ message: 'Payment deleted successfully!', type: 'success' })
+    } catch (error) {
+      uiStore.showToast({ message: error.message, type: 'error' })
+      throw error
+    }
+  }
+
   async function applyFilters(newFilters) {
     try {
       debtStore.setFilters(newFilters)
@@ -235,6 +275,8 @@ export function useDebt() {
     handleUpdateDebt,
     handleDeleteDebt,
     handleAddPayment,
+    handleUpdatePayment,
+    handleDeletePayment,
     handleMarkAsPaid,
     applyFilters,
     resetFilters,

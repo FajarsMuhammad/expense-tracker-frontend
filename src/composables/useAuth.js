@@ -24,8 +24,14 @@ export function useAuth() {
 
   async function handleRegister(userData) {
     try {
-      await authStore.register(userData)
-      uiStore.showToast({ message: 'Registration successful!', type: 'success' })
+      const response = await authStore.register(userData)
+
+      // Show success message with trial info
+      const message = response?.subscription?.isTrial
+        ? 'Welcome! Your 14-day PREMIUM trial has started 🎉'
+        : 'Registration successful!'
+
+      uiStore.showToast({ message, type: 'success', duration: 5000 })
       router.push('/dashboard')
     } catch (error) {
       uiStore.showToast({ message: error.message, type: 'error' })

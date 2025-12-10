@@ -84,9 +84,29 @@
             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
             </svg>
-            {{ upgrading ? 'Processing...' : loading ? 'Loading...' : 'Start Free Trial (14 Days)' }}
+            {{ upgrading ? 'Processing...' : loading ? 'Loading...' : 'Subscribe to Premium' }}
           </button>
-          <p class="text-white/80 text-sm mt-4">No credit card required for trial</p>
+          <p class="text-white/80 text-sm mt-4">Only IDR 25,000/month · Cancel anytime</p>
+        </div>
+      </div>
+
+      <!-- Trial Info Banner (for free users) -->
+      <div v-if="isFree" class="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border-2 border-yellow-200 dark:border-yellow-800 rounded-2xl p-6 mb-8">
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0">
+            <svg class="w-8 h-8 text-yellow-600 dark:text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-neutral-900 dark:text-neutral-100 mb-2">
+              Did you know?
+            </h3>
+            <p class="text-neutral-700 dark:text-neutral-300 text-sm leading-relaxed">
+              New users automatically get a <span class="font-bold text-yellow-600 dark:text-yellow-400">14-day FREE trial</span> of all Premium features when they register!
+              Experience unlimited wallets, advanced reports, and Excel/PDF export before deciding to subscribe.
+            </p>
+          </div>
         </div>
       </div>
 

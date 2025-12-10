@@ -1,6 +1,6 @@
 <template>
   <div
-    class="group relative overflow-hidden rounded-xl border border-neutral-200 bg-white p-6 shadow-sm transition-all duration-300 hover:shadow-md dark:border-neutral-700 dark:bg-dark-card"
+    class="group relative overflow-hidden rounded-xl border border-neutral-200 bg-white p-3 md:p-4 lg:p-5 shadow-sm transition-all duration-300 hover:shadow-md dark:border-neutral-700 dark:bg-dark-card"
   >
     <!-- Background Gradient (Subtle) -->
     <div
@@ -9,21 +9,21 @@
     ></div>
 
     <!-- Loading State -->
-    <div v-if="loading" class="relative space-y-3">
-      <AppSkeleton class="h-4 w-24" />
-      <AppSkeleton class="h-8 w-32" />
-      <AppSkeleton class="h-4 w-20" />
+    <div v-if="loading" class="relative space-y-2 md:space-y-3">
+      <AppSkeleton class="h-3 md:h-4 w-20 md:w-24" />
+      <AppSkeleton class="h-6 md:h-8 w-24 md:w-32" />
+      <AppSkeleton class="h-3 md:h-4 w-16 md:w-20" />
     </div>
 
     <!-- Content -->
     <div v-else class="relative">
       <!-- Icon & Title -->
-      <div class="mb-4 flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <div class="rounded-lg p-2" :class="iconBgClass">
-            <component :is="iconComponent" class="size-6" :class="iconClass" />
+      <div class="mb-2 md:mb-3 flex items-center justify-between gap-1.5 md:gap-2">
+        <div class="flex items-center gap-1.5 md:gap-2 min-w-0">
+          <div class="rounded-lg p-1 md:p-1.5 flex-shrink-0" :class="iconBgClass">
+            <component :is="iconComponent" class="size-3.5 md:size-4 lg:size-5" :class="iconClass" />
           </div>
-          <h3 class="text-sm font-semibold text-neutral-600 dark:text-neutral-400">
+          <h3 class="text-[10px] md:text-xs font-semibold text-neutral-600 dark:text-neutral-400 truncate">
             {{ title }}
           </h3>
         </div>
@@ -32,32 +32,32 @@
       </div>
 
       <!-- Value -->
-      <div class="mb-2">
-        <p class="text-3xl font-bold" :class="valueClass">
+      <div class="mb-1.5 md:mb-2">
+        <p class="text-base md:text-lg lg:text-xl font-bold break-words leading-tight" :class="valueClass">
           {{ formattedValue }}
         </p>
       </div>
 
       <!-- Trend Indicator -->
-      <div v-if="trend !== null" class="flex items-center gap-1">
+      <div v-if="trend !== null" class="flex items-center gap-0.5 md:gap-1 flex-wrap">
         <component
           :is="trendIcon"
-          class="size-4"
+          class="size-2.5 md:size-3 flex-shrink-0"
           :class="trend >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'"
         />
         <span
-          class="text-sm font-medium"
+          class="text-[10px] md:text-xs font-medium"
           :class="trend >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'"
         >
           {{ Math.abs(trend) }}%
         </span>
-        <span class="text-sm text-neutral-500 dark:text-neutral-400">
+        <span class="text-[10px] md:text-xs text-neutral-500 dark:text-neutral-400">
           {{ trendLabel || 'vs last period' }}
         </span>
       </div>
 
       <!-- Subtitle or additional info -->
-      <p v-else-if="subtitle" class="text-sm text-neutral-500 dark:text-neutral-400">
+      <p v-else-if="subtitle" class="text-[10px] md:text-xs text-neutral-500 dark:text-neutral-400">
         {{ subtitle }}
       </p>
 

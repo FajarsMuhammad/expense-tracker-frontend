@@ -222,11 +222,11 @@
     </div>
 
     <!-- Action Buttons -->
-    <div class="flex gap-3 pt-4">
-      <AppButton type="submit" :loading="loading" class="flex-1">
-        {{ isEditMode ? 'Update Transaction' : 'Create Transaction' }}
+    <div class="flex gap-2 md:gap-3 pt-4">
+      <AppButton type="submit" :loading="loading" class="flex-1 !py-2 md:!py-2.5 !text-xs md:!text-sm">
+        {{ loading ? 'Saving...' : 'Save' }}
       </AppButton>
-      <AppButton type="button" variant="secondary" @click="$emit('cancel')" class="flex-1">
+      <AppButton type="button" variant="secondary" @click="$emit('cancel')" class="flex-1 !py-2 md:!py-2.5 !text-xs md:!text-sm">
         Cancel
       </AppButton>
     </div>

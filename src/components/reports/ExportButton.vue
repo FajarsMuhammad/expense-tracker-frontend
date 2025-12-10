@@ -3,13 +3,13 @@
     <!-- Export Button -->
     <button
       type="button"
-      class="flex items-center gap-2 rounded-lg border border-neutral-300 bg-white px-4 py-2.5 text-sm font-medium text-neutral-700 shadow-sm transition-all duration-200 hover:bg-neutral-50 hover:shadow focus:outline-none focus:ring-2 focus:ring-primary-500/50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-600 dark:bg-dark-card dark:text-neutral-300 dark:hover:bg-neutral-800"
+      class="flex items-center gap-1.5 sm:gap-2 rounded-lg border border-neutral-300 bg-white px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-neutral-700 shadow-sm transition-all duration-200 hover:bg-neutral-50 hover:shadow focus:outline-none focus:ring-2 focus:ring-primary-500/50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-600 dark:bg-dark-card dark:text-neutral-300 dark:hover:bg-neutral-800"
       :disabled="disabled || exporting"
       @click="toggleDropdown"
     >
-      <ArrowDownTrayIcon class="size-5" :class="{ 'animate-bounce': exporting }" />
+      <ArrowDownTrayIcon class="size-4 sm:size-5" :class="{ 'animate-bounce': exporting }" />
       <span>{{ exporting ? exportingText : 'Export' }}</span>
-      <ChevronDownIcon v-if="!exporting" class="size-4 transition-transform" :class="{ 'rotate-180': showDropdown }" />
+      <ChevronDownIcon v-if="!exporting" class="size-3 sm:size-4 transition-transform" :class="{ 'rotate-180': showDropdown }" />
     </button>
 
     <!-- Progress Bar (Shown when exporting) -->
@@ -40,14 +40,14 @@
     >
       <div
         v-if="showDropdown && !exporting"
-        class="absolute right-0 top-full z-50 mt-2 w-64 overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-xl dark:border-neutral-700 dark:bg-dark-card"
+        class="absolute right-0 top-full z-50 mt-2 w-56 sm:w-64 overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-xl dark:border-neutral-700 dark:bg-dark-card"
       >
         <!-- Dropdown Header -->
-        <div class="border-b border-neutral-200 bg-neutral-50 px-4 py-3 dark:border-neutral-700 dark:bg-neutral-800/50">
-          <h4 class="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+        <div class="border-b border-neutral-200 bg-neutral-50 px-3 sm:px-4 py-2 sm:py-3 dark:border-neutral-700 dark:bg-neutral-800/50">
+          <h4 class="text-xs sm:text-sm font-semibold text-neutral-900 dark:text-neutral-100">
             Select Export Format
           </h4>
-          <p class="mt-0.5 text-xs text-neutral-600 dark:text-neutral-400">
+          <p class="mt-0.5 text-[10px] sm:text-xs text-neutral-600 dark:text-neutral-400">
             Choose a format to download your data
           </p>
         </div>
@@ -58,7 +58,7 @@
             v-for="format in formats"
             :key="format.value"
             type="button"
-            class="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
+            class="flex w-full items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 text-left transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
             :class="{
               'cursor-not-allowed opacity-50': !format.available,
             }"
@@ -67,33 +67,33 @@
           >
             <!-- Icon -->
             <div
-              class="flex size-10 items-center justify-center rounded-lg"
+              class="flex size-8 sm:size-10 flex-shrink-0 items-center justify-center rounded-lg"
               :class="format.iconBg"
             >
-              <component :is="format.icon" class="size-5" :class="format.iconColor" />
+              <component :is="format.icon" class="size-4 sm:size-5" :class="format.iconColor" />
             </div>
 
             <!-- Content -->
-            <div class="flex-1">
-              <div class="flex items-center gap-2">
-                <span class="text-sm font-medium text-neutral-900 dark:text-neutral-100">
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-1.5 sm:gap-2">
+                <span class="text-xs sm:text-sm font-medium text-neutral-900 dark:text-neutral-100">
                   {{ format.label }}
                 </span>
                 <span
                   v-if="format.badge"
-                  class="rounded-full bg-primary-100 px-2 py-0.5 text-xs font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
+                  class="rounded-full bg-primary-100 px-1.5 sm:px-2 py-0.5 text-[10px] sm:text-xs font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
                 >
                   {{ format.badge }}
                 </span>
               </div>
-              <p class="text-xs text-neutral-600 dark:text-neutral-400">
+              <p class="text-[10px] sm:text-xs text-neutral-600 dark:text-neutral-400 truncate">
                 {{ format.description }}
               </p>
             </div>
 
             <!-- Check Mark if available -->
-            <ChevronRightIcon v-if="format.available" class="size-4 text-neutral-400" />
-            <LockClosedIcon v-else class="size-4 text-neutral-400" />
+            <ChevronRightIcon v-if="format.available" class="size-3 sm:size-4 flex-shrink-0 text-neutral-400" />
+            <LockClosedIcon v-else class="size-3 sm:size-4 flex-shrink-0 text-neutral-400" />
           </button>
         </div>
 

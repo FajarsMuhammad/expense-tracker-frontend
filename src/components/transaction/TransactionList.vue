@@ -1,22 +1,22 @@
 <template>
   <div class="space-y-6">
     <!-- Summary Header -->
-    <div v-if="!loading && hasTransactions" class="flex items-center justify-between">
+    <div v-if="!loading && hasTransactions" class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
       <div>
-        <p class="text-sm text-muted">
+        <p class="text-[10px] md:text-xs lg:text-sm text-muted">
           Showing {{ transactions.length }} of {{ totalTransactions }} transactions
         </p>
       </div>
-      <div class="flex gap-4 text-sm">
-        <div class="flex items-center gap-2">
-          <span class="text-muted">Income:</span>
-          <span class="font-semibold text-income dark:text-income-light">
+      <div class="flex flex-col gap-1.5 md:flex-row md:gap-3 lg:gap-4 text-[10px] md:text-xs lg:text-sm">
+        <div class="flex items-center gap-1.5 md:gap-2 min-w-0">
+          <span class="text-muted flex-shrink-0">Income:</span>
+          <span class="font-semibold text-income dark:text-income-light break-all leading-tight">
             {{ formatCurrency(incomeTotal, 'IDR') }}
           </span>
         </div>
-        <div class="flex items-center gap-2">
-          <span class="text-muted">Expense:</span>
-          <span class="font-semibold text-expense dark:text-expense-light">
+        <div class="flex items-center gap-1.5 md:gap-2 min-w-0">
+          <span class="text-muted flex-shrink-0">Expense:</span>
+          <span class="font-semibold text-expense dark:text-expense-light break-all leading-tight">
             {{ formatCurrency(expenseTotal, 'IDR') }}
           </span>
         </div>

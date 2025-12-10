@@ -3,6 +3,13 @@ export default {
   content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   darkMode: 'class', // Enable class-based dark mode
   theme: {
+    screens: {
+      sm: '640px',   // Mobile landscape
+      md: '768px',   // Tablet portrait (iPad Mini)
+      lg: '1024px',  // Tablet landscape / Desktop
+      xl: '1280px',  // Desktop
+      '2xl': '1536px', // Large desktop
+    },
     fontFamily: {
       sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
       display: ['Poppins', 'system-ui', '-apple-system', 'sans-serif'],
