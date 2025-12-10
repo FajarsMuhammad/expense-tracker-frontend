@@ -4,9 +4,9 @@
       <!-- Header -->
       <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
         <div>
-          <h1 class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">Wallets</h1>
+          <h1 class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">{{ $t('wallets.title') }}</h1>
           <p class="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
-            Manage your financial accounts and balances
+            {{ $t('wallets.subtitle') }}
           </p>
         </div>
         <!-- Desktop Add Button -->
@@ -16,7 +16,7 @@
           class="hidden md:inline-flex items-center gap-1.5 rounded-lg bg-neutral-400 px-4 py-2 text-sm font-medium text-white shadow-sm cursor-not-allowed opacity-60 dark:bg-neutral-600"
         >
           <PlusIcon class="size-4" />
-          Add
+          {{ $t('wallets.add') }}
         </button>
         <router-link
           v-else
@@ -24,7 +24,7 @@
           class="hidden md:inline-flex items-center gap-1.5 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-all hover:bg-primary-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:bg-primary-500 dark:hover:bg-primary-600"
         >
           <PlusIcon class="size-4" />
-          Add
+          {{ $t('wallets.add') }}
         </router-link>
       </div>
 
@@ -48,11 +48,11 @@
 
       <AppEmpty
         v-else-if="!loading && wallets.length === 0"
-        title="No Wallets Yet"
-        description="Create your first wallet to start tracking your expenses"
+        :title="$t('wallets.empty.title')"
+        :description="$t('wallets.empty.description')"
       >
         <AppButton @click="$router.push('/wallets/create')">
-          Create Your First Wallet
+          {{ $t('wallets.empty.createFirst') }}
         </AppButton>
       </AppEmpty>
 
@@ -69,10 +69,10 @@
 
       <AppConfirmDialog
         v-model="showDeleteModal"
-        title="Delete Wallet"
-        :message="`Are you sure you want to delete &quot;${walletToDelete?.name}&quot;? This action cannot be undone.`"
+        :title="$t('wallets.deleteConfirm.title')"
+        :message="deleteMessage"
         variant="danger"
-        confirm-text="Delete"
+        :confirm-text="$t('wallets.deleteConfirm.confirm')"
         :loading="loading"
         @confirm="handleDelete"
         @cancel="showDeleteModal = false"
@@ -82,8 +82,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import AppButton from '@/components/common/AppButton.vue'
 import AppConfirmDialog from '@/components/common/AppConfirmDialog.vue'
@@ -93,11 +94,17 @@ import WalletCard from '@/components/wallet/WalletCard.vue'
 import { PlusIcon } from '@heroicons/vue/24/outline'
 import { useWallet } from '@/composables/useWallet'
 
+const { t } = useI18n()
 const router = useRouter()
 const { wallets, loading, canCreateWallet, loadWallets, handleDeleteWallet } = useWallet()
 
 const showDeleteModal = ref(false)
 const walletToDelete = ref(null)
+
+const deleteMessage = computed(() => {
+  if (!walletToDelete.value) return ''
+  return t('wallets.deleteConfirm.message', { name: walletToDelete.value.name })
+})
 
 onMounted(() => {
   loadWallets()

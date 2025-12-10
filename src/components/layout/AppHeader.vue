@@ -98,7 +98,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round"
                     d="M5.121 17.804A4 4 0 018 16h8a4 4 0 012.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
-                Profile
+                {{ $t('navigation.menu.profile') }}
               </button>
 
               <!-- Settings -->
@@ -107,8 +107,44 @@
                   <path stroke-linecap="round" stroke-linejoin="round"
                     d="M12 8v4l3 3m6-7a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                Settings
+                {{ $t('navigation.menu.settings') }}
               </button>
+
+              <!-- Separator -->
+              <div class="menu-separator my-1"></div>
+
+              <!-- Language Switcher -->
+              <div class="px-4 py-3">
+                <div class="text-xs font-semibold text-neutral-500 dark:text-neutral-400 mb-2.5">
+                  {{ $t('common.locale.title') }}
+                </div>
+
+                <!-- Compact Toggle Switch -->
+                <div class="relative inline-flex w-full bg-neutral-100 dark:bg-dark-surface rounded-full p-0.5">
+                  <!-- Sliding Background -->
+                  <div
+                    class="absolute top-0.5 left-0.5 h-[calc(100%-0.25rem)] w-[calc(50%-0.25rem)] bg-gradient-primary rounded-full transition-all duration-300 ease-out shadow-lg"
+                    :style="{ transform: currentLocale === 'en' ? 'translateX(calc(100% + 0.25rem))' : 'translateX(0)' }">
+                  </div>
+
+                  <!-- Toggle Options -->
+                  <button
+                    v-for="locale in availableLocales"
+                    :key="locale"
+                    @click="switchLocale(locale)"
+                    :class="[
+                      'relative z-10 flex-1 px-2.5 py-1.5 text-xs font-semibold rounded-full transition-all duration-300',
+                      currentLocale === locale
+                        ? 'text-white'
+                        : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200'
+                    ]">
+                    <span class="flex items-center justify-center gap-1.5">
+                      <span class="text-sm">{{ locale === 'id' ? '🇮🇩' : '🇬🇧' }}</span>
+                      <span class="tracking-tight">{{ locale === 'id' ? 'ID' : 'EN' }}</span>
+                    </span>
+                  </button>
+                </div>
+              </div>
 
               <!-- Separator BEFORE Logout -->
               <div class="menu-separator my-1"></div>
@@ -118,7 +154,7 @@
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1m0-10V5" />
                 </svg>
-                Log out
+                {{ $t('navigation.menu.logout') }}
               </button>
 
             </div>
@@ -135,10 +171,20 @@ import { ref, computed, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import ThemeToggle from '@/components/common/ThemeToggle.vue'
 import { useRouter } from 'vue-router'
 import { useAuth } from '@/composables/useAuth'
+import { useLocaleStore } from '@/stores/locale'
 
 /* AUTH */
 const router = useRouter()
 const { user, handleLogout } = useAuth()
+
+/* LOCALE */
+const localeStore = useLocaleStore()
+const { currentLocale, availableLocales } = localeStore
+const { setLocale, getLocaleLabel } = localeStore
+
+function switchLocale(locale) {
+  setLocale(locale)
+}
 
 const userName = computed(() => user?.value?.name || 'User')
 const userEmail = computed(() => user?.value?.email || '')

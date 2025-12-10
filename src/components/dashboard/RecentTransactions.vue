@@ -1,17 +1,17 @@
 <template>
   <AppCard>
     <div class="flex items-center justify-between mb-4">
-      <h3 class="text-lg font-display font-semibold text-neutral-900 dark:text-neutral-100">Recent Transactions</h3>
+      <h3 class="text-lg font-display font-semibold text-neutral-900 dark:text-neutral-100">{{ $t('dashboard.recentTransactions') }}</h3>
       <router-link
         to="/transactions"
         class="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium hidden sm:block transition-colors"
       >
-        View All
+        {{ $t('dashboard.viewAll') }}
       </router-link>
     </div>
 
     <div v-if="transactions.length === 0" class="py-12 text-center text-neutral-500 dark:text-neutral-400">
-      No transactions yet
+      {{ $t('dashboard.noTransactions') }}
     </div>
 
     <div v-else class="divide-y divide-neutral-200 dark:divide-dark-border">
@@ -35,7 +35,7 @@
 
           <div class="flex-1 min-w-0">
             <p class="font-medium text-neutral-900 dark:text-neutral-100 truncate">
-              {{ transaction.categoryName || 'Uncategorized' }}
+              {{ transaction.categoryName || $t('dashboard.uncategorized') }}
             </p>
             <p class="text-sm text-neutral-500 dark:text-neutral-400">{{ formatDate(transaction.date) }}</p>
           </div>

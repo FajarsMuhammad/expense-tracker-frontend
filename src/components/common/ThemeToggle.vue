@@ -2,7 +2,7 @@
   <button
     @click="toggleTheme"
     class="relative p-2 rounded-xl bg-neutral-100 dark:bg-dark-surface hover:bg-neutral-200 dark:hover:bg-dark-card transition-all duration-300 group"
-    aria-label="Toggle theme"
+    :aria-label="$t('common.theme.toggle')"
   >
     <!-- Sun icon (light mode) -->
     <svg

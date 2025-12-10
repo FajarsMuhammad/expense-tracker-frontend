@@ -3,7 +3,7 @@
     <!-- Debt Type -->
     <div class="space-y-2">
       <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">
-        Debt Type <span class="text-red-500">*</span>
+        {{ $t('debts.form.debtType') }} <span class="text-red-500">*</span>
       </label>
       <div class="grid grid-cols-2 gap-4">
         <button
@@ -14,8 +14,8 @@
         >
           <ArrowUpCircleIcon class="size-6" />
           <div class="text-left">
-            <div class="font-bold">Payable</div>
-            <div class="text-xs opacity-90">You owe money</div>
+            <div class="font-bold">{{ $t('debts.types.payable') }}</div>
+            <div class="text-xs opacity-90">{{ $t('debts.types.youOweMoney') }}</div>
           </div>
         </button>
         <button
@@ -26,8 +26,8 @@
         >
           <ArrowDownCircleIcon class="size-6" />
           <div class="text-left">
-            <div class="font-bold">Receivable</div>
-            <div class="text-xs opacity-90">You are owed money</div>
+            <div class="font-bold">{{ $t('debts.types.receivable') }}</div>
+            <div class="text-xs opacity-90">{{ $t('debts.types.youAreOwedMoney') }}</div>
           </div>
         </button>
       </div>
@@ -39,13 +39,13 @@
     <!-- Counterparty Name -->
     <div class="space-y-2">
       <label for="counterpartyName" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">
-        Counterparty Name <span class="text-red-500">*</span>
+        {{ $t('debts.form.counterpartyName') }} <span class="text-red-500">*</span>
       </label>
       <input
         id="counterpartyName"
         v-model="formData.counterpartyName"
         type="text"
-        placeholder="Enter person or company name"
+        :placeholder="$t('debts.form.counterpartyPlaceholder')"
         :class="errors.counterpartyName ? inputErrorClass : inputClass"
         class="block w-full rounded-lg px-4 py-2.5 text-sm shadow-sm transition-colors focus:outline-none focus:ring-2"
       />
@@ -58,7 +58,7 @@
     <CurrencyInput
       id="totalAmount"
       v-model="formData.totalAmount"
-      label="Total Amount"
+      :label="$t('debts.form.totalAmount')"
       placeholder="0"
       required
       :min="1"
@@ -68,7 +68,7 @@
     <!-- Due Date -->
     <div class="space-y-2">
       <label for="dueDate" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">
-        Due Date <span class="text-red-500">*</span>
+        {{ $t('debts.form.dueDate') }} <span class="text-red-500">*</span>
       </label>
       <input
         id="dueDate"
@@ -86,19 +86,19 @@
     <!-- Note -->
     <div class="space-y-2">
       <label for="note" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">
-        Note <span class="text-neutral-400">(Optional)</span>
+        {{ $t('debts.form.note') }} <span class="text-neutral-400">{{ $t('debts.form.noteOptional') }}</span>
       </label>
       <textarea
         id="note"
         v-model="formData.note"
         rows="4"
         maxlength="500"
-        placeholder="Add any additional details about this debt..."
+        :placeholder="$t('debts.form.notePlaceholder')"
         :class="inputClass"
         class="block w-full rounded-lg px-4 py-2.5 text-sm shadow-sm transition-colors focus:outline-none focus:ring-2"
       ></textarea>
       <p class="text-xs text-neutral-500 dark:text-neutral-400">
-        {{ formData.note?.length || 0 }}/500 characters
+        {{ $t('debts.form.charactersCount', { count: formData.note?.length || 0 }) }}
       </p>
     </div>
 
@@ -109,14 +109,14 @@
         :disabled="loading"
         class="flex-1 rounded-lg bg-primary-600 px-6 py-2 md:py-3 text-xs md:text-sm font-medium text-white transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-primary-500 dark:hover:bg-primary-600"
       >
-        {{ loading ? 'Saving...' : 'Save' }}
+        {{ loading ? $t('debts.form.saving') : $t('debts.form.save') }}
       </button>
       <button
         type="button"
         @click="$emit('cancel')"
         class="flex-1 rounded-lg border border-neutral-300 bg-white px-6 py-2 md:py-3 text-xs md:text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:border-neutral-600 dark:bg-dark-bg dark:text-neutral-300 dark:hover:bg-neutral-800"
       >
-        Cancel
+        {{ $t('debts.form.cancel') }}
       </button>
     </div>
   </form>
@@ -124,9 +124,12 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { ArrowUpCircleIcon, ArrowDownCircleIcon } from '@heroicons/vue/24/outline'
 import { DEBT_TYPES } from '@/config/api.config'
 import CurrencyInput from '@/components/common/CurrencyInput.vue'
+
+const { t } = useI18n()
 
 const props = defineProps({
   debt: {
@@ -203,22 +206,22 @@ function validateForm() {
   let isValid = true
 
   if (!formData.value.type) {
-    errors.value.type = 'Please select a debt type'
+    errors.value.type = t('debts.form.typeRequired')
     isValid = false
   }
 
   if (!formData.value.counterpartyName || formData.value.counterpartyName.trim() === '') {
-    errors.value.counterpartyName = 'Counterparty name is required'
+    errors.value.counterpartyName = t('debts.form.counterpartyRequired')
     isValid = false
   }
 
   if (!formData.value.totalAmount || formData.value.totalAmount <= 0) {
-    errors.value.totalAmount = 'Amount must be greater than 0'
+    errors.value.totalAmount = t('debts.form.amountRequired')
     isValid = false
   }
 
   if (!formData.value.dueDate) {
-    errors.value.dueDate = 'Due date is required'
+    errors.value.dueDate = t('debts.form.dueDateRequired')
     isValid = false
   }
 

@@ -4,18 +4,18 @@
     <div v-if="!loading && hasTransactions" class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
       <div>
         <p class="text-[10px] md:text-xs lg:text-sm text-muted">
-          Showing {{ transactions.length }} of {{ totalTransactions }} transactions
+          {{ $t('transactions.showing', { count: transactions.length, total: totalTransactions }) }}
         </p>
       </div>
       <div class="flex flex-col gap-1.5 md:flex-row md:gap-3 lg:gap-4 text-[10px] md:text-xs lg:text-sm">
         <div class="flex items-center gap-1.5 md:gap-2 min-w-0">
-          <span class="text-muted flex-shrink-0">Income:</span>
+          <span class="text-muted flex-shrink-0">{{ $t('transactions.income') }}:</span>
           <span class="font-semibold text-income dark:text-income-light break-all leading-tight">
             {{ formatCurrency(incomeTotal, 'IDR') }}
           </span>
         </div>
         <div class="flex items-center gap-1.5 md:gap-2 min-w-0">
-          <span class="text-muted flex-shrink-0">Expense:</span>
+          <span class="text-muted flex-shrink-0">{{ $t('transactions.expense') }}:</span>
           <span class="font-semibold text-expense dark:text-expense-light break-all leading-tight">
             {{ formatCurrency(expenseTotal, 'IDR') }}
           </span>
@@ -31,11 +31,11 @@
     <!-- Empty State -->
     <AppEmpty
       v-else-if="!loading && !hasTransactions"
-      title="No Transactions"
-      description="Start tracking your finances by creating your first transaction"
+      :title="$t('transactions.empty.title')"
+      :description="$t('transactions.empty.description')"
     >
       <AppButton @click="$router.push('/transactions/create')">
-        Create Transaction
+        {{ $t('transactions.empty.create') }}
       </AppButton>
     </AppEmpty>
 
@@ -61,13 +61,13 @@
         <svg v-if="!loading" class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
         </svg>
-        {{ loading ? 'Loading...' : 'Load More' }}
+        {{ loading ? $t('transactions.loading') : $t('transactions.loadMore') }}
       </AppButton>
     </div>
 
     <!-- End of List Indicator -->
     <div v-if="!hasMore && hasTransactions && transactions.length > 10" class="text-center py-4">
-      <p class="text-sm text-muted">You've reached the end of the list</p>
+      <p class="text-sm text-muted">{{ $t('transactions.endOfList') }}</p>
     </div>
   </div>
 </template>
