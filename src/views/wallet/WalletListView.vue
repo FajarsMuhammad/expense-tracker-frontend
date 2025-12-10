@@ -13,17 +13,17 @@
         <button
           v-if="!canCreateWallet"
           disabled
-          class="hidden md:inline-flex items-center gap-2 rounded-lg bg-neutral-400 px-6 py-3 font-medium text-white shadow-sm cursor-not-allowed opacity-60 dark:bg-neutral-600"
+          class="hidden md:inline-flex items-center gap-1.5 rounded-lg bg-neutral-400 px-4 py-2 text-sm font-medium text-white shadow-sm cursor-not-allowed opacity-60 dark:bg-neutral-600"
         >
-          <PlusIcon class="size-5" />
+          <PlusIcon class="size-4" />
           Add
         </button>
         <router-link
           v-else
           to="/wallets/create"
-          class="hidden md:inline-flex items-center gap-2 rounded-lg bg-primary-600 px-6 py-3 font-medium text-white shadow-sm transition-all hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:bg-primary-500 dark:hover:bg-primary-600"
+          class="hidden md:inline-flex items-center gap-1.5 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-all hover:bg-primary-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:bg-primary-500 dark:hover:bg-primary-600"
         >
-          <PlusIcon class="size-5" />
+          <PlusIcon class="size-4" />
           Add
         </router-link>
       </div>

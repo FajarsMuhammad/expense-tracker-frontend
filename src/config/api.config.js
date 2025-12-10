@@ -28,7 +28,8 @@ export const API_ENDPOINTS = {
 
   // User
   USER: {
-    ME: '/me',
+    ME: '/users/me',
+    UPDATE_PROFILE: '/users/me',
   },
 
   // Wallets
