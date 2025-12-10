@@ -56,6 +56,7 @@ export const API_ENDPOINTS = {
     BASE: '/debts',
     BY_ID: (id) => `/debts/${id}`,
     PAYMENTS: (id) => `/debts/${id}/payments`,
+    PAYMENT_BY_ID: (debtId, paymentId) => `/debts/${debtId}/payments/${paymentId}`,
     MARK_PAID: (id) => `/debts/${id}/mark-paid`,
   },
 

@@ -70,7 +70,7 @@
         :disabled="loading"
         class="flex-1 rounded-lg bg-primary-600 px-6 py-2 md:py-3 text-xs md:text-sm font-medium text-white transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-primary-500 dark:hover:bg-primary-600"
       >
-        {{ loading ? 'Saving...' : 'Save' }}
+        {{ loading ? 'Saving...' : isEditMode ? 'Update Payment' : 'Add Payment' }}
       </button>
       <button
         type="button"
@@ -97,6 +97,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  payment: {
+    type: Object,
+    default: null,
+  },
   loading: {
     type: Boolean,
     default: false,
@@ -105,11 +109,33 @@ const props = defineProps({
 
 const emit = defineEmits(['submit', 'cancel'])
 
+const isEditMode = computed(() => !!props.payment)
+
 const formData = ref({
-  amount: null,
-  paidAt: getCurrentDateTime(),
-  note: '',
+  amount: props.payment?.amount || null,
+  paidAt: props.payment?.paidAt || getCurrentDateTime(),
+  note: props.payment?.note || '',
 })
+
+// Watch for payment prop changes (when editing different payments)
+watch(
+  () => props.payment,
+  (newPayment) => {
+    if (newPayment) {
+      formData.value = {
+        amount: newPayment.amount,
+        paidAt: newPayment.paidAt,
+        note: newPayment.note || '',
+      }
+    } else {
+      formData.value = {
+        amount: null,
+        paidAt: getCurrentDateTime(),
+        note: '',
+      }
+    }
+  }
+)
 
 const errors = ref({
   amount: '',

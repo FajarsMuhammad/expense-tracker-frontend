@@ -238,6 +238,60 @@ export const useDebtStore = defineStore('debt', () => {
     }
   }
 
+  async function updatePayment(debtId, paymentId, paymentData) {
+    loading.value = true
+    error.value = null
+    try {
+      const data = await debtService.updatePayment(debtId, paymentId, paymentData)
+
+      // Backend returns { payment, updatedDebt }
+      const updatedDebt = data.updatedDebt || data
+
+      // Update the debt in the list
+      const index = debts.value.findIndex((d) => d.id === debtId)
+      if (index !== -1) {
+        debts.value[index] = updatedDebt
+      }
+      // Update current debt if it's the same
+      if (currentDebt.value?.id === debtId) {
+        currentDebt.value = updatedDebt
+      }
+      return data
+    } catch (err) {
+      error.value = err.message
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
+  async function deletePayment(debtId, paymentId) {
+    loading.value = true
+    error.value = null
+    try {
+      const data = await debtService.deletePayment(debtId, paymentId)
+
+      // Backend returns updatedDebt
+      const updatedDebt = data
+
+      // Update the debt in the list
+      const index = debts.value.findIndex((d) => d.id === debtId)
+      if (index !== -1) {
+        debts.value[index] = updatedDebt
+      }
+      // Update current debt if it's the same
+      if (currentDebt.value?.id === debtId) {
+        currentDebt.value = updatedDebt
+      }
+      return data
+    } catch (err) {
+      error.value = err.message
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
   function setFilters(newFilters) {
     filters.value = { ...filters.value, ...newFilters }
     // Reset to page 0 when filters change
@@ -279,6 +333,8 @@ export const useDebtStore = defineStore('debt', () => {
     updateDebt,
     deleteDebt,
     addPaymentToDebt,
+    updatePayment,
+    deletePayment,
     markDebtAsPaid,
     setFilters,
     resetFilters,

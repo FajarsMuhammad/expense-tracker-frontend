@@ -10,24 +10,24 @@
       <!-- Debt Content -->
       <template v-else-if="currentDebt">
         <!-- Header with Actions -->
-        <div class="flex items-start justify-between gap-4">
-          <div class="flex items-center gap-4">
+        <div class="space-y-4">
+          <div class="flex items-start gap-3">
             <button
               @click="router.back()"
-              class="rounded-lg p-2 text-neutral-600 transition-colors hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
+              class="flex-shrink-0 rounded-lg p-2 text-neutral-600 transition-colors hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
             >
-              <ArrowLeftIcon class="size-6" />
+              <ArrowLeftIcon class="size-5 sm:size-6" />
             </button>
-            <div>
-              <h1 class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">
+            <div class="min-w-0 flex-1">
+              <h1 class="truncate text-xl font-bold text-neutral-900 dark:text-neutral-100 sm:text-2xl lg:text-3xl">
                 {{ currentDebt?.counterpartyName }}
               </h1>
-              <div class="mt-2 flex items-center gap-2">
+              <div class="mt-2 flex flex-wrap items-center gap-2">
                 <span
                   :class="typeClasses"
-                  class="inline-flex items-center gap-1.5 rounded-lg px-3 py-1 text-xs font-bold uppercase"
+                  class="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-bold uppercase sm:px-3"
                 >
-                  <component :is="typeIcon" class="size-4" />
+                  <component :is="typeIcon" class="size-3.5 sm:size-4" />
                   {{ typeLabel }}
                 </span>
                 <DebtStatusBadge v-if="currentDebt" :status="currentDebt.status" :is-overdue="currentDebt.isOverdue" />
@@ -39,17 +39,17 @@
           <div class="flex gap-2">
             <button
               @click="handleEdit"
-              class="rounded-lg border border-neutral-300 bg-white px-4 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50 dark:border-neutral-600 dark:bg-dark-card dark:text-neutral-300 dark:hover:bg-neutral-800"
+              class="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-neutral-300 bg-white px-3 py-2 text-xs font-medium text-neutral-700 transition-colors hover:bg-neutral-50 dark:border-neutral-600 dark:bg-dark-card dark:text-neutral-300 dark:hover:bg-neutral-800 sm:flex-none sm:px-4 sm:text-sm"
             >
-              <PencilIcon class="inline size-4" />
-              Edit
+              <PencilIcon class="size-4" />
+              <span>Edit</span>
             </button>
             <button
               @click="showDeleteDialog = true"
-              class="rounded-lg border border-red-300 bg-red-50 px-4 py-2 text-sm font-medium text-red-700 transition-colors hover:bg-red-100 dark:border-red-700 dark:bg-red-900/20 dark:text-red-300 dark:hover:bg-red-900/30"
+              class="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-red-300 bg-red-50 px-3 py-2 text-xs font-medium text-red-700 transition-colors hover:bg-red-100 dark:border-red-700 dark:bg-red-900/20 dark:text-red-300 dark:hover:bg-red-900/30 sm:flex-none sm:px-4 sm:text-sm"
             >
-              <TrashIcon class="inline size-4" />
-              Delete
+              <TrashIcon class="size-4" />
+              <span>Delete</span>
             </button>
           </div>
         </div>
@@ -147,20 +147,25 @@
           <!-- Right Column: Payment History -->
           <div class="space-y-6">
             <!-- Payment History Card -->
-            <div class="rounded-lg bg-white p-6 shadow-sm dark:bg-dark-card">
-              <div class="mb-4 flex items-center justify-between">
-                <h2 class="text-lg font-semibold text-neutral-900 dark:text-neutral-100">Payment History</h2>
+            <div class="rounded-lg bg-white p-4 shadow-sm dark:bg-dark-card sm:p-6">
+              <div class="mb-4 flex items-center justify-between gap-2">
+                <h2 class="truncate text-base font-semibold text-neutral-900 dark:text-neutral-100 sm:text-lg">Payment History</h2>
                 <button
                   v-if="currentDebt?.status !== DEBT_STATUS.PAID"
-                  @click="showPaymentModal = true"
-                  class="rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600"
+                  @click="handleAddPaymentClick"
+                  class="group flex flex-shrink-0 items-center gap-1.5 rounded-lg bg-gradient-to-r from-primary-600 to-primary-700 px-2.5 py-1.5 text-xs font-semibold text-white shadow-sm transition-all hover:shadow-md hover:from-primary-700 hover:to-primary-800 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:from-primary-500 dark:to-primary-600 dark:hover:from-primary-600 dark:hover:to-primary-700 sm:px-4 sm:py-2"
                 >
-                  <PlusIcon class="inline size-4" />
-                  Add Payment
+                  <PlusIcon class="size-3.5 flex-shrink-0 text-white transition-transform group-hover:scale-110 sm:size-4" />
+                  <span class="text-white">Add</span>
                 </button>
               </div>
 
-              <PaymentHistory :payments="currentDebt?.payments" />
+              <PaymentHistory
+                :payments="currentDebt?.payments"
+                :readonly="currentDebt?.status === DEBT_STATUS.PAID"
+                @edit-payment="handleEditPaymentClick"
+                @delete-payment="handleDeletePaymentClick"
+              />
             </div>
           </div>
         </div>
@@ -172,9 +177,15 @@
       </div>
     </div>
 
-    <!-- Add Payment Modal -->
-    <AppModal v-model="showPaymentModal" title="Add Payment">
-      <PaymentForm :debt="currentDebt" :loading="loading" @submit="handleAddPaymentSubmit" @cancel="showPaymentModal = false" />
+    <!-- Add/Edit Payment Modal -->
+    <AppModal v-model="showPaymentModal" :title="editingPayment ? 'Edit Payment' : 'Add Payment'">
+      <PaymentForm
+        :debt="currentDebt"
+        :payment="editingPayment"
+        :loading="loading"
+        @submit="editingPayment ? handleEditPaymentSubmit : handleAddPaymentSubmit"
+        @cancel="handleCancelPaymentForm"
+      />
     </AppModal>
 
     <!-- Delete Confirmation Dialog -->
@@ -197,6 +208,17 @@
       cancel-text="Cancel"
       @confirm="confirmMarkAsPaid"
       @cancel="showMarkPaidDialog = false"
+    />
+
+    <!-- Delete Payment Confirmation Dialog -->
+    <AppConfirmDialog
+      v-model="showDeletePaymentDialog"
+      title="Delete Payment"
+      :message="`Are you sure you want to delete this payment? This action cannot be undone.`"
+      confirm-text="Delete"
+      cancel-text="Cancel"
+      @confirm="confirmDeletePayment"
+      @cancel="showDeletePaymentDialog = false"
     />
   </AppLayout>
 </template>
@@ -226,11 +248,23 @@ import { DEBT_TYPES, DEBT_STATUS } from '@/config/api.config'
 
 const router = useRouter()
 const route = useRoute()
-const { currentDebt, loading, loadDebt, handleDeleteDebt, handleAddPayment, handleMarkAsPaid } = useDebt()
+const {
+  currentDebt,
+  loading,
+  loadDebt,
+  handleDeleteDebt,
+  handleAddPayment,
+  handleUpdatePayment,
+  handleDeletePayment,
+  handleMarkAsPaid,
+} = useDebt()
 
 const showPaymentModal = ref(false)
 const showDeleteDialog = ref(false)
 const showMarkPaidDialog = ref(false)
+const showDeletePaymentDialog = ref(false)
+const editingPayment = ref(null)
+const deletingPayment = ref(null)
 
 const typeClasses = computed(() => {
   if (!currentDebt.value) return ''
@@ -301,9 +335,47 @@ async function confirmDelete() {
   router.push('/debts')
 }
 
+function handleAddPaymentClick() {
+  editingPayment.value = null
+  showPaymentModal.value = true
+}
+
+function handleEditPaymentClick(payment) {
+  editingPayment.value = payment
+  showPaymentModal.value = true
+}
+
+function handleDeletePaymentClick(payment) {
+  deletingPayment.value = payment
+  showDeletePaymentDialog.value = true
+}
+
+function handleCancelPaymentForm() {
+  showPaymentModal.value = false
+  editingPayment.value = null
+}
+
 async function handleAddPaymentSubmit(paymentData) {
   await handleAddPayment(route.params.id, paymentData)
   showPaymentModal.value = false
+  editingPayment.value = null
+  // Reload to ensure all calculated fields are fresh
+  await loadDebt(route.params.id)
+}
+
+async function handleEditPaymentSubmit(paymentData) {
+  await handleUpdatePayment(route.params.id, editingPayment.value.id, paymentData)
+  showPaymentModal.value = false
+  editingPayment.value = null
+  // Reload to ensure all calculated fields are fresh
+  await loadDebt(route.params.id)
+}
+
+async function confirmDeletePayment() {
+  if (!deletingPayment.value) return
+  await handleDeletePayment(route.params.id, deletingPayment.value.id)
+  showDeletePaymentDialog.value = false
+  deletingPayment.value = null
   // Reload to ensure all calculated fields are fresh
   await loadDebt(route.params.id)
 }
