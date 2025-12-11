@@ -119,31 +119,30 @@
                   {{ $t('common.locale.title') }}
                 </div>
 
-                <!-- Compact Toggle Switch -->
-                <div class="relative inline-flex w-full bg-neutral-100 dark:bg-dark-surface rounded-full p-0.5">
-                  <!-- Sliding Background -->
+                <!-- Single Toggle Button (like Theme Toggle) -->
+                <button
+                  @click="toggleLocale"
+                  class="w-full flex items-center justify-center gap-2 p-2 rounded-xl bg-neutral-100 dark:bg-dark-surface hover:bg-neutral-200 dark:hover:bg-dark-card transition-all duration-300 group"
+                  :aria-label="$t('common.locale.switchLanguage')"
+                >
+                  <!-- ID Flag (Indonesian) -->
                   <div
-                    class="absolute top-0.5 left-0.5 h-[calc(100%-0.25rem)] w-[calc(50%-0.25rem)] bg-gradient-primary rounded-full transition-all duration-300 ease-out shadow-lg"
-                    :style="{ transform: currentLocale === 'en' ? 'translateX(calc(100% + 0.25rem))' : 'translateX(0)' }">
+                    v-if="currentLocale === 'id'"
+                    class="flex items-center gap-2 transition-all duration-300 group-hover:scale-110"
+                  >
+                    <span class="text-xl">🇮🇩</span>
+                    <span class="text-sm font-bold text-neutral-700 dark:text-neutral-300">Bahasa Indonesia</span>
                   </div>
 
-                  <!-- Toggle Options -->
-                  <button
-                    v-for="locale in availableLocales"
-                    :key="locale"
-                    @click="switchLocale(locale)"
-                    :class="[
-                      'relative z-10 flex-1 px-2.5 py-1.5 text-xs font-semibold rounded-full transition-all duration-300',
-                      currentLocale === locale
-                        ? 'text-white'
-                        : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200'
-                    ]">
-                    <span class="flex items-center justify-center gap-1.5">
-                      <span class="text-sm">{{ locale === 'id' ? '🇮🇩' : '🇬🇧' }}</span>
-                      <span class="tracking-tight">{{ locale === 'id' ? 'ID' : 'EN' }}</span>
-                    </span>
-                  </button>
-                </div>
+                  <!-- EN Flag (English) -->
+                  <div
+                    v-else
+                    class="flex items-center gap-2 transition-all duration-300 group-hover:scale-110"
+                  >
+                    <span class="text-xl">🇬🇧</span>
+                    <span class="text-sm font-bold text-neutral-700 dark:text-neutral-300">English</span>
+                  </div>
+                </button>
               </div>
 
               <!-- Separator BEFORE Logout -->
@@ -180,11 +179,7 @@ const { user, handleLogout } = useAuth()
 /* LOCALE */
 const localeStore = useLocaleStore()
 const { currentLocale, availableLocales } = localeStore
-const { setLocale, getLocaleLabel } = localeStore
-
-function switchLocale(locale) {
-  setLocale(locale)
-}
+const { toggleLocale, getLocaleLabel } = localeStore
 
 const userName = computed(() => user?.value?.name || 'User')
 const userEmail = computed(() => user?.value?.email || '')

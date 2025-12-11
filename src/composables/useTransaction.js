@@ -2,11 +2,13 @@ import { storeToRefs } from 'pinia'
 import { useTransactionStore } from '@/stores/transaction'
 import { useUIStore } from '@/stores/ui'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
 export function useTransaction() {
   const transactionStore = useTransactionStore()
   const uiStore = useUIStore()
   const router = useRouter()
+  const { t } = useI18n()
 
   // Use storeToRefs to maintain reactivity
   const {
@@ -26,7 +28,7 @@ export function useTransaction() {
     try {
       await transactionStore.fetchTransactions()
     } catch (error) {
-      uiStore.showToast({ message: 'Failed to load transactions', type: 'error' })
+      uiStore.showToast({ message: t('common.toast.transactionLoadFailed'), type: 'error' })
     }
   }
 
@@ -34,7 +36,7 @@ export function useTransaction() {
     try {
       await transactionStore.loadMoreTransactions()
     } catch (error) {
-      uiStore.showToast({ message: 'Failed to load more transactions', type: 'error' })
+      uiStore.showToast({ message: t('common.toast.transactionLoadMoreFailed'), type: 'error' })
     }
   }
 
@@ -42,7 +44,7 @@ export function useTransaction() {
     try {
       await transactionStore.fetchTransactionById(id)
     } catch (error) {
-      uiStore.showToast({ message: 'Failed to load transaction', type: 'error' })
+      uiStore.showToast({ message: t('common.toast.transactionLoadFailed'), type: 'error' })
       router.push('/transactions')
     }
   }
@@ -51,27 +53,27 @@ export function useTransaction() {
     try {
       // Validation
       if (!transactionData.walletId) {
-        uiStore.showToast({ message: 'Please select a wallet', type: 'warning' })
+        uiStore.showToast({ message: t('common.toast.selectWallet'), type: 'warning' })
         return
       }
 
       if (!transactionData.categoryId) {
-        uiStore.showToast({ message: 'Please select a category', type: 'warning' })
+        uiStore.showToast({ message: t('common.toast.selectCategory'), type: 'warning' })
         return
       }
 
       if (!transactionData.type) {
-        uiStore.showToast({ message: 'Please select transaction type', type: 'warning' })
+        uiStore.showToast({ message: t('common.toast.selectTransactionType'), type: 'warning' })
         return
       }
 
       if (!transactionData.amount || transactionData.amount <= 0) {
-        uiStore.showToast({ message: 'Amount must be greater than 0', type: 'warning' })
+        uiStore.showToast({ message: t('common.toast.amountMustBePositive'), type: 'warning' })
         return
       }
 
       if (!transactionData.date) {
-        uiStore.showToast({ message: 'Please select a date', type: 'warning' })
+        uiStore.showToast({ message: t('common.toast.selectDate'), type: 'warning' })
         return
       }
 
@@ -81,12 +83,12 @@ export function useTransaction() {
       today.setHours(23, 59, 59, 999)
 
       if (transactionDate > today) {
-        uiStore.showToast({ message: 'Transaction date cannot be in the future', type: 'warning' })
+        uiStore.showToast({ message: t('common.toast.dateCannotBeFuture'), type: 'warning' })
         return
       }
 
       await transactionStore.createTransaction(transactionData)
-      uiStore.showToast({ message: 'Transaction created successfully!', type: 'success' })
+      uiStore.showToast({ message: t('common.toast.transactionCreated'), type: 'success' })
       router.push('/transactions')
     } catch (error) {
       uiStore.showToast({ message: error.message, type: 'error' })
@@ -98,27 +100,27 @@ export function useTransaction() {
     try {
       // Same validation as create
       if (!transactionData.walletId) {
-        uiStore.showToast({ message: 'Please select a wallet', type: 'warning' })
+        uiStore.showToast({ message: t('common.toast.selectWallet'), type: 'warning' })
         return
       }
 
       if (!transactionData.categoryId) {
-        uiStore.showToast({ message: 'Please select a category', type: 'warning' })
+        uiStore.showToast({ message: t('common.toast.selectCategory'), type: 'warning' })
         return
       }
 
       if (!transactionData.type) {
-        uiStore.showToast({ message: 'Please select transaction type', type: 'warning' })
+        uiStore.showToast({ message: t('common.toast.selectTransactionType'), type: 'warning' })
         return
       }
 
       if (!transactionData.amount || transactionData.amount <= 0) {
-        uiStore.showToast({ message: 'Amount must be greater than 0', type: 'warning' })
+        uiStore.showToast({ message: t('common.toast.amountMustBePositive'), type: 'warning' })
         return
       }
 
       if (!transactionData.date) {
-        uiStore.showToast({ message: 'Please select a date', type: 'warning' })
+        uiStore.showToast({ message: t('common.toast.selectDate'), type: 'warning' })
         return
       }
 
@@ -127,12 +129,12 @@ export function useTransaction() {
       today.setHours(23, 59, 59, 999)
 
       if (transactionDate > today) {
-        uiStore.showToast({ message: 'Transaction date cannot be in the future', type: 'warning' })
+        uiStore.showToast({ message: t('common.toast.dateCannotBeFuture'), type: 'warning' })
         return
       }
 
       await transactionStore.updateTransaction(id, transactionData)
-      uiStore.showToast({ message: 'Transaction updated successfully!', type: 'success' })
+      uiStore.showToast({ message: t('common.toast.transactionUpdated'), type: 'success' })
       router.push('/transactions')
     } catch (error) {
       uiStore.showToast({ message: error.message, type: 'error' })
@@ -143,7 +145,7 @@ export function useTransaction() {
   async function handleDeleteTransaction(id) {
     try {
       await transactionStore.deleteTransaction(id)
-      uiStore.showToast({ message: 'Transaction deleted successfully!', type: 'success' })
+      uiStore.showToast({ message: t('common.toast.transactionDeleted'), type: 'success' })
     } catch (error) {
       uiStore.showToast({ message: error.message, type: 'error' })
       throw error
@@ -155,7 +157,7 @@ export function useTransaction() {
       transactionStore.setFilters(newFilters)
       await transactionStore.fetchTransactions()
     } catch (error) {
-      uiStore.showToast({ message: 'Failed to apply filters', type: 'error' })
+      uiStore.showToast({ message: t('common.toast.filtersFailed'), type: 'error' })
     }
   }
 
@@ -164,7 +166,7 @@ export function useTransaction() {
       transactionStore.resetFilters()
       await transactionStore.fetchTransactions()
     } catch (error) {
-      uiStore.showToast({ message: 'Failed to reset filters', type: 'error' })
+      uiStore.showToast({ message: t('common.toast.filtersResetFailed'), type: 'error' })
     }
   }
 

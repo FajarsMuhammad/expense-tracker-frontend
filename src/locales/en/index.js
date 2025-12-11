@@ -8,6 +8,78 @@ export default {
       name: 'MoneyTrack',
       tagline: 'Track Your Expenses'
     },
+    toast: {
+      // Generic messages
+      success: 'Success',
+      error: 'An error occurred',
+      warning: 'Warning',
+      info: 'Information',
+      // Wallets
+      walletLoadFailed: 'Failed to load wallets',
+      walletCreated: 'Wallet created successfully!',
+      walletUpdated: 'Wallet updated successfully!',
+      walletDeleted: 'Wallet deleted successfully!',
+      walletLimitReached: 'Free users can only create 1 wallet. Upgrade to Premium for unlimited wallets.',
+      // Transactions
+      transactionLoadFailed: 'Failed to load transactions',
+      transactionLoadMoreFailed: 'Failed to load more transactions',
+      transactionCreated: 'Transaction created successfully!',
+      transactionUpdated: 'Transaction updated successfully!',
+      transactionDeleted: 'Transaction deleted successfully!',
+      selectWallet: 'Please select a wallet',
+      selectCategory: 'Please select a category',
+      selectTransactionType: 'Please select transaction type',
+      amountMustBePositive: 'Amount must be greater than 0',
+      selectDate: 'Please select a date',
+      dateCannotBeFuture: 'Transaction date cannot be in the future',
+      filtersFailed: 'Failed to apply filters',
+      filtersResetFailed: 'Failed to reset filters',
+      // Categories
+      categoryLoadFailed: 'Failed to load categories',
+      categoryCreated: 'Category created successfully!',
+      categoryUpdated: 'Category updated successfully!',
+      categoryDeleted: 'Category deleted successfully!',
+      categoryDuplicateExists: 'A {type} category with this name already exists',
+      categoryCannotDeleteDefault: 'Cannot delete default categories',
+      // Debts
+      debtLoadFailed: 'Failed to load debts',
+      debtLoadMoreFailed: 'Failed to load more debts',
+      debtCreated: 'Debt created successfully!',
+      debtUpdated: 'Debt updated successfully!',
+      debtDeleted: 'Debt deleted successfully!',
+      selectDebtType: 'Please select debt type',
+      enterCounterpartyName: 'Please enter counterparty name',
+      selectDueDate: 'Please select a due date',
+      dueDateCannotBePast: 'Due date cannot be in the past',
+      paymentAmountMustBePositive: 'Payment amount must be greater than 0',
+      paymentExceedsRemaining: 'Payment amount cannot exceed remaining amount ({amount})',
+      selectPaymentDate: 'Please select payment date',
+      paymentDateCannotBeFuture: 'Payment date cannot be in the future',
+      paymentAdded: 'Payment added successfully!',
+      paymentUpdated: 'Payment updated successfully!',
+      paymentDeleted: 'Payment deleted successfully!',
+      debtAlreadyPaid: 'Debt is already marked as paid',
+      debtMarkedAsPaid: 'Debt marked as paid!',
+      // Auth
+      loginSuccessful: 'Login successful!',
+      logoutSuccessful: 'Logged out successfully',
+      registrationSuccessful: 'Registration successful!',
+      trialStarted: 'Welcome! Your 14-day PREMIUM trial has started 🎉',
+      // Profile
+      profileLoadFailed: 'Failed to load profile',
+      profileUpdated: 'Profile updated successfully!',
+      profileUpdateFailed: 'Failed to update profile',
+      // Export
+      invalidExportFormat: 'Invalid export format',
+      exportInProgress: 'Export already in progress',
+      startDateBeforeEndDate: 'Start date must be before end date',
+      transactionsExported: 'Transactions exported successfully as {format}',
+      debtsExported: 'Debts exported successfully as {format}',
+      summaryExported: 'Summary exported successfully as {format}',
+      exportFailed: 'Failed to export',
+      csvNotSupportedForSummary: 'CSV format not supported for summary export. Please use Excel or PDF.',
+      exportQuotaCheckFailed: 'Failed to check export quota'
+    },
     buttons: {
       save: 'Save',
       cancel: 'Cancel',
@@ -166,8 +238,15 @@ export default {
     add: 'Add',
     wallet: 'Wallet',
     currentBalance: 'Current Balance',
-    edit: 'Edit',
     delete: 'Delete',
+    create: {
+      title: 'Create Wallet',
+      description: 'Add a new wallet to track your finances'
+    },
+    edit: {
+      title: 'Edit Wallet',
+      description: 'Update wallet information'
+    },
     empty: {
       title: 'No Wallets Yet',
       description: 'Create your first wallet to start tracking your expenses',
@@ -205,6 +284,14 @@ export default {
     showing: 'Showing {count} of {total} transactions',
     income: 'Income',
     expense: 'Expense',
+    create: {
+      title: 'Create Transaction',
+      description: 'Add a new income or expense transaction'
+    },
+    edit: {
+      title: 'Edit Transaction',
+      description: 'Update transaction information'
+    },
     empty: {
       title: 'No Transactions',
       description: 'Start tracking your finances by creating your first transaction',
@@ -217,12 +304,42 @@ export default {
       title: 'Delete Transaction',
       message: 'Are you sure you want to delete this transaction? This action cannot be undone and will affect your wallet balance.',
       confirm: 'Delete'
+    },
+    form: {
+      type: 'Type',
+      typeCannotChange: 'Transaction type cannot be changed after creation',
+      wallet: 'Wallet',
+      walletPlaceholder: 'Search wallets...',
+      selectWallet: 'Select wallet',
+      noWalletsFound: 'No wallets found',
+      category: 'Category',
+      categoryPlaceholder: 'Search categories...',
+      selectCategory: 'Select category',
+      selectTypeFirst: 'Select type first',
+      noCategories: 'No categories',
+      amount: 'Amount',
+      date: 'Date',
+      note: 'Note',
+      noteOptional: '(Optional)',
+      notePlaceholder: 'Add a note about this transaction...',
+      charactersCount: '{count}/500',
+      save: 'Save',
+      saving: 'Saving...',
+      cancel: 'Cancel'
     }
   },
   categories: {
     title: 'Categories',
     subtitle: 'Organize your transactions with custom categories',
     add: 'Add',
+    create: {
+      title: 'Create Category',
+      description: 'Add a new category to organize your transactions'
+    },
+    edit: {
+      title: 'Edit Category',
+      description: 'Update category information'
+    },
     tabs: {
       all: 'All',
       income: 'Income',
@@ -262,6 +379,14 @@ export default {
     title: 'Debts',
     subtitle: 'Manage your payables and receivables',
     add: 'Add',
+    create: {
+      title: 'Create Debt',
+      description: 'Add a new payable or receivable debt'
+    },
+    edit: {
+      title: 'Edit Debt',
+      description: 'Update debt information'
+    },
     summary: {
       youOwe: 'You Owe',
       owedToYou: 'Owed to You',
@@ -344,6 +469,76 @@ export default {
         dayAgo: '{count} day ago',
         daysAgo: '{count} days ago'
       }
+    },
+    paymentForm: {
+      remainingAmount: 'Remaining Amount',
+      paymentAmount: 'Payment Amount',
+      paymentDateTime: 'Payment Date & Time',
+      note: 'Note',
+      noteOptional: '(Optional)',
+      notePlaceholder: 'Add a note about this payment...',
+      charactersCount: '{count}/200 characters',
+      save: 'Save',
+      saving: 'Saving...',
+      updatePayment: 'Update Payment',
+      addPayment: 'Add Payment',
+      cancel: 'Cancel',
+      maximumHint: 'Maximum: {amount}'
+    },
+    filtersForm: {
+      title: 'Filters',
+      activeCount: '{count} active',
+      debtType: 'Debt Type',
+      all: 'All',
+      status: 'Status',
+      allStatuses: 'All Statuses',
+      statusOpen: 'Open',
+      statusPartial: 'Partial',
+      statusPaid: 'Paid',
+      showOnlyOverdue: 'Show Only Overdue',
+      applyFilters: 'Apply Filters',
+      reset: 'Reset'
+    },
+    detail: {
+      // Buttons and actions
+      edit: 'Edit',
+      delete: 'Delete',
+      add: 'Add',
+      markAsFullyPaid: 'Mark as Fully Paid',
+      // Section headings
+      debtSummary: 'Debt Summary',
+      information: 'Information',
+      paymentHistory: 'Payment History',
+      // Labels and fields
+      totalAmount: 'Total Amount',
+      paidAmount: 'Paid Amount',
+      remainingAmount: 'Remaining Amount',
+      dueDate: 'Due Date',
+      paymentsMade: 'Payments Made',
+      created: 'Created',
+      lastUpdated: 'Last Updated',
+      note: 'Note',
+      // Type labels
+      youOwe: 'You Owe',
+      owedToYou: 'Owed to You',
+      // Status
+      paid: 'Paid',
+      // Due date messages
+      daysOverdue: '{count} days overdue',
+      dueToday: 'Due today',
+      daysRemaining: '{count} days remaining',
+      // Modal titles
+      addPayment: 'Add Payment',
+      editPayment: 'Edit Payment',
+      deleteDebt: 'Delete Debt',
+      markAsPaid: 'Mark as Paid',
+      deletePayment: 'Delete Payment',
+      // Confirmation messages
+      deleteDebtConfirm: 'Are you sure you want to delete this debt? This action cannot be undone.',
+      markAsPaidConfirm: 'Are you sure you want to mark this debt as fully paid? This will set the remaining amount to zero.',
+      deletePaymentConfirm: 'Are you sure you want to delete this payment? This action cannot be undone.',
+      // Error state
+      debtNotFound: 'Debt not found'
     }
   },
   reports: {

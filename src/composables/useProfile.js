@@ -1,6 +1,7 @@
 import { storeToRefs } from 'pinia'
 import { useProfileStore } from '@/stores/profile'
 import { useUIStore } from '@/stores/ui'
+import { useI18n } from 'vue-i18n'
 
 /**
  * Profile Composable
@@ -13,6 +14,7 @@ import { useUIStore } from '@/stores/ui'
 export function useProfile() {
   const profileStore = useProfileStore()
   const uiStore = useUIStore()
+  const { t } = useI18n()
 
   // Use storeToRefs to maintain reactivity
   const {
@@ -46,7 +48,7 @@ export function useProfile() {
       await profileStore.fetchProfile()
     } catch (err) {
       uiStore.showToast({
-        message: err.message || 'Failed to load profile',
+        message: err.message || t('common.toast.profileLoadFailed'),
         type: 'error',
       })
       throw err
@@ -63,12 +65,12 @@ export function useProfile() {
     try {
       await profileStore.updateProfile(profileData)
       uiStore.showToast({
-        message: 'Profile updated successfully!',
+        message: t('common.toast.profileUpdated'),
         type: 'success',
       })
     } catch (err) {
       uiStore.showToast({
-        message: err.message || 'Failed to update profile',
+        message: err.message || t('common.toast.profileUpdateFailed'),
         type: 'error',
       })
       throw err

@@ -8,6 +8,78 @@ export default {
       name: 'MoneyTrack',
       tagline: 'Lacak Pengeluaran Anda'
     },
+    toast: {
+      // Generic messages
+      success: 'Berhasil',
+      error: 'Terjadi kesalahan',
+      warning: 'Peringatan',
+      info: 'Informasi',
+      // Wallets
+      walletLoadFailed: 'Gagal memuat dompet',
+      walletCreated: 'Dompet berhasil dibuat!',
+      walletUpdated: 'Dompet berhasil diperbarui!',
+      walletDeleted: 'Dompet berhasil dihapus!',
+      walletLimitReached: 'Pengguna gratis hanya dapat membuat 1 dompet. Upgrade ke Premium untuk dompet tanpa batas.',
+      // Transactions
+      transactionLoadFailed: 'Gagal memuat transaksi',
+      transactionLoadMoreFailed: 'Gagal memuat lebih banyak transaksi',
+      transactionCreated: 'Transaksi berhasil dibuat!',
+      transactionUpdated: 'Transaksi berhasil diperbarui!',
+      transactionDeleted: 'Transaksi berhasil dihapus!',
+      selectWallet: 'Silakan pilih dompet',
+      selectCategory: 'Silakan pilih kategori',
+      selectTransactionType: 'Silakan pilih jenis transaksi',
+      amountMustBePositive: 'Jumlah harus lebih besar dari 0',
+      selectDate: 'Silakan pilih tanggal',
+      dateCannotBeFuture: 'Tanggal transaksi tidak boleh di masa depan',
+      filtersFailed: 'Gagal menerapkan filter',
+      filtersResetFailed: 'Gagal mereset filter',
+      // Categories
+      categoryLoadFailed: 'Gagal memuat kategori',
+      categoryCreated: 'Kategori berhasil dibuat!',
+      categoryUpdated: 'Kategori berhasil diperbarui!',
+      categoryDeleted: 'Kategori berhasil dihapus!',
+      categoryDuplicateExists: 'Kategori {type} dengan nama ini sudah ada',
+      categoryCannotDeleteDefault: 'Tidak dapat menghapus kategori default',
+      // Debts
+      debtLoadFailed: 'Gagal memuat utang',
+      debtLoadMoreFailed: 'Gagal memuat lebih banyak utang',
+      debtCreated: 'Utang berhasil dibuat!',
+      debtUpdated: 'Utang berhasil diperbarui!',
+      debtDeleted: 'Utang berhasil dihapus!',
+      selectDebtType: 'Silakan pilih jenis utang',
+      enterCounterpartyName: 'Silakan masukkan nama pihak terkait',
+      selectDueDate: 'Silakan pilih tanggal jatuh tempo',
+      dueDateCannotBePast: 'Tanggal jatuh tempo tidak boleh di masa lalu',
+      paymentAmountMustBePositive: 'Jumlah pembayaran harus lebih besar dari 0',
+      paymentExceedsRemaining: 'Jumlah pembayaran tidak boleh melebihi sisa ({amount})',
+      selectPaymentDate: 'Silakan pilih tanggal pembayaran',
+      paymentDateCannotBeFuture: 'Tanggal pembayaran tidak boleh di masa depan',
+      paymentAdded: 'Pembayaran berhasil ditambahkan!',
+      paymentUpdated: 'Pembayaran berhasil diperbarui!',
+      paymentDeleted: 'Pembayaran berhasil dihapus!',
+      debtAlreadyPaid: 'Utang sudah ditandai sebagai lunas',
+      debtMarkedAsPaid: 'Utang ditandai sebagai lunas!',
+      // Auth
+      loginSuccessful: 'Login berhasil!',
+      logoutSuccessful: 'Logout berhasil',
+      registrationSuccessful: 'Pendaftaran berhasil!',
+      trialStarted: 'Selamat datang! Uji coba PREMIUM 14 hari Anda telah dimulai 🎉',
+      // Profile
+      profileLoadFailed: 'Gagal memuat profil',
+      profileUpdated: 'Profil berhasil diperbarui!',
+      profileUpdateFailed: 'Gagal memperbarui profil',
+      // Export
+      invalidExportFormat: 'Format ekspor tidak valid',
+      exportInProgress: 'Ekspor sedang berlangsung',
+      startDateBeforeEndDate: 'Tanggal mulai harus sebelum tanggal akhir',
+      transactionsExported: 'Transaksi berhasil diekspor sebagai {format}',
+      debtsExported: 'Utang berhasil diekspor sebagai {format}',
+      summaryExported: 'Ringkasan berhasil diekspor sebagai {format}',
+      exportFailed: 'Gagal mengekspor',
+      csvNotSupportedForSummary: 'Format CSV tidak didukung untuk ekspor ringkasan. Silakan gunakan Excel atau PDF.',
+      exportQuotaCheckFailed: 'Gagal memeriksa kuota ekspor'
+    },
     buttons: {
       save: 'Simpan',
       cancel: 'Batal',
@@ -166,8 +238,15 @@ export default {
     add: 'Tambah',
     wallet: 'Dompet',
     currentBalance: 'Saldo Saat Ini',
-    edit: 'Edit',
     delete: 'Hapus',
+    create: {
+      title: 'Buat Dompet',
+      description: 'Tambahkan dompet baru untuk melacak keuangan Anda'
+    },
+    edit: {
+      title: 'Edit Dompet',
+      description: 'Perbarui informasi dompet'
+    },
     empty: {
       title: 'Belum Ada Dompet',
       description: 'Buat dompet pertama Anda untuk mulai melacak pengeluaran',
@@ -205,6 +284,14 @@ export default {
     showing: 'Menampilkan {count} dari {total} transaksi',
     income: 'Pemasukan',
     expense: 'Pengeluaran',
+    create: {
+      title: 'Buat Transaksi',
+      description: 'Tambahkan transaksi pemasukan atau pengeluaran baru'
+    },
+    edit: {
+      title: 'Edit Transaksi',
+      description: 'Perbarui informasi transaksi'
+    },
     empty: {
       title: 'Tidak Ada Transaksi',
       description: 'Mulai lacak keuangan Anda dengan membuat transaksi pertama',
@@ -217,12 +304,42 @@ export default {
       title: 'Hapus Transaksi',
       message: 'Apakah Anda yakin ingin menghapus transaksi ini? Tindakan ini tidak dapat dibatalkan dan akan mempengaruhi saldo dompet Anda.',
       confirm: 'Hapus'
+    },
+    form: {
+      type: 'Tipe',
+      typeCannotChange: 'Tipe transaksi tidak dapat diubah setelah dibuat',
+      wallet: 'Dompet',
+      walletPlaceholder: 'Cari dompet...',
+      selectWallet: 'Pilih dompet',
+      noWalletsFound: 'Tidak ada dompet ditemukan',
+      category: 'Kategori',
+      categoryPlaceholder: 'Cari kategori...',
+      selectCategory: 'Pilih kategori',
+      selectTypeFirst: 'Pilih tipe terlebih dahulu',
+      noCategories: 'Tidak ada kategori',
+      amount: 'Jumlah',
+      date: 'Tanggal',
+      note: 'Catatan',
+      noteOptional: '(Opsional)',
+      notePlaceholder: 'Tambahkan catatan tentang transaksi ini...',
+      charactersCount: '{count}/500',
+      save: 'Simpan',
+      saving: 'Menyimpan...',
+      cancel: 'Batal'
     }
   },
   categories: {
     title: 'Kategori',
     subtitle: 'Atur transaksi Anda dengan kategori kustom',
     add: 'Tambah',
+    create: {
+      title: 'Buat Kategori',
+      description: 'Tambahkan kategori baru untuk mengatur transaksi Anda'
+    },
+    edit: {
+      title: 'Edit Kategori',
+      description: 'Perbarui informasi kategori'
+    },
     tabs: {
       all: 'Semua',
       income: 'Pemasukan',
@@ -262,6 +379,14 @@ export default {
     title: 'Utang Piutang',
     subtitle: 'Kelola utang dan piutang Anda',
     add: 'Tambah',
+    create: {
+      title: 'Buat Utang Piutang',
+      description: 'Tambahkan utang atau piutang baru'
+    },
+    edit: {
+      title: 'Edit Utang Piutang',
+      description: 'Perbarui informasi utang piutang'
+    },
     summary: {
       youOwe: 'Anda Berutang',
       owedToYou: 'Piutang Anda',
@@ -344,6 +469,76 @@ export default {
         dayAgo: '{count} hari yang lalu',
         daysAgo: '{count} hari yang lalu'
       }
+    },
+    paymentForm: {
+      remainingAmount: 'Sisa Jumlah',
+      paymentAmount: 'Jumlah Pembayaran',
+      paymentDateTime: 'Tanggal & Waktu Pembayaran',
+      note: 'Catatan',
+      noteOptional: '(Opsional)',
+      notePlaceholder: 'Tambahkan catatan tentang pembayaran ini...',
+      charactersCount: '{count}/200 karakter',
+      save: 'Simpan',
+      saving: 'Menyimpan...',
+      updatePayment: 'Perbarui Pembayaran',
+      addPayment: 'Tambah Pembayaran',
+      cancel: 'Batal',
+      maximumHint: 'Maksimal: {amount}'
+    },
+    filtersForm: {
+      title: 'Filter',
+      activeCount: '{count} aktif',
+      debtType: 'Tipe Utang Piutang',
+      all: 'Semua',
+      status: 'Status',
+      allStatuses: 'Semua Status',
+      statusOpen: 'Terbuka',
+      statusPartial: 'Sebagian',
+      statusPaid: 'Lunas',
+      showOnlyOverdue: 'Tampilkan Hanya Jatuh Tempo',
+      applyFilters: 'Terapkan Filter',
+      reset: 'Reset'
+    },
+    detail: {
+      // Buttons and actions
+      edit: 'Edit',
+      delete: 'Hapus',
+      add: 'Tambah',
+      markAsFullyPaid: 'Tandai Sebagai Lunas',
+      // Section headings
+      debtSummary: 'Ringkasan Utang Piutang',
+      information: 'Informasi',
+      paymentHistory: 'Riwayat Pembayaran',
+      // Labels and fields
+      totalAmount: 'Jumlah Total',
+      paidAmount: 'Jumlah Dibayar',
+      remainingAmount: 'Sisa Jumlah',
+      dueDate: 'Tanggal Jatuh Tempo',
+      paymentsMade: 'Pembayaran Dilakukan',
+      created: 'Dibuat',
+      lastUpdated: 'Terakhir Diperbarui',
+      note: 'Catatan',
+      // Type labels
+      youOwe: 'Anda Berutang',
+      owedToYou: 'Piutang Anda',
+      // Status
+      paid: 'Lunas',
+      // Due date messages
+      daysOverdue: '{count} hari terlambat',
+      dueToday: 'Jatuh tempo hari ini',
+      daysRemaining: '{count} hari tersisa',
+      // Modal titles
+      addPayment: 'Tambah Pembayaran',
+      editPayment: 'Edit Pembayaran',
+      deleteDebt: 'Hapus Utang Piutang',
+      markAsPaid: 'Tandai Sebagai Lunas',
+      deletePayment: 'Hapus Pembayaran',
+      // Confirmation messages
+      deleteDebtConfirm: 'Apakah Anda yakin ingin menghapus utang piutang ini? Tindakan ini tidak dapat dibatalkan.',
+      markAsPaidConfirm: 'Apakah Anda yakin ingin menandai utang piutang ini sebagai lunas? Ini akan mengatur sisa jumlah menjadi nol.',
+      deletePaymentConfirm: 'Apakah Anda yakin ingin menghapus pembayaran ini? Tindakan ini tidak dapat dibatalkan.',
+      // Error state
+      debtNotFound: 'Utang piutang tidak ditemukan'
     }
   },
   reports: {

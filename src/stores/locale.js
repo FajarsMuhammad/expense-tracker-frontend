@@ -65,11 +65,20 @@ export const useLocaleStore = defineStore('locale', () => {
     return flags[locale] || '🌐'
   }
 
+  /**
+   * Toggle between available locales
+   */
+  function toggleLocale() {
+    const newLocale = currentLocale.value === 'id' ? 'en' : 'id'
+    setLocale(newLocale)
+  }
+
   return {
     currentLocale,
     availableLocales,
     setLocale,
     getLocaleLabel,
-    getLocaleFlag
+    getLocaleFlag,
+    toggleLocale
   }
 })

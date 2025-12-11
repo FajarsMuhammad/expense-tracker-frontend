@@ -2,60 +2,60 @@
   <div class="space-y-4 rounded-lg bg-white p-6 shadow-sm dark:bg-dark-card">
     <!-- Header -->
     <div class="flex items-center justify-between">
-      <h3 class="text-lg font-semibold text-neutral-900 dark:text-neutral-100">Filters</h3>
+      <h3 class="text-lg font-semibold text-neutral-900 dark:text-neutral-100">{{ $t('debts.filtersForm.title') }}</h3>
       <span
         v-if="activeFilterCount > 0"
         class="inline-flex items-center gap-1 rounded-full bg-primary-100 px-2.5 py-0.5 text-xs font-semibold text-primary-700 dark:bg-primary-900/20 dark:text-primary-300"
       >
-        {{ activeFilterCount }} active
+        {{ $t('debts.filtersForm.activeCount', { count: activeFilterCount }) }}
       </span>
     </div>
 
     <!-- Debt Type Filter -->
     <div class="space-y-2">
-      <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Debt Type</label>
+      <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">{{ $t('debts.filtersForm.debtType') }}</label>
       <div class="grid grid-cols-3 gap-2">
         <button
           @click="localFilters.type = null"
           :class="localFilters.type === null ? activeTabClass : inactiveTabClass"
           class="rounded-lg px-4 py-2 text-sm font-medium transition-all"
         >
-          All
+          {{ $t('debts.filtersForm.all') }}
         </button>
         <button
           @click="localFilters.type = DEBT_TYPES.PAYABLE"
           :class="localFilters.type === DEBT_TYPES.PAYABLE ? activePayableClass : inactiveTabClass"
           class="rounded-lg px-4 py-2 text-sm font-medium transition-all"
         >
-          Payable
+          {{ $t('debts.types.payable') }}
         </button>
         <button
           @click="localFilters.type = DEBT_TYPES.RECEIVABLE"
           :class="localFilters.type === DEBT_TYPES.RECEIVABLE ? activeReceivableClass : inactiveTabClass"
           class="rounded-lg px-4 py-2 text-sm font-medium transition-all"
         >
-          Receivable
+          {{ $t('debts.types.receivable') }}
         </button>
       </div>
     </div>
 
     <!-- Status Filter -->
     <div class="space-y-2">
-      <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Status</label>
+      <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">{{ $t('debts.filtersForm.status') }}</label>
       <select
         v-model="localFilters.status"
         class="block w-full rounded-lg border border-neutral-300 bg-white px-4 py-2 text-sm text-neutral-900 shadow-sm transition-colors focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:border-neutral-600 dark:bg-dark-bg dark:text-neutral-100 dark:focus:border-primary-400"
       >
-        <option :value="null">All Statuses</option>
-        <option :value="DEBT_STATUS.OPEN">Open</option>
-        <option :value="DEBT_STATUS.PARTIAL">Partial</option>
-        <option :value="DEBT_STATUS.PAID">Paid</option>
+        <option :value="null">{{ $t('debts.filtersForm.allStatuses') }}</option>
+        <option :value="DEBT_STATUS.OPEN">{{ $t('debts.filtersForm.statusOpen') }}</option>
+        <option :value="DEBT_STATUS.PARTIAL">{{ $t('debts.filtersForm.statusPartial') }}</option>
+        <option :value="DEBT_STATUS.PAID">{{ $t('debts.filtersForm.statusPaid') }}</option>
       </select>
     </div>
 
     <!-- Overdue Toggle -->
     <div class="flex items-center justify-between">
-      <label class="text-sm font-medium text-neutral-700 dark:text-neutral-300">Show Only Overdue</label>
+      <label class="text-sm font-medium text-neutral-700 dark:text-neutral-300">{{ $t('debts.filtersForm.showOnlyOverdue') }}</label>
       <button
         @click="localFilters.overdue = localFilters.overdue === true ? null : true"
         :class="localFilters.overdue === true ? 'bg-red-600' : 'bg-neutral-300 dark:bg-neutral-600'"
@@ -76,13 +76,13 @@
         @click="handleApply"
         class="flex-1 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:bg-primary-500 dark:hover:bg-primary-600"
       >
-        Apply Filters
+        {{ $t('debts.filtersForm.applyFilters') }}
       </button>
       <button
         @click="handleReset"
         class="flex-1 rounded-lg border border-neutral-300 bg-white px-4 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:border-neutral-600 dark:bg-dark-bg dark:text-neutral-300 dark:hover:bg-neutral-800"
       >
-        Reset
+        {{ $t('debts.filtersForm.reset') }}
       </button>
     </div>
   </div>
@@ -90,7 +90,10 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { DEBT_TYPES, DEBT_STATUS } from '@/config/api.config'
+
+const { t: $t } = useI18n()
 
 const props = defineProps({
   filters: {
