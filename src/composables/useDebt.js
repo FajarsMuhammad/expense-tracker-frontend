@@ -2,12 +2,14 @@ import { storeToRefs } from 'pinia'
 import { useDebtStore } from '@/stores/debt'
 import { useUIStore } from '@/stores/ui'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { DEBT_STATUS } from '@/config/api.config'
 
 export function useDebt() {
   const debtStore = useDebtStore()
   const uiStore = useUIStore()
   const router = useRouter()
+  const { t } = useI18n()
 
   // Use storeToRefs to maintain reactivity
   const {
@@ -32,7 +34,7 @@ export function useDebt() {
     try {
       await debtStore.fetchDebts()
     } catch (error) {
-      uiStore.showToast({ message: 'Failed to load debts', type: 'error' })
+      uiStore.showToast({ message: t('common.toast.debtLoadFailed'), type: 'error' })
     }
   }
 
@@ -40,7 +42,7 @@ export function useDebt() {
     try {
       await debtStore.loadMoreDebts()
     } catch (error) {
-      uiStore.showToast({ message: 'Failed to load more debts', type: 'error' })
+      uiStore.showToast({ message: t('common.toast.debtLoadMoreFailed'), type: 'error' })
     }
   }
 
@@ -48,7 +50,7 @@ export function useDebt() {
     try {
       await debtStore.fetchDebtById(id)
     } catch (error) {
-      uiStore.showToast({ message: 'Failed to load debt', type: 'error' })
+      uiStore.showToast({ message: t('common.toast.debtLoadFailed'), type: 'error' })
       router.push('/debts')
     }
   }
@@ -57,22 +59,22 @@ export function useDebt() {
     try {
       // Validation
       if (!debtData.type) {
-        uiStore.showToast({ message: 'Please select debt type', type: 'warning' })
+        uiStore.showToast({ message: t('common.toast.selectDebtType'), type: 'warning' })
         return
       }
 
       if (!debtData.counterpartyName || debtData.counterpartyName.trim() === '') {
-        uiStore.showToast({ message: 'Please enter counterparty name', type: 'warning' })
+        uiStore.showToast({ message: t('common.toast.enterCounterpartyName'), type: 'warning' })
         return
       }
 
       if (!debtData.totalAmount || debtData.totalAmount <= 0) {
-        uiStore.showToast({ message: 'Amount must be greater than 0', type: 'warning' })
+        uiStore.showToast({ message: t('common.toast.amountMustBePositive'), type: 'warning' })
         return
       }
 
       if (!debtData.dueDate) {
-        uiStore.showToast({ message: 'Please select a due date', type: 'warning' })
+        uiStore.showToast({ message: t('common.toast.selectDueDate'), type: 'warning' })
         return
       }
 
@@ -82,12 +84,12 @@ export function useDebt() {
       today.setHours(0, 0, 0, 0)
 
       if (dueDate < today) {
-        uiStore.showToast({ message: 'Due date cannot be in the past', type: 'warning' })
+        uiStore.showToast({ message: t('common.toast.dueDateCannotBePast'), type: 'warning' })
         return
       }
 
       await debtStore.createDebt(debtData)
-      uiStore.showToast({ message: 'Debt created successfully!', type: 'success' })
+      uiStore.showToast({ message: t('common.toast.debtCreated'), type: 'success' })
       router.push('/debts')
     } catch (error) {
       uiStore.showToast({ message: error.message, type: 'error' })
@@ -99,27 +101,27 @@ export function useDebt() {
     try {
       // Same validation as create
       if (!debtData.type) {
-        uiStore.showToast({ message: 'Please select debt type', type: 'warning' })
+        uiStore.showToast({ message: t('common.toast.selectDebtType'), type: 'warning' })
         return
       }
 
       if (!debtData.counterpartyName || debtData.counterpartyName.trim() === '') {
-        uiStore.showToast({ message: 'Please enter counterparty name', type: 'warning' })
+        uiStore.showToast({ message: t('common.toast.enterCounterpartyName'), type: 'warning' })
         return
       }
 
       if (!debtData.totalAmount || debtData.totalAmount <= 0) {
-        uiStore.showToast({ message: 'Amount must be greater than 0', type: 'warning' })
+        uiStore.showToast({ message: t('common.toast.amountMustBePositive'), type: 'warning' })
         return
       }
 
       if (!debtData.dueDate) {
-        uiStore.showToast({ message: 'Please select a due date', type: 'warning' })
+        uiStore.showToast({ message: t('common.toast.selectDueDate'), type: 'warning' })
         return
       }
 
       await debtStore.updateDebt(id, debtData)
-      uiStore.showToast({ message: 'Debt updated successfully!', type: 'success' })
+      uiStore.showToast({ message: t('common.toast.debtUpdated'), type: 'success' })
       router.push('/debts')
     } catch (error) {
       uiStore.showToast({ message: error.message, type: 'error' })
@@ -130,7 +132,7 @@ export function useDebt() {
   async function handleDeleteDebt(id) {
     try {
       await debtStore.deleteDebt(id)
-      uiStore.showToast({ message: 'Debt deleted successfully!', type: 'success' })
+      uiStore.showToast({ message: t('common.toast.debtDeleted'), type: 'success' })
     } catch (error) {
       uiStore.showToast({ message: error.message, type: 'error' })
       throw error
@@ -141,7 +143,7 @@ export function useDebt() {
     try {
       // Validation
       if (!paymentData.amount || paymentData.amount <= 0) {
-        uiStore.showToast({ message: 'Payment amount must be greater than 0', type: 'warning' })
+        uiStore.showToast({ message: t('common.toast.paymentAmountMustBePositive'), type: 'warning' })
         return
       }
 
@@ -149,14 +151,14 @@ export function useDebt() {
       const debt = currentDebt.value
       if (debt && paymentData.amount > debt.remainingAmount) {
         uiStore.showToast({
-          message: `Payment amount cannot exceed remaining amount (${debt.remainingAmount})`,
+          message: t('common.toast.paymentExceedsRemaining'),
           type: 'warning',
         })
         return
       }
 
       if (!paymentData.paidAt) {
-        uiStore.showToast({ message: 'Please select payment date', type: 'warning' })
+        uiStore.showToast({ message: t('common.toast.selectPaymentDate'), type: 'warning' })
         return
       }
 
@@ -165,12 +167,12 @@ export function useDebt() {
       const now = new Date()
 
       if (paymentDate > now) {
-        uiStore.showToast({ message: 'Payment date cannot be in the future', type: 'warning' })
+        uiStore.showToast({ message: t('common.toast.paymentDateCannotBeFuture'), type: 'warning' })
         return
       }
 
       await debtStore.addPaymentToDebt(debtId, paymentData)
-      uiStore.showToast({ message: 'Payment added successfully!', type: 'success' })
+      uiStore.showToast({ message: t('common.toast.paymentAdded'), type: 'success' })
     } catch (error) {
       uiStore.showToast({ message: error.message, type: 'error' })
       throw error
@@ -182,12 +184,12 @@ export function useDebt() {
       // Check if already paid
       const debt = currentDebt.value
       if (debt && debt.status === DEBT_STATUS.PAID) {
-        uiStore.showToast({ message: 'Debt is already marked as paid', type: 'info' })
+        uiStore.showToast({ message: t('common.toast.debtAlreadyPaid'), type: 'info' })
         return
       }
 
       await debtStore.markDebtAsPaid(debtId)
-      uiStore.showToast({ message: 'Debt marked as paid!', type: 'success' })
+      uiStore.showToast({ message: t('common.toast.debtMarkedAsPaid'), type: 'success' })
     } catch (error) {
       uiStore.showToast({ message: error.message, type: 'error' })
       throw error
@@ -198,12 +200,12 @@ export function useDebt() {
     try {
       // Validation
       if (!paymentData.amount || paymentData.amount <= 0) {
-        uiStore.showToast({ message: 'Payment amount must be greater than 0', type: 'warning' })
+        uiStore.showToast({ message: t('common.toast.paymentAmountMustBePositive'), type: 'warning' })
         return
       }
 
       if (!paymentData.paidAt) {
-        uiStore.showToast({ message: 'Please select payment date', type: 'warning' })
+        uiStore.showToast({ message: t('common.toast.selectPaymentDate'), type: 'warning' })
         return
       }
 
@@ -212,12 +214,12 @@ export function useDebt() {
       const now = new Date()
 
       if (paymentDate > now) {
-        uiStore.showToast({ message: 'Payment date cannot be in the future', type: 'warning' })
+        uiStore.showToast({ message: t('common.toast.paymentDateCannotBeFuture'), type: 'warning' })
         return
       }
 
       await debtStore.updatePayment(debtId, paymentId, paymentData)
-      uiStore.showToast({ message: 'Payment updated successfully!', type: 'success' })
+      uiStore.showToast({ message: t('common.toast.paymentUpdated'), type: 'success' })
     } catch (error) {
       uiStore.showToast({ message: error.message, type: 'error' })
       throw error
@@ -227,7 +229,7 @@ export function useDebt() {
   async function handleDeletePayment(debtId, paymentId) {
     try {
       await debtStore.deletePayment(debtId, paymentId)
-      uiStore.showToast({ message: 'Payment deleted successfully!', type: 'success' })
+      uiStore.showToast({ message: t('common.toast.paymentDeleted'), type: 'success' })
     } catch (error) {
       uiStore.showToast({ message: error.message, type: 'error' })
       throw error
@@ -239,7 +241,7 @@ export function useDebt() {
       debtStore.setFilters(newFilters)
       await debtStore.fetchDebts()
     } catch (error) {
-      uiStore.showToast({ message: 'Failed to apply filters', type: 'error' })
+      uiStore.showToast({ message: t('common.toast.filtersFailed'), type: 'error' })
     }
   }
 
@@ -248,7 +250,7 @@ export function useDebt() {
       debtStore.resetFilters()
       await debtStore.fetchDebts()
     } catch (error) {
-      uiStore.showToast({ message: 'Failed to reset filters', type: 'error' })
+      uiStore.showToast({ message: t('common.toast.filtersResetFailed'), type: 'error' })
     }
   }
 

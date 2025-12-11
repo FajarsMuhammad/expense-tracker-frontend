@@ -1,7 +1,7 @@
 <template>
   <div>
     <label for="wallet-filter" class="block text-sm font-medium text-neutral-700 dark:text-neutral-200 mb-2">
-      Filter by Wallet
+      {{ $t('dashboard.walletFilter.label') }}
     </label>
     <DropdownBase class="relative">
       <template #trigger="{ toggle, isOpen }">
@@ -31,7 +31,7 @@
             <input
               v-model="walletQuery"
               type="search"
-              placeholder="Search wallets..."
+              :placeholder="$t('dashboard.walletFilter.searchPlaceholder')"
               class="w-full px-3 py-2 rounded-md border border-neutral-200 dark:border-dark-border bg-white dark:bg-dark-surface text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
           </div>
@@ -43,7 +43,7 @@
               :class="selectedWalletId === null ? 'font-medium' : ''"
               @click.stop.prevent="selectWallet(null, close)"
             >
-              All Wallets
+              {{ $t('dashboard.walletFilter.allWallets') }}
             </button>
 
             <template v-for="wallet in filteredWallets" :key="wallet.id">
@@ -56,7 +56,7 @@
               </button>
             </template>
 
-            <div v-if="filteredWallets.length === 0" class="px-3 py-2 text-sm text-muted">No wallets found</div>
+            <div v-if="filteredWallets.length === 0" class="px-3 py-2 text-sm text-muted">{{ $t('dashboard.walletFilter.noWalletsFound') }}</div>
           </div>
         </div>
       </template>
@@ -66,7 +66,10 @@
 
 <script setup>
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import DropdownBase from '@/components/common/DropdownBase.vue'
+
+const { t } = useI18n()
 
 const props = defineProps({
   wallets: {
@@ -97,10 +100,10 @@ const filteredWallets = computed(() => {
 // friendly label shown in trigger
 const selectedLabel = computed(() => {
   if (props.selectedWalletId === null || props.selectedWalletId === undefined || props.selectedWalletId === '') {
-    return 'All Wallets'
+    return t('dashboard.walletFilter.allWallets')
   }
   const found = props.wallets.find(w => String(w.id) === String(props.selectedWalletId))
-  return found ? `${found.name} (${found.currency})` : 'All Wallets'
+  return found ? `${found.name} (${found.currency})` : t('dashboard.walletFilter.allWallets')
 })
 
 function selectWallet(id, close) {

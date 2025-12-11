@@ -4,7 +4,7 @@
     <div class="rounded-lg bg-blue-50 p-4 dark:bg-blue-900/10">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm font-medium text-blue-700 dark:text-blue-300">Remaining Amount</p>
+          <p class="text-sm font-medium text-blue-700 dark:text-blue-300">{{ $t('debts.paymentForm.remainingAmount') }}</p>
           <p class="mt-1 text-2xl font-bold text-blue-900 dark:text-blue-100">
             {{ formatCurrency(debt.remainingAmount) }}
           </p>
@@ -17,19 +17,19 @@
     <CurrencyInput
       id="amount"
       v-model="formData.amount"
-      label="Payment Amount"
+      :label="$t('debts.paymentForm.paymentAmount')"
       placeholder="0"
       required
       :min="1"
       :max="debt.remainingAmount"
-      :hint="`Maximum: ${formatCurrency(debt.remainingAmount)}`"
+      :hint="$t('debts.paymentForm.maximumHint', { amount: formatCurrency(debt.remainingAmount) })"
       :error="errors.amount"
     />
 
     <!-- Payment Date/Time -->
     <div class="space-y-2">
       <label for="paidAt" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">
-        Payment Date & Time <span class="text-red-500">*</span>
+        {{ $t('debts.paymentForm.paymentDateTime') }} <span class="text-red-500">*</span>
       </label>
       <input
         id="paidAt"
@@ -47,19 +47,19 @@
     <!-- Note -->
     <div class="space-y-2">
       <label for="note" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">
-        Note <span class="text-neutral-400">(Optional)</span>
+        {{ $t('debts.paymentForm.note') }} <span class="text-neutral-400">{{ $t('debts.paymentForm.noteOptional') }}</span>
       </label>
       <textarea
         id="note"
         v-model="formData.note"
         rows="3"
         maxlength="200"
-        placeholder="Add a note about this payment..."
+        :placeholder="$t('debts.paymentForm.notePlaceholder')"
         :class="inputClass"
         class="block w-full rounded-lg px-4 py-2.5 text-sm shadow-sm transition-colors focus:outline-none focus:ring-2"
       ></textarea>
       <p class="text-xs text-neutral-500 dark:text-neutral-400">
-        {{ formData.note?.length || 0 }}/200 characters
+        {{ $t('debts.paymentForm.charactersCount', { count: formData.note?.length || 0 }) }}
       </p>
     </div>
 
@@ -70,14 +70,14 @@
         :disabled="loading"
         class="flex-1 rounded-lg bg-primary-600 px-6 py-2 md:py-3 text-xs md:text-sm font-medium text-white transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-primary-500 dark:hover:bg-primary-600"
       >
-        {{ loading ? 'Saving...' : isEditMode ? 'Update Payment' : 'Add Payment' }}
+        {{ loading ? $t('debts.paymentForm.saving') : isEditMode ? $t('debts.paymentForm.updatePayment') : $t('debts.paymentForm.addPayment') }}
       </button>
       <button
         type="button"
         @click="$emit('cancel')"
         class="flex-1 rounded-lg border border-neutral-300 bg-white px-6 py-2 md:py-3 text-xs md:text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:border-neutral-600 dark:bg-dark-bg dark:text-neutral-300 dark:hover:bg-neutral-800"
       >
-        Cancel
+        {{ $t('debts.paymentForm.cancel') }}
       </button>
     </div>
   </form>
@@ -85,11 +85,13 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { InformationCircleIcon } from '@heroicons/vue/24/outline'
 import CurrencyInput from '@/components/common/CurrencyInput.vue'
 import { formatCurrency } from '@/utils/currency'
 import { useUIStore } from '@/stores/ui'
 
+const { t: $t } = useI18n()
 const uiStore = useUIStore()
 
 const props = defineProps({

@@ -3,8 +3,8 @@
     <AppInput
       id="name"
       v-model="formData.name"
-      label="Wallet Name"
-      placeholder="e.g., Cash Wallet, Bank Account"
+      :label="$t('wallets.form.name')"
+      :placeholder="$t('wallets.form.namePlaceholder')"
       required
       :error="errors.name"
       @blur="validateField('name')"
@@ -12,7 +12,7 @@
 
     <div>
       <label for="currency" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-        Currency <span class="text-red-500">*</span>
+        {{ $t('wallets.form.currency') }} <span class="text-red-500">*</span>
       </label>
       <select
         id="currency"
@@ -21,7 +21,7 @@
         required
         @blur="validateField('currency')"
       >
-        <option value="">Select currency</option>
+        <option value="">{{ $t('wallets.form.selectCurrency') }}</option>
         <option v-for="curr in currencies" :key="curr.value" :value="curr.value">
           {{ curr.label }}
         </option>
@@ -32,9 +32,9 @@
     <CurrencyInput
       id="initialBalance"
       v-model="formData.initialBalance"
-      :label="isEditMode ? 'Balance' : 'Initial Balance'"
-      placeholder="0"
-      :hint="isEditMode ? 'Update wallet balance' : 'Optional: Leave blank for 0 balance'"
+      :label="isEditMode ? $t('wallets.form.balance') : $t('wallets.form.initialBalance')"
+      :placeholder="$t('wallets.form.balancePlaceholder')"
+      :hint="isEditMode ? $t('wallets.form.balanceHint') : $t('wallets.form.initialBalanceHint')"
       :error="errors.initialBalance"
       @blur="validateField('initialBalance')"
     />
@@ -42,10 +42,10 @@
     <!-- Action Buttons -->
     <div class="flex gap-2 md:gap-3 pt-4">
       <AppButton type="submit" :loading="loading" class="flex-1 !py-2 md:!py-2.5 !text-xs md:!text-sm">
-        {{ loading ? 'Saving...' : 'Save' }}
+        {{ loading ? $t('wallets.form.saving') : $t('wallets.form.save') }}
       </AppButton>
       <AppButton type="button" variant="secondary" @click="$emit('cancel')" class="flex-1 !py-2 md:!py-2.5 !text-xs md:!text-sm">
-        Cancel
+        {{ $t('wallets.form.cancel') }}
       </AppButton>
     </div>
   </form>
@@ -53,10 +53,13 @@
 
 <script setup>
 import { ref, watch, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import AppInput from '@/components/common/AppInput.vue'
 import AppButton from '@/components/common/AppButton.vue'
 import CurrencyInput from '@/components/common/CurrencyInput.vue'
 import { SUPPORTED_CURRENCIES } from '@/utils/currency'
+
+const { t } = useI18n()
 
 const props = defineProps({
   wallet: {
@@ -131,9 +134,9 @@ function validateField(fieldName) {
 
   // Validate specific field
   if (fieldName === 'name' && !formData.value.name?.trim()) {
-    errors.value.name = 'Wallet name is required'
+    errors.value.name = t('wallets.form.nameRequired')
   } else if (fieldName === 'currency' && !formData.value.currency) {
-    errors.value.currency = 'Please select a currency'
+    errors.value.currency = t('wallets.form.currencyRequired')
   }
 }
 
@@ -141,11 +144,11 @@ function validateForm() {
   const newErrors = {}
 
   if (!formData.value.name?.trim()) {
-    newErrors.name = 'Wallet name is required'
+    newErrors.name = t('wallets.form.nameRequired')
   }
 
   if (!formData.value.currency) {
-    newErrors.currency = 'Please select a currency'
+    newErrors.currency = t('wallets.form.currencyRequired')
   }
 
   errors.value = newErrors

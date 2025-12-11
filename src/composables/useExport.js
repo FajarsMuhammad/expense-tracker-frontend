@@ -8,11 +8,13 @@
 import { storeToRefs } from 'pinia'
 import { useExportStore } from '@/stores/export'
 import { useUIStore } from '@/stores/ui'
+import { useI18n } from 'vue-i18n'
 import { EXPORT_FORMATS } from '@/config/api.config'
 
 export function useExport() {
   const exportStore = useExportStore()
   const uiStore = useUIStore()
+  const { t } = useI18n()
 
   // Use storeToRefs to maintain reactivity
   const {
@@ -40,7 +42,7 @@ export function useExport() {
       // Validate format
       if (!Object.values(EXPORT_FORMATS).includes(format)) {
         uiStore.showToast({
-          message: 'Invalid export format',
+          message: t('common.toast.invalidExportFormat'),
           type: 'error',
         })
         return
@@ -49,7 +51,7 @@ export function useExport() {
       // Check if already exporting
       if (isExporting.value) {
         uiStore.showToast({
-          message: 'Export already in progress',
+          message: t('common.toast.exportInProgress'),
           type: 'warning',
         })
         return
@@ -72,7 +74,7 @@ export function useExport() {
 
         if (start > end) {
           uiStore.showToast({
-            message: 'Start date must be before end date',
+            message: t('common.toast.startDateBeforeEndDate'),
             type: 'warning',
           })
           return
@@ -83,12 +85,12 @@ export function useExport() {
       await exportStore.exportTransactions(format, filter)
 
       uiStore.showToast({
-        message: `Transactions exported successfully as ${format}`,
+        message: t('common.toast.transactionsExported'),
         type: 'success',
       })
     } catch (error) {
       uiStore.showToast({
-        message: error.message || 'Failed to export transactions',
+        message: error.message || t('common.toast.exportFailed'),
         type: 'error',
       })
     }
@@ -104,7 +106,7 @@ export function useExport() {
       // Validate format
       if (!Object.values(EXPORT_FORMATS).includes(format)) {
         uiStore.showToast({
-          message: 'Invalid export format',
+          message: t('common.toast.invalidExportFormat'),
           type: 'error',
         })
         return
@@ -113,7 +115,7 @@ export function useExport() {
       // Check if already exporting
       if (isExporting.value) {
         uiStore.showToast({
-          message: 'Export already in progress',
+          message: t('common.toast.exportInProgress'),
           type: 'warning',
         })
         return
@@ -123,12 +125,12 @@ export function useExport() {
       await exportStore.exportDebts(format, filter)
 
       uiStore.showToast({
-        message: `Debts exported successfully as ${format}`,
+        message: t('common.toast.debtsExported'),
         type: 'success',
       })
     } catch (error) {
       uiStore.showToast({
-        message: error.message || 'Failed to export debts',
+        message: error.message || t('common.toast.exportFailed'),
         type: 'error',
       })
     }
@@ -144,7 +146,7 @@ export function useExport() {
       // CSV not supported for summary
       if (format === EXPORT_FORMATS.CSV) {
         uiStore.showToast({
-          message: 'CSV format not supported for summary export. Please use Excel or PDF.',
+          message: t('common.toast.csvNotSupportedForSummary'),
           type: 'warning',
         })
         return
@@ -153,7 +155,7 @@ export function useExport() {
       // Validate format
       if (!Object.values(EXPORT_FORMATS).includes(format)) {
         uiStore.showToast({
-          message: 'Invalid export format',
+          message: t('common.toast.invalidExportFormat'),
           type: 'error',
         })
         return
@@ -162,7 +164,7 @@ export function useExport() {
       // Check if already exporting
       if (isExporting.value) {
         uiStore.showToast({
-          message: 'Export already in progress',
+          message: t('common.toast.exportInProgress'),
           type: 'warning',
         })
         return
@@ -175,7 +177,7 @@ export function useExport() {
 
         if (start > end) {
           uiStore.showToast({
-            message: 'Start date must be before end date',
+            message: t('common.toast.startDateBeforeEndDate'),
             type: 'warning',
           })
           return
@@ -186,12 +188,12 @@ export function useExport() {
       await exportStore.exportSummary(format, filter)
 
       uiStore.showToast({
-        message: `Summary exported successfully as ${format}`,
+        message: t('common.toast.summaryExported'),
         type: 'success',
       })
     } catch (error) {
       uiStore.showToast({
-        message: error.message || 'Failed to export summary',
+        message: error.message || t('common.toast.exportFailed'),
         type: 'error',
       })
     }
@@ -205,7 +207,7 @@ export function useExport() {
       await exportStore.checkQuota()
     } catch (error) {
       uiStore.showToast({
-        message: error.message || 'Failed to check export quota',
+        message: error.message || t('common.toast.exportQuotaCheckFailed'),
         type: 'error',
       })
     }

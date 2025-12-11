@@ -3,9 +3,9 @@
     <!-- Empty State -->
     <div v-if="!payments || payments.length === 0" class="rounded-lg bg-neutral-50 p-8 text-center dark:bg-neutral-800/50">
       <BanknotesIcon class="mx-auto size-12 text-neutral-400" />
-      <p class="mt-2 text-sm text-neutral-600 dark:text-neutral-400">No payments yet</p>
+      <p class="mt-2 text-sm text-neutral-600 dark:text-neutral-400">{{ $t('debts.paymentHistory.empty.title') }}</p>
       <p class="text-xs text-neutral-500 dark:text-neutral-500">
-        Add a payment to start tracking this debt
+        {{ $t('debts.paymentHistory.empty.description') }}
       </p>
     </div>
 
@@ -60,14 +60,14 @@
                 class="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-neutral-300 bg-white px-3 py-1.5 text-xs font-medium text-neutral-700 transition-colors hover:border-primary-400 hover:text-primary-600 dark:border-neutral-600 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:border-primary-500 dark:hover:text-primary-400"
               >
                 <PencilSquareIcon class="size-3.5 flex-shrink-0" />
-                <span>Edit</span>
+                <span>{{ $t('debts.paymentHistory.edit') }}</span>
               </button>
               <button
                 @click="$emit('delete-payment', payment)"
                 class="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-red-300 bg-red-50 px-3 py-1.5 text-xs font-medium text-red-700 transition-colors hover:border-red-400 hover:bg-red-100 dark:border-red-700 dark:bg-red-900/20 dark:text-red-400 dark:hover:border-red-600 dark:hover:bg-red-900/30"
               >
                 <TrashIcon class="size-3.5 flex-shrink-0" />
-                <span>Delete</span>
+                <span>{{ $t('debts.paymentHistory.delete') }}</span>
               </button>
             </div>
           </div>
@@ -79,7 +79,10 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { BanknotesIcon, ClockIcon, PencilSquareIcon, TrashIcon } from '@heroicons/vue/24/outline'
+
+const { t } = useI18n()
 
 const props = defineProps({
   payments: {
@@ -129,9 +132,9 @@ function formatRelativeTime(dateString) {
   const hours = Math.floor(minutes / 60)
   const days = Math.floor(hours / 24)
 
-  if (days > 0) return `${days} day${days > 1 ? 's' : ''} ago`
-  if (hours > 0) return `${hours} hour${hours > 1 ? 's' : ''} ago`
-  if (minutes > 0) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`
-  return 'Just now'
+  if (days > 0) return t(days > 1 ? 'debts.paymentHistory.timeAgo.daysAgo' : 'debts.paymentHistory.timeAgo.dayAgo', { count: days })
+  if (hours > 0) return t(hours > 1 ? 'debts.paymentHistory.timeAgo.hoursAgo' : 'debts.paymentHistory.timeAgo.hourAgo', { count: hours })
+  if (minutes > 0) return t(minutes > 1 ? 'debts.paymentHistory.timeAgo.minutesAgo' : 'debts.paymentHistory.timeAgo.minuteAgo', { count: minutes })
+  return t('debts.paymentHistory.timeAgo.justNow')
 }
 </script>

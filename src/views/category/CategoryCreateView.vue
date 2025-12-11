@@ -2,7 +2,7 @@
   <AppLayout>
     <div class="mx-auto max-w-3xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
       <!-- Header with Back Button -->
-      <FormHeader title="Create Category" description="Add a new category to organize your transactions" />
+      <FormHeader :title="$t('categories.create.title')" :description="$t('categories.create.description')" />
 
       <!-- Form Card -->
       <div class="rounded-lg bg-white p-6 shadow-sm dark:bg-dark-card sm:p-8">

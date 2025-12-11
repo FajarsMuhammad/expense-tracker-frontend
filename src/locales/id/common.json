@@ -1,0 +1,69 @@
+{
+  "app": {
+    "name": "MoneyTrack",
+    "tagline": "Lacak Pengeluaran Anda"
+  },
+  "buttons": {
+    "save": "Simpan",
+    "cancel": "Batal",
+    "delete": "Hapus",
+    "create": "Buat",
+    "edit": "Edit",
+    "close": "Tutup",
+    "confirm": "Konfirmasi",
+    "add": "Tambah",
+    "remove": "Hapus",
+    "search": "Cari",
+    "filter": "Filter",
+    "export": "Ekspor",
+    "back": "Kembali",
+    "next": "Selanjutnya",
+    "previous": "Sebelumnya",
+    "submit": "Kirim",
+    "reset": "Reset",
+    "clear": "Bersihkan",
+    "view": "Lihat",
+    "download": "Unduh"
+  },
+  "actions": {
+    "loading": "Memuat...",
+    "saving": "Menyimpan...",
+    "deleting": "Menghapus...",
+    "processing": "Memproses...",
+    "uploading": "Mengunggah...",
+    "downloading": "Mengunduh..."
+  },
+  "states": {
+    "active": "Aktif",
+    "inactive": "Tidak Aktif",
+    "pending": "Tertunda",
+    "completed": "Selesai",
+    "cancelled": "Dibatalkan",
+    "failed": "Gagal"
+  },
+  "locale": {
+    "title": "Bahasa",
+    "switchLanguage": "Ganti Bahasa",
+    "selectLanguage": "Pilih Bahasa"
+  },
+  "pagination": {
+    "showing": "Menampilkan {from} hingga {to} dari {total} entri",
+    "noResults": "Tidak ada hasil",
+    "page": "Halaman",
+    "of": "dari"
+  },
+  "empty": {
+    "noData": "Tidak ada data",
+    "noResults": "Tidak ada hasil ditemukan",
+    "tryAgain": "Coba lagi"
+  },
+  "time": {
+    "justNow": "Baru saja",
+    "minutesAgo": "{count} menit yang lalu",
+    "hoursAgo": "{count} jam yang lalu",
+    "daysAgo": "{count} hari yang lalu",
+    "weeksAgo": "{count} minggu yang lalu",
+    "monthsAgo": "{count} bulan yang lalu",
+    "yearsAgo": "{count} tahun yang lalu"
+  }
+}

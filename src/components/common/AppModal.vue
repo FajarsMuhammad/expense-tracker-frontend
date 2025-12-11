@@ -21,7 +21,7 @@
               <button
                 class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                 @click="close"
-                aria-label="Close modal"
+                :aria-label="$t('common.modal.close')"
               >
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path

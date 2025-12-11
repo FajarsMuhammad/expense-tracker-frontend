@@ -28,14 +28,14 @@
         <!-- Total & Remaining Amounts -->
         <div class="grid grid-cols-2 gap-2 md:gap-3">
           <div class="space-y-0.5 md:space-y-1 min-w-0 overflow-hidden">
-            <p class="text-[10px] md:text-xs text-neutral-500 dark:text-neutral-400">Total Amount</p>
+            <p class="text-[10px] md:text-xs text-neutral-500 dark:text-neutral-400">{{ $t('debts.card.totalAmount') }}</p>
             <p class="text-[10px] md:text-xs lg:text-sm font-semibold text-neutral-700 dark:text-neutral-300 break-all leading-tight">
               {{ formatCurrency(debt.totalAmount) }}
             </p>
           </div>
 
           <div class="space-y-0.5 md:space-y-1 text-right min-w-0 overflow-hidden">
-            <p class="text-[10px] md:text-xs text-neutral-500 dark:text-neutral-400">Remaining</p>
+            <p class="text-[10px] md:text-xs text-neutral-500 dark:text-neutral-400">{{ $t('debts.card.remaining') }}</p>
             <p :class="remainingAmountColor" class="text-[10px] md:text-xs lg:text-sm font-bold break-all leading-tight">
               {{ formatCurrency(debt.remainingAmount) }}
             </p>
@@ -50,7 +50,7 @@
       <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-t border-neutral-200 pt-2 md:pt-3 dark:border-neutral-700">
         <div class="flex items-center gap-1 md:gap-1.5 text-[10px] md:text-xs">
           <CalendarDaysIcon class="size-3 md:size-3.5 text-neutral-400 flex-shrink-0" />
-          <span class="text-neutral-600 dark:text-neutral-400">Due:</span>
+          <span class="text-neutral-600 dark:text-neutral-400">{{ $t('debts.card.due') }}:</span>
           <span :class="dueDateColor" class="font-semibold">
             {{ formatDate(debt.dueDate) }}
           </span>
@@ -59,7 +59,7 @@
         <div v-if="debt.paymentCount > 0" class="flex items-center gap-1 md:gap-1.5 text-[10px] md:text-xs">
           <BanknotesIcon class="size-3 md:size-3.5 text-neutral-400 flex-shrink-0" />
           <span class="text-neutral-600 dark:text-neutral-400">
-            {{ debt.paymentCount }} {{ debt.paymentCount === 1 ? 'payment' : 'payments' }}
+            {{ debt.paymentCount }} {{ debt.paymentCount === 1 ? $t('debts.card.payment') : $t('debts.card.payments') }}
           </span>
         </div>
       </div>
@@ -78,16 +78,16 @@
         <button
           @click.stop="$emit('edit', debt)"
           class="flex-1 rounded-lg bg-neutral-100 px-2 md:px-3 py-1.5 md:py-2 text-[10px] md:text-xs font-medium text-neutral-700 transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
-          title="Edit debt"
+          :title="$t('debts.card.edit')"
         >
-          Edit
+          {{ $t('debts.card.edit') }}
         </button>
         <button
           @click.stop="$emit('delete', debt)"
           class="flex-1 rounded-lg bg-red-100 px-2 md:px-3 py-1.5 md:py-2 text-[10px] md:text-xs font-medium text-red-700 transition-colors hover:bg-red-200 dark:bg-red-900/20 dark:text-red-300 dark:hover:bg-red-900/30"
-          title="Delete debt"
+          :title="$t('debts.card.delete')"
         >
-          Delete
+          {{ $t('debts.card.delete') }}
         </button>
       </div>
     </div>
@@ -96,11 +96,14 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import AppCard from '@/components/common/AppCard.vue'
 import DebtStatusBadge from './DebtStatusBadge.vue'
 import DebtProgressBar from './DebtProgressBar.vue'
 import { CalendarDaysIcon, BanknotesIcon, ArrowUpCircleIcon, ArrowDownCircleIcon } from '@heroicons/vue/24/outline'
 import { DEBT_TYPES, DEBT_STATUS } from '@/config/api.config'
+
+const { t } = useI18n()
 
 const props = defineProps({
   debt: {
@@ -120,7 +123,7 @@ const typeClasses = computed(() => {
 })
 
 const typeLabel = computed(() => {
-  return props.debt.type === DEBT_TYPES.PAYABLE ? 'You Owe' : 'Owed to You'
+  return props.debt.type === DEBT_TYPES.PAYABLE ? t('debts.types.youOwe') : t('debts.types.owedToYou')
 })
 
 const typeIcon = computed(() => {

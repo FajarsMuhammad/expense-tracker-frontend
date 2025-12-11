@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import walletService from '@/services/wallet.service'
 import { useAuthStore } from './auth'
+import { useSubscriptionStore } from '@/stores/subscription'
 
 export const useWalletStore = defineStore('wallet', () => {
   const wallets = ref([])
@@ -16,8 +17,9 @@ export const useWalletStore = defineStore('wallet', () => {
   })
 
   const canCreateWallet = computed(() => {
-    const authStore = useAuthStore()
-    const isPremium = authStore.user?.subscriptionPlan === 'PREMIUM'
+    const subscriptionStore = useSubscriptionStore()
+
+    const isPremium = subscriptionStore.subscription?.isPremium || false
     return isPremium || walletCount.value < 1
   })
 

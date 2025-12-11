@@ -3,9 +3,9 @@
     <div class="max-w-4xl mx-auto">
       <!-- Header -->
       <div class="mb-6">
-        <h1 class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">Profile</h1>
+        <h1 class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">{{ $t('profile.title') }}</h1>
         <p class="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
-          Manage your account information and preferences
+          {{ $t('profile.subtitle') }}
         </p>
       </div>
 
@@ -19,7 +19,7 @@
       >
         <p>{{ error }}</p>
         <AppButton @click="loadProfile" variant="secondary" class="mt-2">
-          Retry
+          {{ $t('profile.retry') }}
         </AppButton>
       </div>
 
@@ -29,7 +29,7 @@
         <div class="rounded-lg bg-white dark:bg-dark-card shadow-sm border border-neutral-200 dark:border-dark-border p-6">
           <div class="flex items-center justify-between mb-4">
             <h2 class="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
-              Account Information
+              {{ $t('profile.accountInfo.title') }}
             </h2>
             <SubscriptionBadge
               :tier="tier"
@@ -43,7 +43,7 @@
             <!-- User ID -->
             <div>
               <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-                User ID
+                {{ $t('profile.accountInfo.userId') }}
               </label>
               <p class="text-sm text-neutral-900 dark:text-neutral-100 font-mono bg-neutral-50 dark:bg-neutral-800 rounded px-3 py-2">
                 {{ userId }}
@@ -53,7 +53,7 @@
             <!-- Name -->
             <div>
               <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-                Name
+                {{ $t('profile.accountInfo.name') }}
               </label>
               <p class="text-sm text-neutral-900 dark:text-neutral-100">
                 {{ userName || '-' }}
@@ -63,7 +63,7 @@
             <!-- Email -->
             <div>
               <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-                Email
+                {{ $t('profile.accountInfo.email') }}
               </label>
               <p class="text-sm text-neutral-900 dark:text-neutral-100">
                 {{ userEmail || '-' }}
@@ -73,7 +73,7 @@
             <!-- Locale -->
             <div>
               <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-                Language/Region
+                {{ $t('profile.accountInfo.language') }}
               </label>
               <p class="text-sm text-neutral-900 dark:text-neutral-100">
                 {{ getLocaleLabel(userLocale) }}
@@ -83,7 +83,7 @@
             <!-- Member Since -->
             <div>
               <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-                Member Since
+                {{ $t('profile.accountInfo.memberSince') }}
               </label>
               <p class="text-sm text-neutral-900 dark:text-neutral-100">
                 {{ formatDate(createdAt) }}
@@ -93,7 +93,7 @@
             <!-- Edit Button -->
             <div class="pt-2">
               <AppButton @click="showEditForm = true" variant="secondary" class="w-full sm:w-auto">
-                Edit Profile
+                {{ $t('profile.accountInfo.editProfile') }}
               </AppButton>
             </div>
           </div>
@@ -105,14 +105,14 @@
           class="rounded-lg bg-white dark:bg-dark-card shadow-sm border border-neutral-200 dark:border-dark-border p-6"
         >
           <h2 class="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
-            Subscription Details
+            {{ $t('profile.subscription.title') }}
           </h2>
 
           <div class="space-y-4">
             <!-- Subscription Type -->
             <div>
               <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-                Plan
+                {{ $t('profile.subscription.plan') }}
               </label>
               <div class="flex items-center gap-2">
                 <p class="text-sm text-neutral-900 dark:text-neutral-100">
@@ -139,13 +139,13 @@
                     {{ getTrialMessage() }}
                   </p>
                   <p class="text-xs text-orange-700 dark:text-orange-300 mt-1">
-                    Your trial will end on {{ formatDate(subscriptionEndedAt) }}
+                    {{ $t('profile.subscription.trialEndsOn', { date: formatDate(subscriptionEndedAt) }) }}
                   </p>
                   <router-link
                     to="/premium"
                     class="inline-block mt-2 text-sm font-medium text-orange-700 dark:text-orange-300 hover:text-orange-900 dark:hover:text-orange-100 underline"
                   >
-                    Upgrade to Premium
+                    {{ $t('profile.subscription.upgradeToPremium') }}
                   </router-link>
                 </div>
               </div>
@@ -160,10 +160,10 @@
                 <SparklesIcon class="size-5 text-purple-600 dark:text-purple-400 flex-shrink-0 mt-0.5" />
                 <div>
                   <p class="text-sm font-medium text-purple-900 dark:text-purple-100">
-                    Premium Active
+                    {{ $t('profile.subscription.premiumActive') }}
                   </p>
                   <p class="text-xs text-purple-700 dark:text-purple-300 mt-1">
-                    Enjoy unlimited access to all premium features
+                    {{ $t('profile.subscription.premiumMessage') }}
                   </p>
                 </div>
               </div>
@@ -173,7 +173,7 @@
             <div v-if="subscriptionStartedAt" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-                  Started
+                  {{ $t('profile.subscription.started') }}
                 </label>
                 <p class="text-sm text-neutral-900 dark:text-neutral-100">
                   {{ formatDate(subscriptionStartedAt) }}
@@ -181,7 +181,7 @@
               </div>
               <div v-if="subscriptionEndedAt">
                 <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-                  {{ isTrial ? 'Trial Ends' : 'Expires' }}
+                  {{ isTrial ? $t('profile.subscription.trialEnds') : $t('profile.subscription.expires') }}
                 </label>
                 <p class="text-sm text-neutral-900 dark:text-neutral-100">
                   {{ formatDate(subscriptionEndedAt) }}
@@ -196,7 +196,7 @@
                 class="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-all hover:from-purple-700 hover:to-pink-700"
               >
                 <SparklesIcon class="size-4" />
-                Upgrade to Premium
+                {{ $t('profile.subscription.upgradeToPremium') }}
               </router-link>
             </div>
           </div>
@@ -204,7 +204,7 @@
       </div>
 
       <!-- Edit Profile Modal -->
-      <AppModal v-model="showEditForm" title="Edit Profile" size="md">
+      <AppModal v-model="showEditForm" :title="$t('profile.accountInfo.editProfile')" size="md">
         <ProfileForm
           :profile="profile"
           :loading="loading"
@@ -218,6 +218,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { ClockIcon, SparklesIcon } from '@heroicons/vue/24/outline'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import AppButton from '@/components/common/AppButton.vue'
@@ -226,6 +227,8 @@ import AppSkeleton from '@/components/common/AppSkeleton.vue'
 import SubscriptionBadge from '@/components/profile/SubscriptionBadge.vue'
 import ProfileForm from '@/components/profile/ProfileForm.vue'
 import { useProfile } from '@/composables/useProfile'
+
+const { t } = useI18n()
 
 const {
   profile,

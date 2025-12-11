@@ -2,11 +2,13 @@ import { useCategoryStore } from '@/stores/category'
 import { useUIStore } from '@/stores/ui'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
 
 export function useCategory() {
   const categoryStore = useCategoryStore()
   const uiStore = useUIStore()
   const router = useRouter()
+  const { t } = useI18n()
 
   const {
     categories,
@@ -22,7 +24,7 @@ export function useCategory() {
     try {
       await categoryStore.fetchCategories(type)
     } catch (error) {
-      uiStore.showToast({ message: 'Failed to load categories', type: 'error' })
+      uiStore.showToast({ message: t('common.toast.categoryLoadFailed'), type: 'error' })
     }
   }
 
@@ -30,7 +32,7 @@ export function useCategory() {
     try {
       await categoryStore.fetchCategoryById(id)
     } catch (error) {
-      uiStore.showToast({ message: 'Failed to load category', type: 'error' })
+      uiStore.showToast({ message: t('common.toast.categoryLoadFailed'), type: 'error' })
       router.push('/categories')
     }
   }
@@ -44,9 +46,6 @@ export function useCategory() {
       const normalizedType = (categoryData.type ?? '').toString().toUpperCase()
       // Check for duplicate name
       const list = categories.value || []
-      console.log('=== DUPLICATE CHECK DEBUG ===')
-      console.log('Existing categories:', list)
-      console.log('New category:', categoryData)
 
       const duplicate = list.some((c) => {
       if (!c || !c.name) return false
@@ -60,14 +59,14 @@ export function useCategory() {
       if (duplicate) {
         console.log('DUPLICATE FOUND!') // cek di console
         uiStore.showToast({
-          message: `A ${categoryData.type.toLowerCase()} category with this name already exists`,
+          message: t('common.toast.categoryDuplicateExists', { type: categoryData.type.toLowerCase() }),
           type: 'error',
         })
         return false
       }
 
       await categoryStore.createCategory(categoryData)
-      uiStore.showToast({ message: 'Category created successfully!', type: 'success' })
+      uiStore.showToast({ message: t('common.toast.categoryCreated'), type: 'success' })
 
       // Reload categories before redirecting
       await categoryStore.fetchCategories()
@@ -82,7 +81,7 @@ export function useCategory() {
   async function handleUpdateCategory(id, categoryData) {
     try {
       await categoryStore.updateCategory(id, categoryData)
-      uiStore.showToast({ message: 'Category updated successfully!', type: 'success' })
+      uiStore.showToast({ message: t('common.toast.categoryUpdated'), type: 'success' })
       router.push('/categories')
     } catch (error) {
       uiStore.showToast({ message: error.message, type: 'error' })
@@ -97,7 +96,7 @@ export function useCategory() {
 
       if (category?.isDefault) {
         uiStore.showToast({
-          message: 'Cannot delete default categories',
+          message: t('common.toast.categoryCannotDeleteDefault'),
           type: 'error',
         })
         return
@@ -106,7 +105,7 @@ export function useCategory() {
       // ❗ this will update categories.value in the store
       await categoryStore.deleteCategory(id)
 
-      uiStore.showToast({ message: 'Category deleted successfully!', type: 'success' })
+      uiStore.showToast({ message: t('common.toast.categoryDeleted'), type: 'success' })
     } catch (error) {
       uiStore.showToast({ message: error.message, type: 'error' })
       throw error

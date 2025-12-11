@@ -1,0 +1,69 @@
+{
+  "app": {
+    "name": "MoneyTrack",
+    "tagline": "Track Your Expenses"
+  },
+  "buttons": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "create": "Create",
+    "edit": "Edit",
+    "close": "Close",
+    "confirm": "Confirm",
+    "add": "Add",
+    "remove": "Remove",
+    "search": "Search",
+    "filter": "Filter",
+    "export": "Export",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "reset": "Reset",
+    "clear": "Clear",
+    "view": "View",
+    "download": "Download"
+  },
+  "actions": {
+    "loading": "Loading...",
+    "saving": "Saving...",
+    "deleting": "Deleting...",
+    "processing": "Processing...",
+    "uploading": "Uploading...",
+    "downloading": "Downloading..."
+  },
+  "states": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "pending": "Pending",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "failed": "Failed"
+  },
+  "locale": {
+    "title": "Language",
+    "switchLanguage": "Switch Language",
+    "selectLanguage": "Select Language"
+  },
+  "pagination": {
+    "showing": "Showing {from} to {to} of {total} entries",
+    "noResults": "No results",
+    "page": "Page",
+    "of": "of"
+  },
+  "empty": {
+    "noData": "No data",
+    "noResults": "No results found",
+    "tryAgain": "Try again"
+  },
+  "time": {
+    "justNow": "Just now",
+    "minutesAgo": "{count} minute ago | {count} minutes ago",
+    "hoursAgo": "{count} hour ago | {count} hours ago",
+    "daysAgo": "{count} day ago | {count} days ago",
+    "weeksAgo": "{count} week ago | {count} weeks ago",
+    "monthsAgo": "{count} month ago | {count} months ago",
+    "yearsAgo": "{count} year ago | {count} years ago"
+  }
+}

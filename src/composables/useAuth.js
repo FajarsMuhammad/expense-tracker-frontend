@@ -2,11 +2,13 @@ import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 import { useUIStore } from '@/stores/ui'
+import { useI18n } from 'vue-i18n'
 
 export function useAuth() {
   const authStore = useAuthStore()
   const router = useRouter()
   const uiStore = useUIStore()
+  const { t } = useI18n()
 
   // Use storeToRefs to maintain reactivity
   const { user, isAuthenticated, loading } = storeToRefs(authStore)
@@ -14,7 +16,7 @@ export function useAuth() {
   async function handleLogin(credentials) {
     try {
       await authStore.login(credentials)
-      uiStore.showToast({ message: 'Login successful!', type: 'success' })
+      uiStore.showToast({ message: t('common.toast.loginSuccessful'), type: 'success' })
       router.push('/dashboard')
     } catch (error) {
       uiStore.showToast({ message: error.message, type: 'error' })
@@ -28,8 +30,8 @@ export function useAuth() {
 
       // Show success message with trial info
       const message = response?.subscription?.isTrial
-        ? 'Welcome! Your 14-day PREMIUM trial has started 🎉'
-        : 'Registration successful!'
+        ? t('common.toast.trialStarted')
+        : t('common.toast.registrationSuccessful')
 
       uiStore.showToast({ message, type: 'success', duration: 5000 })
       router.push('/dashboard')
@@ -41,7 +43,7 @@ export function useAuth() {
 
   function handleLogout() {
     authStore.logout()
-    uiStore.showToast({ message: 'Logged out successfully', type: 'info' })
+    uiStore.showToast({ message: t('common.toast.logoutSuccessful'), type: 'info' })
     router.push('/login')
   }
 
