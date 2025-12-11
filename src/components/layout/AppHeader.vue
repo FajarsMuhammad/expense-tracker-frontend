@@ -51,11 +51,6 @@
               <span v-if="!avatarUrl || avatarError">{{ userInitial }}</span>
             </div>
 
-            <div class="hidden md:flex flex-col leading-tight">
-              <span class="text-sm font-medium">{{ userName }}</span>
-              <span class="text-xs text-neutral-500">{{ userRole || 'Member' }}</span>
-            </div>
-
             <svg class="w-4 h-4 text-neutral-500" fill="none" stroke="currentColor" stroke-width="1.8"
               viewBox="0 0 20 20">
               <path stroke-linecap="round" stroke-linejoin="round" d="M6 8l4 4 4-4" />
@@ -68,29 +63,6 @@
             <div v-if="menuOpen" ref="menu"
               class="absolute right-0 mt-3 w-64 bg-white dark:bg-dark-card rounded-lg shadow-xl ring-1 ring-black/5 dark:ring-white/10 py-2 z-50 no-borders"
               role="menu">
-
-              <!-- Profile Summary -->
-              <div class="px-4 py-3 flex items-center gap-3">
-                <div
-                  class="w-12 h-12 rounded-full overflow-hidden bg-gradient-primary text-white flex items-center justify-center">
-                  <img v-if="avatarUrl" :src="avatarUrl" @error="avatarError = true"
-                    class="object-cover w-full h-full" />
-                  <span v-if="!avatarUrl || avatarError">{{ userInitial }}</span>
-                </div>
-
-                <div class="flex-1 min-w-0">
-                  <div class="text-sm font-medium truncate">{{ userName }}</div>
-                  <div class="text-xs text-neutral-500 truncate">{{ userEmail }}</div>
-                </div>
-
-                <button @click="goToProfile"
-                  class="px-2 py-1 text-xs bg-neutral-100 dark:bg-dark-surface rounded-md hover:bg-neutral-200">
-                  View
-                </button>
-              </div>
-
-              <!-- Separator BEFORE Profile -->
-              <div class="menu-separator"></div>
 
               <!-- Profile -->
               <button ref="firstItem" @click="goToProfile" class="menu-item">
@@ -115,32 +87,34 @@
 
               <!-- Language Switcher -->
               <div class="px-4 py-3">
-                <div class="text-xs font-semibold text-neutral-500 dark:text-neutral-400 mb-2.5">
+                <div class="text-xs font-semibold text-neutral-500 dark:text-neutral-400 mb-2">
                   {{ $t('common.locale.title') }}
                 </div>
 
-                <!-- Single Toggle Button (like Theme Toggle) -->
+                <!-- Sliding Toggle Button -->
                 <button
                   @click="toggleLocale"
-                  class="w-full flex items-center justify-center gap-2 p-2 rounded-xl bg-neutral-100 dark:bg-dark-surface hover:bg-neutral-200 dark:hover:bg-dark-card transition-all duration-300 group"
+                  class="w-24 h-9 rounded-full bg-neutral-100 dark:bg-dark-surface flex items-center transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-500/20 relative hover:bg-neutral-200 dark:hover:bg-dark-card"
                   :aria-label="$t('common.locale.switchLanguage')"
                 >
-                  <!-- ID Flag (Indonesian) -->
+                  <!-- Slider -->
                   <div
-                    v-if="currentLocale === 'id'"
-                    class="flex items-center gap-2 transition-all duration-300 group-hover:scale-110"
+                    class="absolute w-11 h-7 m-1 rounded-full transition-all duration-300 ease-out transform flex items-center justify-center font-semibold text-sm text-white"
+                    :class="currentLocale === 'id'
+                      ? 'bg-gradient-primary translate-x-0'
+                      : 'bg-gradient-primary translate-x-[calc(100%-0.5rem)]'"
                   >
-                    <span class="text-xl">🇮🇩</span>
-                    <span class="text-sm font-bold text-neutral-700 dark:text-neutral-300">Bahasa Indonesia</span>
+                    {{ currentLocale === 'id' ? 'ID' : 'EN' }}
                   </div>
 
-                  <!-- EN Flag (English) -->
-                  <div
-                    v-else
-                    class="flex items-center gap-2 transition-all duration-300 group-hover:scale-110"
-                  >
-                    <span class="text-xl">🇬🇧</span>
-                    <span class="text-sm font-bold text-neutral-700 dark:text-neutral-300">English</span>
+                  <!-- Static Labels -->
+                  <div class="w-1/2 flex items-center justify-center text-xs font-medium z-10 transition-opacity duration-200"
+                    :class="currentLocale === 'id' ? 'opacity-0' : 'opacity-100 text-neutral-600 dark:text-neutral-400'">
+                    ID
+                  </div>
+                  <div class="w-1/2 flex items-center justify-center text-xs font-medium z-10 transition-opacity duration-200"
+                    :class="currentLocale === 'en' ? 'opacity-0' : 'opacity-100 text-neutral-600 dark:text-neutral-400'">
+                    EN
                   </div>
                 </button>
               </div>
@@ -167,6 +141,7 @@
 
 <script setup>
 import { ref, computed, nextTick, onMounted, onBeforeUnmount } from 'vue'
+import { storeToRefs } from 'pinia'
 import ThemeToggle from '@/components/common/ThemeToggle.vue'
 import { useRouter } from 'vue-router'
 import { useAuth } from '@/composables/useAuth'
@@ -178,8 +153,8 @@ const { user, handleLogout } = useAuth()
 
 /* LOCALE */
 const localeStore = useLocaleStore()
-const { currentLocale, availableLocales } = localeStore
-const { toggleLocale, getLocaleLabel } = localeStore
+const { currentLocale } = storeToRefs(localeStore)
+const { toggleLocale } = localeStore
 
 const userName = computed(() => user?.value?.name || 'User')
 const userEmail = computed(() => user?.value?.email || '')

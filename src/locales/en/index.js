@@ -238,12 +238,13 @@ export default {
     add: 'Add',
     wallet: 'Wallet',
     currentBalance: 'Current Balance',
+    edit: 'Edit',
     delete: 'Delete',
     create: {
       title: 'Create Wallet',
       description: 'Add a new wallet to track your finances'
     },
-    edit: {
+    editForm: {
       title: 'Edit Wallet',
       description: 'Update wallet information'
     },
@@ -284,6 +285,7 @@ export default {
     showing: 'Showing {count} of {total} transactions',
     income: 'Income',
     expense: 'Expense',
+    netBalance: 'Net Balance',
     create: {
       title: 'Create Transaction',
       description: 'Add a new income or expense transaction'

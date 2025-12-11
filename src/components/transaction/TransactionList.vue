@@ -1,27 +1,5 @@
 <template>
   <div class="space-y-6">
-    <!-- Summary Header -->
-    <div v-if="!loading && hasTransactions" class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-      <div>
-        <p class="text-[10px] md:text-xs lg:text-sm text-muted">
-          {{ $t('transactions.showing', { count: transactions.length, total: totalTransactions }) }}
-        </p>
-      </div>
-      <div class="flex flex-col gap-1.5 md:flex-row md:gap-3 lg:gap-4 text-[10px] md:text-xs lg:text-sm">
-        <div class="flex items-center gap-1.5 md:gap-2 min-w-0">
-          <span class="text-muted flex-shrink-0">{{ $t('transactions.income') }}:</span>
-          <span class="font-semibold text-income dark:text-income-light break-all leading-tight">
-            {{ formatCurrency(incomeTotal, 'IDR') }}
-          </span>
-        </div>
-        <div class="flex items-center gap-1.5 md:gap-2 min-w-0">
-          <span class="text-muted flex-shrink-0">{{ $t('transactions.expense') }}:</span>
-          <span class="font-semibold text-expense dark:text-expense-light break-all leading-tight">
-            {{ formatCurrency(expenseTotal, 'IDR') }}
-          </span>
-        </div>
-      </div>
-    </div>
 
     <!-- Loading State -->
     <div v-if="loading && !hasTransactions">
@@ -74,14 +52,10 @@
 
 <script setup>
 import { computed } from 'vue'
-import { useRouter } from 'vue-router'
 import TransactionCard from './TransactionCard.vue'
 import AppSkeleton from '@/components/common/AppSkeleton.vue'
 import AppEmpty from '@/components/common/AppEmpty.vue'
 import AppButton from '@/components/common/AppButton.vue'
-import { formatCurrency } from '@/utils/currency'
-
-const router = useRouter()
 
 const props = defineProps({
   transactions: {
@@ -95,18 +69,6 @@ const props = defineProps({
   hasMore: {
     type: Boolean,
     default: false,
-  },
-  incomeTotal: {
-    type: Number,
-    default: 0,
-  },
-  expenseTotal: {
-    type: Number,
-    default: 0,
-  },
-  totalTransactions: {
-    type: Number,
-    default: 0,
   },
 })
 

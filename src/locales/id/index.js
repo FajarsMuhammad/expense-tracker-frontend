@@ -238,12 +238,13 @@ export default {
     add: 'Tambah',
     wallet: 'Dompet',
     currentBalance: 'Saldo Saat Ini',
+    edit: 'Ubah',
     delete: 'Hapus',
     create: {
       title: 'Buat Dompet',
       description: 'Tambahkan dompet baru untuk melacak keuangan Anda'
     },
-    edit: {
+    editForm: {
       title: 'Edit Dompet',
       description: 'Perbarui informasi dompet'
     },
@@ -284,6 +285,7 @@ export default {
     showing: 'Menampilkan {count} dari {total} transaksi',
     income: 'Pemasukan',
     expense: 'Pengeluaran',
+    netBalance: 'Saldo Bersih',
     create: {
       title: 'Buat Transaksi',
       description: 'Tambahkan transaksi pemasukan atau pengeluaran baru'
