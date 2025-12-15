@@ -33,7 +33,7 @@
       </label>
       <input
         id="paidAt"
-        v-model="formData.paidAt"
+        v-model.lazy="formData.paidAt"
         type="datetime-local"
         :max="maxDateTime"
         :class="errors.paidAt ? inputErrorClass : inputClass"

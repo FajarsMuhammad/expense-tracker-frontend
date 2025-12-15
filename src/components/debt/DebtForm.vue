@@ -72,7 +72,7 @@
       </label>
       <input
         id="dueDate"
-        v-model="formData.dueDate"
+        v-model.lazy="formData.dueDate"
         type="date"
         :min="minDate"
         :class="errors.dueDate ? inputErrorClass : inputClass"

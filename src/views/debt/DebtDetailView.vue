@@ -183,7 +183,7 @@
         :debt="currentDebt"
         :payment="editingPayment"
         :loading="loading"
-        @submit="editingPayment ? handleEditPaymentSubmit : handleAddPaymentSubmit"
+        @submit="handlePaymentSubmit"
         @cancel="handleCancelPaymentForm"
       />
     </AppModal>
@@ -357,6 +357,14 @@ function handleDeletePaymentClick(payment) {
 function handleCancelPaymentForm() {
   showPaymentModal.value = false
   editingPayment.value = null
+}
+
+async function handlePaymentSubmit(paymentData) {
+  if (editingPayment.value) {
+    await handleEditPaymentSubmit(paymentData)
+  } else {
+    await handleAddPaymentSubmit(paymentData)
+  }
 }
 
 async function handleAddPaymentSubmit(paymentData) {

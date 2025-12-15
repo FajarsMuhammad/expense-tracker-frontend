@@ -93,11 +93,11 @@ watch(
   (newWallet) => {
     console.log('WalletForm: Wallet prop changed:', newWallet)
     if (newWallet) {
-      // For edit mode, use currentBalance if available, fallback to initialBalance
-      // const balance = newWallet.currentBalance !== undefined
-      //   ? newWallet.currentBalance
-      //   : newWallet.initialBalance ?? 0
-      const balance = newWallet.initialBalance ?? 0
+      // For edit mode, use balance (current balance from API) if available
+      // Fallback to initialBalance for older data structures
+      const balance = newWallet.balance !== undefined
+        ? newWallet.balance
+        : newWallet.initialBalance ?? 0
 
       formData.value = {
         name: newWallet.name || '',

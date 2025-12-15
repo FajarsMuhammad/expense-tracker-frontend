@@ -51,7 +51,7 @@
               Start Date
             </label>
             <input
-              v-model="localStartDate"
+              v-model.lazy="localStartDate"
               type="date"
               :max="localEndDate || maxDate"
               class="w-full rounded-lg border border-neutral-300 bg-white px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-neutral-900 transition-colors focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:border-neutral-600 dark:bg-dark-bg dark:text-neutral-100 dark:focus:border-primary-600"
@@ -65,7 +65,7 @@
               End Date
             </label>
             <input
-              v-model="localEndDate"
+              v-model.lazy="localEndDate"
               type="date"
               :min="localStartDate"
               :max="maxDate"

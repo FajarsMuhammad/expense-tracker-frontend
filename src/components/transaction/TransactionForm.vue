@@ -196,7 +196,7 @@
       </label>
       <input
         id="date"
-        v-model="formData.date"
+        v-model.lazy="formData.date"
         type="date"
         :max="maxDate"
         class="w-full px-4 py-2 border border-neutral-300 dark:border-dark-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-dark-surface"

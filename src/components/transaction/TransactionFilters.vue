@@ -69,7 +69,7 @@
         </label>
         <input
           id="filter-date-from"
-          v-model="localFilters.dateFrom"
+          v-model.lazy="localFilters.dateFrom"
           type="date"
           :max="localFilters.dateTo || maxDate"
           class="w-full px-4 py-2 border border-neutral-300 dark:border-dark-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-dark-surface"
@@ -83,7 +83,7 @@
         </label>
         <input
           id="filter-date-to"
-          v-model="localFilters.dateTo"
+          v-model.lazy="localFilters.dateTo"
           type="date"
           :min="localFilters.dateFrom"
           :max="maxDate"
@@ -171,7 +171,7 @@ watch(() => localFilters.value.type, (newType, oldType) => {
 // Sync local filters with prop filters
 watch(() => props.filters, (newFilters) => {
   localFilters.value = { ...newFilters }
-}, { immediate: true, deep: true })
+}, { immediate: true })
 
 function applyFilters() {
   emit('apply', { ...localFilters.value })
