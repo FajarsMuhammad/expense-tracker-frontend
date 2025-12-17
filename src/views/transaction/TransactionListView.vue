@@ -152,6 +152,7 @@
         :transactions="transactions"
         :loading="loading"
         :has-more="hasMore"
+        :total-transactions="totalTransactions"
         @edit="handleEdit"
         @delete="confirmDelete"
         @load-more="handleLoadMore"

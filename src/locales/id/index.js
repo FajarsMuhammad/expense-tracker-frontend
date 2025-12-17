@@ -240,6 +240,8 @@ export default {
     currentBalance: 'Saldo Saat Ini',
     edit: 'Ubah',
     delete: 'Hapus',
+    locked: 'Terkunci',
+    cannotDelete: 'Tidak dapat menghapus dompet dengan riwayat transaksi',
     create: {
       title: 'Buat Dompet',
       description: 'Tambahkan dompet baru untuk melacak keuangan Anda'
@@ -259,6 +261,22 @@ export default {
       confirm: 'Hapus',
       cancel: 'Batal'
     },
+    cannotDeleteModal: {
+      title: '🔒 Tidak Dapat Menghapus Dompet',
+      warningTitle: '⚠️ Dompet Memiliki Riwayat Transaksi',
+      warningDescription: 'Dompet ini tidak dapat dihapus karena berisi catatan transaksi. Menghapusnya akan:',
+      reason1Title: 'Merusak data keuangan Anda',
+      reason1Desc: 'Riwayat transaksi akan hilang permanen',
+      reason2Title: 'Merusak jejak audit',
+      reason2Desc: 'Laporan keuangan akan menjadi tidak akurat',
+      reason3Title: 'Melanggar integritas data',
+      reason3Desc: 'Tidak dapat mempertahankan catatan keuangan yang dapat dipercaya',
+      alternativesTitle: '💡 Opsi Alternatif',
+      alternative1: 'Simpan dompet dan berhenti menggunakannya',
+      alternative2: 'Transfer sisa saldo ke dompet lain',
+      alternative3: 'Hubungi dukungan jika Anda perlu mengarsipkan dompet ini',
+      understand: 'Saya Mengerti'
+    },
     form: {
       name: 'Nama Dompet',
       namePlaceholder: 'Contoh: Dompet Tunai, Rekening Bank',
@@ -273,7 +291,12 @@ export default {
       saving: 'Menyimpan...',
       cancel: 'Batal',
       nameRequired: 'Nama dompet wajib diisi',
-      currencyRequired: 'Mata uang wajib dipilih'
+      currencyRequired: 'Mata uang wajib dipilih',
+      balanceLocked: 'Saldo Terkunci',
+      balanceLockedDesc: 'Dompet ini memiliki {count} transaksi. Saldo dihitung otomatis dan tidak dapat diedit secara manual.',
+      balanceLockedDescSimple: 'Dompet ini memiliki riwayat transaksi. Saldo dihitung otomatis dan tidak dapat diedit secara manual.',
+      currentBalance: 'Saldo Saat Ini',
+      balanceAdjustmentHint: 'Untuk menyesuaikan saldo, gunakan fitur "Tambah Transaksi" (Income/Expense/Transfer)'
     }
   },
   transactions: {
@@ -283,6 +306,8 @@ export default {
     filters: 'Filter',
     active: 'aktif',
     showing: 'Menampilkan {count} dari {total} transaksi',
+    total: 'Total Transaksi',
+    items: 'transaksi',
     income: 'Pemasukan',
     expense: 'Pengeluaran',
     netBalance: 'Saldo Bersih',
@@ -485,7 +510,9 @@ export default {
       updatePayment: 'Perbarui Pembayaran',
       addPayment: 'Tambah Pembayaran',
       cancel: 'Batal',
-      maximumHint: 'Maksimal: {amount}'
+      maximumHint: 'Maksimal: {amount}',
+      payFullAmount: 'Bayar Semua',
+      payFullAmountDesc: 'Lunasi seluruh sisa saldo'
     },
     filtersForm: {
       title: 'Filter',

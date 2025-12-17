@@ -240,6 +240,8 @@ export default {
     currentBalance: 'Current Balance',
     edit: 'Edit',
     delete: 'Delete',
+    locked: 'Locked',
+    cannotDelete: 'Cannot delete wallet with transaction history',
     create: {
       title: 'Create Wallet',
       description: 'Add a new wallet to track your finances'
@@ -259,6 +261,22 @@ export default {
       confirm: 'Delete',
       cancel: 'Cancel'
     },
+    cannotDeleteModal: {
+      title: '🔒 Cannot Delete Wallet',
+      warningTitle: '⚠️ Wallet Has Transaction History',
+      warningDescription: 'This wallet cannot be deleted because it contains transaction records. Deleting it would:',
+      reason1Title: 'Corrupt your financial data',
+      reason1Desc: 'Transaction history would be permanently lost',
+      reason2Title: 'Break audit trail',
+      reason2Desc: 'Financial reports would become inaccurate',
+      reason3Title: 'Violate data integrity',
+      reason3Desc: 'Cannot maintain reliable financial records',
+      alternativesTitle: '💡 Alternative Options',
+      alternative1: 'Keep the wallet and stop using it',
+      alternative2: 'Transfer remaining balance to another wallet',
+      alternative3: 'Contact support if you need to archive this wallet',
+      understand: 'I Understand'
+    },
     form: {
       name: 'Wallet Name',
       namePlaceholder: 'e.g., Cash Wallet, Bank Account',
@@ -273,7 +291,12 @@ export default {
       saving: 'Saving...',
       cancel: 'Cancel',
       nameRequired: 'Wallet name is required',
-      currencyRequired: 'Currency is required'
+      currencyRequired: 'Currency is required',
+      balanceLocked: 'Balance Locked',
+      balanceLockedDesc: 'This wallet has {count} transactions. Balance is automatically calculated and cannot be manually edited.',
+      balanceLockedDescSimple: 'This wallet has transaction history. Balance is automatically calculated and cannot be manually edited.',
+      currentBalance: 'Current Balance',
+      balanceAdjustmentHint: 'To adjust balance, use "Add Transaction" feature (Income/Expense/Transfer)'
     }
   },
   transactions: {
@@ -283,6 +306,8 @@ export default {
     filters: 'Filters',
     active: 'active',
     showing: 'Showing {count} of {total} transactions',
+    total: 'Total Transactions',
+    items: 'transactions',
     income: 'Income',
     expense: 'Expense',
     netBalance: 'Net Balance',
@@ -485,7 +510,9 @@ export default {
       updatePayment: 'Update Payment',
       addPayment: 'Add Payment',
       cancel: 'Cancel',
-      maximumHint: 'Maximum: {amount}'
+      maximumHint: 'Maximum: {amount}',
+      payFullAmount: 'Pay Full Amount',
+      payFullAmountDesc: 'Settle the entire remaining balance'
     },
     filtersForm: {
       title: 'Filters',

@@ -201,7 +201,7 @@
 
     <!-- Empty State -->
     <div
-      v-if="!isLoading && !hasSummary"
+      v-if="!summaryLoading && !hasSummary"
       class="rounded-lg border-2 border-dashed border-neutral-300 bg-neutral-50 py-12 text-center dark:border-neutral-700 dark:bg-neutral-900/20"
     >
       <ChartBarIcon class="mx-auto size-12 text-neutral-400" />

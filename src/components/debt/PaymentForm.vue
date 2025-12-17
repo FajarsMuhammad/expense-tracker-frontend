@@ -13,6 +13,61 @@
       </div>
     </div>
 
+    <!-- Pay Full Amount Toggle -->
+    <div class="rounded-xl border-2 border-dashed border-primary-200 bg-primary-50/30 p-4 dark:border-primary-800 dark:bg-primary-950/20">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="flex-shrink-0 rounded-lg bg-primary-100 p-2 dark:bg-primary-900/40">
+            <BanknotesIcon class="size-5 text-primary-600 dark:text-primary-400" />
+          </div>
+          <div>
+            <p class="text-sm font-semibold text-primary-900 dark:text-primary-100">{{ $t('debts.paymentForm.payFullAmount') }}</p>
+            <p class="text-xs text-primary-700 dark:text-primary-300">{{ $t('debts.paymentForm.payFullAmountDesc') }}</p>
+          </div>
+        </div>
+
+        <!-- Toggle Switch -->
+        <button
+          type="button"
+          @click="togglePayFullAmount"
+          :class="[
+            'relative inline-flex h-7 w-12 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
+            payFullAmount ? 'bg-primary-600 dark:bg-primary-500' : 'bg-neutral-300 dark:bg-neutral-600'
+          ]"
+          role="switch"
+          :aria-checked="payFullAmount"
+        >
+          <span
+            :class="[
+              'pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
+              payFullAmount ? 'translate-x-5' : 'translate-x-0'
+            ]"
+          >
+            <span
+              :class="[
+                'absolute inset-0 flex h-full w-full items-center justify-center transition-opacity',
+                payFullAmount ? 'opacity-0 duration-100 ease-out' : 'opacity-100 duration-200 ease-in'
+              ]"
+            >
+              <svg class="h-3 w-3 text-neutral-400" fill="none" viewBox="0 0 12 12">
+                <path d="M4 8l2-2m0 0l2-2M6 6L4 4m2 2l2 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+            <span
+              :class="[
+                'absolute inset-0 flex h-full w-full items-center justify-center transition-opacity',
+                payFullAmount ? 'opacity-100 duration-200 ease-in' : 'opacity-0 duration-100 ease-out'
+              ]"
+            >
+              <svg class="h-3 w-3 text-primary-600" fill="currentColor" viewBox="0 0 12 12">
+                <path d="M3.707 5.293a1 1 0 00-1.414 1.414l1.414-1.414zM5 8l-.707.707a1 1 0 001.414 0L5 8zm4.707-3.293a1 1 0 00-1.414-1.414l1.414 1.414zm-7.414 2l2 2 1.414-1.414-2-2-1.414 1.414zm3.414 2l4-4-1.414-1.414-4 4 1.414 1.414z" />
+              </svg>
+            </span>
+          </span>
+        </button>
+      </div>
+    </div>
+
     <!-- Payment Amount -->
     <CurrencyInput
       id="amount"
@@ -24,6 +79,7 @@
       :max="debt.remainingAmount"
       :hint="$t('debts.paymentForm.maximumHint', { amount: formatCurrency(debt.remainingAmount) })"
       :error="errors.amount"
+      :disabled="payFullAmount"
     />
 
     <!-- Payment Date/Time -->
@@ -86,7 +142,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { InformationCircleIcon } from '@heroicons/vue/24/outline'
+import { InformationCircleIcon, BanknotesIcon } from '@heroicons/vue/24/outline'
 import CurrencyInput from '@/components/common/CurrencyInput.vue'
 import { formatCurrency } from '@/utils/currency'
 import { useUIStore } from '@/stores/ui'
@@ -112,11 +168,29 @@ const props = defineProps({
 const emit = defineEmits(['submit', 'cancel'])
 
 const isEditMode = computed(() => !!props.payment)
+const payFullAmount = ref(false)
 
 const formData = ref({
   amount: props.payment?.amount || null,
   paidAt: props.payment?.paidAt || getCurrentDateTime(),
   note: props.payment?.note || '',
+})
+
+// Toggle Pay Full Amount
+function togglePayFullAmount() {
+  payFullAmount.value = !payFullAmount.value
+  if (payFullAmount.value) {
+    formData.value.amount = props.debt.remainingAmount
+  } else {
+    formData.value.amount = null
+  }
+}
+
+// Watch payFullAmount to keep amount in sync
+watch(payFullAmount, (newVal) => {
+  if (newVal) {
+    formData.value.amount = props.debt.remainingAmount
+  }
 })
 
 // Watch for payment prop changes (when editing different payments)
@@ -164,13 +238,18 @@ function getCurrentDateTime() {
 watch(
   () => formData.value.amount,
   (newAmount) => {
-    if (newAmount && newAmount > props.debt.remainingAmount) {
+    // Convert to number if it's a string
+    const amountValue = typeof newAmount === 'string'
+      ? parseFloat(newAmount.replace(/\./g, ''))
+      : newAmount
+
+    if (amountValue && amountValue > props.debt.remainingAmount) {
       uiStore.showToast({
         type: 'error',
         message: `Payment amount cannot exceed remaining amount (${formatCurrency(props.debt.remainingAmount)})`,
       })
       errors.value.amount = `Cannot exceed ${formatCurrency(props.debt.remainingAmount)}`
-    } else if (errors.value.amount && newAmount <= props.debt.remainingAmount) {
+    } else if (errors.value.amount && amountValue && amountValue <= props.debt.remainingAmount) {
       // Clear error when amount is valid again
       errors.value.amount = ''
     }
@@ -185,14 +264,19 @@ function validateForm() {
 
   let isValid = true
 
-  if (!formData.value.amount || formData.value.amount <= 0) {
+  // Convert amount to number if it's a string
+  const amountValue = typeof formData.value.amount === 'string'
+    ? parseFloat(formData.value.amount.replace(/\./g, ''))
+    : formData.value.amount
+
+  if (!amountValue || amountValue <= 0) {
     errors.value.amount = 'Amount must be greater than 0'
     uiStore.showToast({
       type: 'warning',
       message: 'Payment amount must be greater than 0',
     })
     isValid = false
-  } else if (formData.value.amount > props.debt.remainingAmount) {
+  } else if (amountValue > props.debt.remainingAmount) {
     errors.value.amount = `Amount cannot exceed remaining amount (${formatCurrency(props.debt.remainingAmount)})`
     uiStore.showToast({
       type: 'error',

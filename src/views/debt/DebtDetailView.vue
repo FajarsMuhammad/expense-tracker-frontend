@@ -132,16 +132,6 @@
                 </div>
               </div>
             </div>
-
-            <!-- Mark as Paid Button -->
-            <button
-              v-if="currentDebt?.status !== DEBT_STATUS.PAID"
-              @click="showMarkPaidDialog = true"
-              class="w-full rounded-lg bg-green-600 px-6 py-3 font-medium text-white transition-colors hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:bg-green-500 dark:hover:bg-green-600"
-            >
-              <CheckCircleIcon class="inline size-5" />
-              {{ t('debts.detail.markAsFullyPaid') }}
-            </button>
           </div>
 
           <!-- Right Column: Payment History -->
@@ -199,17 +189,6 @@
       @cancel="showDeleteDialog = false"
     />
 
-    <!-- Mark as Paid Confirmation Dialog -->
-    <AppConfirmDialog
-      v-model="showMarkPaidDialog"
-      :title="t('debts.detail.markAsPaid')"
-      :message="t('debts.detail.markAsPaidConfirm')"
-      :confirm-text="t('debts.detail.markAsPaid')"
-      :cancel-text="t('common.buttons.cancel')"
-      @confirm="confirmMarkAsPaid"
-      @cancel="showMarkPaidDialog = false"
-    />
-
     <!-- Delete Payment Confirmation Dialog -->
     <AppConfirmDialog
       v-model="showDeletePaymentDialog"
@@ -243,7 +222,6 @@ import {
   PlusIcon,
   ArrowUpCircleIcon,
   ArrowDownCircleIcon,
-  CheckCircleIcon,
 } from '@heroicons/vue/24/outline'
 import { DEBT_TYPES, DEBT_STATUS } from '@/config/api.config'
 
@@ -258,12 +236,10 @@ const {
   handleAddPayment,
   handleUpdatePayment,
   handleDeletePayment,
-  handleMarkAsPaid,
 } = useDebt()
 
 const showPaymentModal = ref(false)
 const showDeleteDialog = ref(false)
-const showMarkPaidDialog = ref(false)
 const showDeletePaymentDialog = ref(false)
 const editingPayment = ref(null)
 const deletingPayment = ref(null)
@@ -388,13 +364,6 @@ async function confirmDeletePayment() {
   await handleDeletePayment(route.params.id, deletingPayment.value.id)
   showDeletePaymentDialog.value = false
   deletingPayment.value = null
-  // Reload to ensure all calculated fields are fresh
-  await loadDebt(route.params.id)
-}
-
-async function confirmMarkAsPaid() {
-  await handleMarkAsPaid(route.params.id)
-  showMarkPaidDialog.value = false
   // Reload to ensure all calculated fields are fresh
   await loadDebt(route.params.id)
 }

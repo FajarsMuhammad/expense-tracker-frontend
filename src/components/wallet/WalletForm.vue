@@ -29,7 +29,39 @@
       <p v-if="errors.currency" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ errors.currency }}</p>
     </div>
 
+    <!-- Balance Locked Warning (Only in edit mode with transactions) -->
+    <div v-if="isEditMode && hasTransactions" class="rounded-xl border-2 border-dashed border-amber-200 bg-amber-50/50 p-4 dark:border-amber-800 dark:bg-amber-950/20">
+      <div class="flex items-start gap-3">
+        <div class="flex-shrink-0 rounded-lg bg-amber-100 p-2 dark:bg-amber-900/40">
+          <LockClosedIcon class="size-5 text-amber-600 dark:text-amber-400" />
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-semibold text-amber-900 dark:text-amber-100">
+            {{ $t('wallets.form.balanceLocked') }}
+          </p>
+          <p class="mt-1 text-xs text-amber-700 dark:text-amber-300">
+            {{ $t('wallets.form.balanceLockedDescSimple') }}
+          </p>
+          <div class="mt-3 flex items-center gap-2">
+            <div class="flex-1">
+              <p class="text-xs font-medium text-amber-600 dark:text-amber-400 mb-1">
+                {{ $t('wallets.form.currentBalance') }}
+              </p>
+              <p class="text-lg font-bold text-amber-900 dark:text-amber-100">
+                {{ formatCurrency(formData.initialBalance) }}
+              </p>
+            </div>
+          </div>
+          <p class="mt-3 text-xs text-amber-600 dark:text-amber-400">
+            💡 {{ $t('wallets.form.balanceAdjustmentHint') }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Balance Input (Create mode OR Edit mode without transactions) -->
     <CurrencyInput
+      v-if="!isEditMode || (isEditMode && !hasTransactions)"
       id="initialBalance"
       v-model="formData.initialBalance"
       :label="isEditMode ? $t('wallets.form.balance') : $t('wallets.form.initialBalance')"
@@ -54,10 +86,11 @@
 <script setup>
 import { ref, watch, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { LockClosedIcon } from '@heroicons/vue/24/outline'
 import AppInput from '@/components/common/AppInput.vue'
 import AppButton from '@/components/common/AppButton.vue'
 import CurrencyInput from '@/components/common/CurrencyInput.vue'
-import { SUPPORTED_CURRENCIES } from '@/utils/currency'
+import { SUPPORTED_CURRENCIES, formatCurrency } from '@/utils/currency'
 
 const { t } = useI18n()
 
@@ -77,6 +110,24 @@ const emit = defineEmits(['submit', 'cancel'])
 const currencies = SUPPORTED_CURRENCIES
 const isEditMode = computed(() => !!props.wallet)
 
+// Check if wallet has transactions
+// Strategy: If currentBalance != initialBalance, then wallet has been used for transactions
+const hasTransactions = computed(() => {
+  if (!props.wallet) return false
+
+  const initial = props.wallet.initialBalance || 0
+  const current = props.wallet.currentBalance || 0
+
+  // If balances differ, wallet has transactions
+  return initial !== current
+})
+
+const transactionCount = computed(() => {
+  // Since API doesn't return count, we show a generic message
+  // or we could make an API call to get transaction count
+  return hasTransactions.value ? '?' : 0
+})
+
 const formData = ref({
   name: '',
   currency: '',
@@ -91,12 +142,11 @@ const touchedFields = ref(new Set())
 watch(
   () => props.wallet,
   (newWallet) => {
-    console.log('WalletForm: Wallet prop changed:', newWallet)
     if (newWallet) {
-      // For edit mode, use balance (current balance from API) if available
-      // Fallback to initialBalance for older data structures
-      const balance = newWallet.balance !== undefined
-        ? newWallet.balance
+      // For edit mode, use currentBalance (actual balance from transactions)
+      // This ensures we show the real-time balance
+      const balance = newWallet.currentBalance !== undefined
+        ? newWallet.currentBalance
         : newWallet.initialBalance ?? 0
 
       formData.value = {
@@ -104,7 +154,6 @@ watch(
         currency: newWallet.currency || '',
         initialBalance: balance,
       }
-      console.log('WalletForm: Form data updated:', formData.value)
     } else {
       // Reset form for create mode
       formData.value = {
@@ -112,7 +161,6 @@ watch(
         currency: '',
         initialBalance: 0,
       }
-      console.log('WalletForm: Form data reset for create mode')
     }
   },
   { immediate: true, deep: true }
@@ -160,10 +208,17 @@ function onSubmit() {
 
   if (!validateForm()) return
 
-  emit('submit', {
+  const submitData = {
     name: formData.value.name.trim(),
     currency: formData.value.currency,
-    initialBalance: formData.value.initialBalance || 0,
-  })
+  }
+
+  // Only include initialBalance if wallet has no transactions
+  // This prevents overwriting calculated balance
+  if (!hasTransactions.value) {
+    submitData.initialBalance = formData.value.initialBalance || 0
+  }
+
+  emit('submit', submitData)
 }
 </script>

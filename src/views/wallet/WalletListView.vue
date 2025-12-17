@@ -64,6 +64,7 @@
           @view="viewWallet"
           @edit="editWallet"
           @delete="confirmDelete"
+          @cannotDelete="showCannotDeleteWarning"
         />
       </div>
 
@@ -77,6 +78,60 @@
         @confirm="handleDelete"
         @cancel="showDeleteModal = false"
       />
+
+      <!-- Cannot Delete Modal -->
+      <AppModal v-model="showCannotDeleteModal" :title="$t('wallets.cannotDeleteModal.title')">
+        <div class="space-y-4">
+          <div class="rounded-lg bg-red-50 p-4 dark:bg-red-900/20">
+            <h4 class="font-semibold text-red-900 dark:text-red-100 mb-2">
+              {{ $t('wallets.cannotDeleteModal.warningTitle') }}
+            </h4>
+            <p class="text-sm text-red-700 dark:text-red-300">
+              {{ $t('wallets.cannotDeleteModal.warningDescription') }}
+            </p>
+          </div>
+
+          <div class="space-y-2">
+            <div class="flex items-start gap-2">
+              <span class="text-red-600 dark:text-red-400">❌</span>
+              <p class="text-sm text-neutral-700 dark:text-neutral-300">
+                <strong>{{ $t('wallets.cannotDeleteModal.reason1Title') }}</strong> - {{ $t('wallets.cannotDeleteModal.reason1Desc') }}
+              </p>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="text-red-600 dark:text-red-400">❌</span>
+              <p class="text-sm text-neutral-700 dark:text-neutral-300">
+                <strong>{{ $t('wallets.cannotDeleteModal.reason2Title') }}</strong> - {{ $t('wallets.cannotDeleteModal.reason2Desc') }}
+              </p>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="text-red-600 dark:text-red-400">❌</span>
+              <p class="text-sm text-neutral-700 dark:text-neutral-300">
+                <strong>{{ $t('wallets.cannotDeleteModal.reason3Title') }}</strong> - {{ $t('wallets.cannotDeleteModal.reason3Desc') }}
+              </p>
+            </div>
+          </div>
+
+          <div class="rounded-lg bg-blue-50 p-4 dark:bg-blue-900/20">
+            <h4 class="font-semibold text-blue-900 dark:text-blue-100 mb-2">
+              {{ $t('wallets.cannotDeleteModal.alternativesTitle') }}
+            </h4>
+            <ul class="space-y-1 text-sm text-blue-700 dark:text-blue-300">
+              <li>• {{ $t('wallets.cannotDeleteModal.alternative1') }}</li>
+              <li>• {{ $t('wallets.cannotDeleteModal.alternative2') }}</li>
+              <li>• {{ $t('wallets.cannotDeleteModal.alternative3') }}</li>
+            </ul>
+          </div>
+        </div>
+
+        <template #footer>
+          <div class="flex gap-3">
+            <AppButton variant="primary" @click="showCannotDeleteModal = false">
+              {{ $t('wallets.cannotDeleteModal.understand') }}
+            </AppButton>
+          </div>
+        </template>
+      </AppModal>
     </div>
   </AppLayout>
 </template>
@@ -88,17 +143,21 @@ import { useI18n } from 'vue-i18n'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import AppButton from '@/components/common/AppButton.vue'
 import AppConfirmDialog from '@/components/common/AppConfirmDialog.vue'
+import AppModal from '@/components/common/AppModal.vue'
 import AppSkeleton from '@/components/common/AppSkeleton.vue'
 import AppEmpty from '@/components/common/AppEmpty.vue'
 import WalletCard from '@/components/wallet/WalletCard.vue'
 import { PlusIcon } from '@heroicons/vue/24/outline'
 import { useWallet } from '@/composables/useWallet'
+import { useSubscriptionStore } from '@/stores/subscription'
 
 const { t } = useI18n()
 const router = useRouter()
+const subscriptionStore = useSubscriptionStore()
 const { wallets, loading, canCreateWallet, loadWallets, handleDeleteWallet } = useWallet()
 
 const showDeleteModal = ref(false)
+const showCannotDeleteModal = ref(false)
 const walletToDelete = ref(null)
 
 const deleteMessage = computed(() => {
@@ -106,8 +165,16 @@ const deleteMessage = computed(() => {
   return t('wallets.deleteConfirm.message', { name: walletToDelete.value.name })
 })
 
-onMounted(() => {
-  loadWallets()
+onMounted(async () => {
+  // Fetch subscription first to ensure canCreateWallet is accurate
+  // This prevents button being disabled for premium users
+  try {
+    await subscriptionStore.fetchSubscription()
+  } catch (error) {
+    console.error('Failed to fetch subscription, continuing with wallet load:', error)
+    // Continue loading wallets even if subscription fetch fails
+  }
+  await loadWallets()
 })
 
 function viewWallet(wallet) {
@@ -121,6 +188,10 @@ function editWallet(wallet) {
 function confirmDelete(wallet) {
   walletToDelete.value = wallet
   showDeleteModal.value = true
+}
+
+function showCannotDeleteWarning(wallet) {
+  showCannotDeleteModal.value = true
 }
 
 async function handleDelete() {

@@ -72,9 +72,9 @@
           </form>
         </div>
 
-        <!-- Footer + OAuth -->
+        <!-- Footer -->
         <div class="px-8 py-6 bg-gray-50">
-          <div class="text-center mb-4">
+          <div class="text-center">
             <p class="text-sm text-gray-600">
               {{ $t('auth.login.noAccount') }}
               <router-link to="/register" class="text-primary-600 font-medium hover:underline ml-1">
@@ -83,16 +83,16 @@
             </p>
           </div>
 
+          <!-- OAuth Section - Hidden until implementation is ready -->
+          <!-- Uncomment below to enable OAuth login options -->
+          <!--
           <div class="flex items-center gap-3 my-4">
             <div class="flex-1 h-px bg-gray-200"></div>
             <div class="text-xs text-gray-400">{{ $t('auth.login.orContinueWith') }}</div>
             <div class="flex-1 h-px bg-gray-200"></div>
           </div>
 
-          <!-- ICON-ONLY OAUTH -->
           <div class="flex items-center justify-center gap-4 py-1">
-
-            <!-- Google (inline SVG to avoid import issues) -->
             <button @click="onOAuth('google')"
               class="w-11 h-11 flex items-center justify-center rounded-full border border-gray-200 bg-white hover:shadow disabled:opacity-60 transition"
               :aria-label="$t('auth.login.loginWithGoogle')">
@@ -108,7 +108,6 @@
               </svg>
             </button>
 
-            <!-- Apple -->
             <button @click="onOAuth('apple')" :disabled="oauthLoading.apple || loading"
               class="w-11 h-11 flex items-center justify-center rounded-full bg-black hover:shadow text-white disabled:opacity-60 transition"
               :aria-label="$t('auth.login.loginWithApple')">
@@ -118,7 +117,6 @@
               </svg>
             </button>
 
-            <!-- Facebook -->
             <button @click="onOAuth('facebook')" :disabled="oauthLoading.facebook || loading"
               class="w-11 h-11 flex items-center justify-center rounded-full hover:shadow disabled:opacity-60 transition"
               style="background-color: #1877F2;" :aria-label="$t('auth.login.loginWithFacebook')">
@@ -127,8 +125,8 @@
                   d="M22 12.07C22 6.48 17.52 2 11.93 2S2 6.48 2 12.07c0 4.99 3.66 9.12 8.44 9.93v-7.03H7.9v-2.9h2.54V9.77c0-2.5 1.49-3.88 3.77-3.88 1.09 0 2.23.2 2.23.2v2.45h-1.25c-1.23 0-1.61.76-1.61 1.53v1.84h2.74l-.44 2.9h-2.3v7.03C18.34 21.19 22 17.06 22 12.07z" />
               </svg>
             </button>
-
           </div>
+          -->
         </div>
       </div>
     </div>

@@ -8,6 +8,30 @@
  * Production: https://api.expensetracker.com/api/v1
  */
 
+// Validate required environment variables
+const validateEnv = () => {
+  const required = {
+    VITE_API_BASE_URL: import.meta.env.VITE_API_BASE_URL,
+    VITE_APP_NAME: import.meta.env.VITE_APP_NAME,
+    VITE_MIDTRANS_CLIENT_KEY: import.meta.env.VITE_MIDTRANS_CLIENT_KEY,
+    VITE_MIDTRANS_IS_PRODUCTION: import.meta.env.VITE_MIDTRANS_IS_PRODUCTION,
+  }
+
+  const missing = Object.entries(required)
+    .filter(([_, value]) => value === undefined)
+    .map(([key]) => key)
+
+  if (missing.length > 0) {
+    throw new Error(
+      `Missing required environment variables: ${missing.join(', ')}\n` +
+        'Please check your .env file or copy from .env.example'
+    )
+  }
+}
+
+// Run validation
+validateEnv()
+
 // API Base URL from environment variable
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
