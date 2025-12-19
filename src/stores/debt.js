@@ -53,6 +53,18 @@ export const useDebtStore = defineStore('debt', () => {
       .reduce((sum, debt) => sum + debt.remainingAmount, 0)
   })
 
+  const payableCount = computed(() => {
+    return debts.value.filter(
+      (debt) => debt.type === DEBT_TYPES.PAYABLE && debt.status !== DEBT_STATUS.PAID
+    ).length
+  })
+
+  const receivableCount = computed(() => {
+    return debts.value.filter(
+      (debt) => debt.type === DEBT_TYPES.RECEIVABLE && debt.status !== DEBT_STATUS.PAID
+    ).length
+  })
+
   const netPosition = computed(() => {
     // Positive: you are owed more than you owe
     // Negative: you owe more than you are owed
@@ -322,6 +334,8 @@ export const useDebtStore = defineStore('debt', () => {
     overdueDebts,
     totalPayable,
     totalReceivable,
+    payableCount,
+    receivableCount,
     netPosition,
     openDebts,
     partialDebts,

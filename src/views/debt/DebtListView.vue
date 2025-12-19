@@ -36,7 +36,12 @@
               <ArrowUpCircleIcon class="size-4 md:size-5 lg:size-6 text-red-600 dark:text-red-400" />
             </div>
             <div class="flex-1 min-w-0 overflow-hidden">
-              <p class="text-[10px] md:text-xs lg:text-sm font-medium text-red-600 dark:text-red-400">{{ $t('debts.summary.youOwe') }}</p>
+              <div class="flex items-center gap-1.5 md:gap-2">
+                <p class="text-[10px] md:text-xs lg:text-sm font-medium text-red-600 dark:text-red-400">{{ $t('debts.summary.youOwe') }}</p>
+                <span class="inline-flex items-center justify-center min-w-[18px] md:min-w-[20px] h-[18px] md:h-[20px] px-1 md:px-1.5 rounded-full bg-red-600/10 dark:bg-red-400/10 text-[9px] md:text-[10px] font-semibold text-red-700 dark:text-red-300">
+                  {{ payableCount }}
+                </span>
+              </div>
               <p class="text-xs md:text-sm lg:text-lg font-bold text-red-700 dark:text-red-300 break-all leading-tight">
                 {{ formatCurrency(totalPayable) }}
               </p>
@@ -51,7 +56,12 @@
               <ArrowDownCircleIcon class="size-4 md:size-5 lg:size-6 text-green-600 dark:text-green-400" />
             </div>
             <div class="flex-1 min-w-0 overflow-hidden">
-              <p class="text-[10px] md:text-xs lg:text-sm font-medium text-green-600 dark:text-green-400">{{ $t('debts.summary.owedToYou') }}</p>
+              <div class="flex items-center gap-1.5 md:gap-2">
+                <p class="text-[10px] md:text-xs lg:text-sm font-medium text-green-600 dark:text-green-400">{{ $t('debts.summary.owedToYou') }}</p>
+                <span class="inline-flex items-center justify-center min-w-[18px] md:min-w-[20px] h-[18px] md:h-[20px] px-1 md:px-1.5 rounded-full bg-green-600/10 dark:bg-green-400/10 text-[9px] md:text-[10px] font-semibold text-green-700 dark:text-green-300">
+                  {{ receivableCount }}
+                </span>
+              </div>
               <p class="text-xs md:text-sm lg:text-lg font-bold text-green-700 dark:text-green-300 break-all leading-tight">
                 {{ formatCurrency(totalReceivable) }}
               </p>
@@ -172,6 +182,8 @@ const {
   overdueDebts,
   totalPayable,
   totalReceivable,
+  payableCount,
+  receivableCount,
   netPosition,
   loadDebts,
   handleDeleteDebt,
