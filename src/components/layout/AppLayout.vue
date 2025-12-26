@@ -14,7 +14,7 @@
 
       <main
         id="main-content"
-        class="flex-1 w-full pt-20 md:pt-24 px-6 md:px-8 lg:px-12 pb-8 md:ml-64 transition-all duration-300 animate-fade-in"
+        class="flex-1 w-full pt-24 md:pt-28 lg:pt-24 px-6 md:px-8 lg:px-12 pb-8 md:ml-64 transition-all duration-300 animate-fade-in"
         tabindex="-1"
       >
         <slot />

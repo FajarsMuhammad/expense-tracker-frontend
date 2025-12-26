@@ -14,7 +14,7 @@
       </button>
 
       <!-- Title -->
-      <div class="flex-1 md:flex-none flex items-center gap-4">
+      <div class="flex-1 md:flex-none flex items-center gap-4 ml-3 md:ml-0">
         <h1
           class="text-base md:text-lg font-display font-semibold bg-gradient-primary bg-clip-text text-transparent tracking-tight">
           {{ appName }}
