@@ -71,7 +71,8 @@
 
 <script setup>
 import { useRoute } from 'vue-router'
-import { h } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { h, computed } from 'vue'
 
 defineProps({
   isOpen: {
@@ -83,12 +84,13 @@ defineProps({
 defineEmits(['close'])
 
 const route = useRoute()
+const { t } = useI18n()
 
-// Navigation items with icons
-const navItems = [
+// Navigation items with icons - using computed for reactive translations
+const navItems = computed(() => [
   {
     path: '/dashboard',
-    label: 'Dashboard',
+    label: t('navigation.sidebar.dashboard'),
     icon: (props) => h('svg', {
       ...props,
       fill: 'none',
@@ -105,7 +107,7 @@ const navItems = [
   },
   {
     path: '/wallets',
-    label: 'Wallets',
+    label: t('navigation.sidebar.wallets'),
     icon: (props) => h('svg', {
       ...props,
       fill: 'none',
@@ -122,7 +124,7 @@ const navItems = [
   },
   {
     path: '/transactions',
-    label: 'Transactions',
+    label: t('navigation.sidebar.transactions'),
     icon: (props) => h('svg', {
       ...props,
       fill: 'none',
@@ -139,7 +141,7 @@ const navItems = [
   },
   {
     path: '/categories',
-    label: 'Categories',
+    label: t('navigation.sidebar.categories'),
     icon: (props) => h('svg', {
       ...props,
       fill: 'none',
@@ -156,7 +158,7 @@ const navItems = [
   },
   {
     path: '/debts',
-    label: 'Debts',
+    label: t('navigation.sidebar.debts'),
     icon: (props) => h('svg', {
       ...props,
       fill: 'none',
@@ -173,7 +175,7 @@ const navItems = [
   },
   {
     path: '/reports',
-    label: 'Reports',
+    label: t('navigation.sidebar.reports'),
     icon: (props) => h('svg', {
       ...props,
       fill: 'none',
@@ -190,7 +192,7 @@ const navItems = [
   },
   {
     path: '/profile',
-    label: 'Profile',
+    label: t('navigation.sidebar.profile'),
     icon: (props) => h('svg', {
       ...props,
       fill: 'none',
@@ -205,7 +207,7 @@ const navItems = [
       })
     ])
   }
-]
+])
 
 function isActive(path) {
   return route.path.startsWith(path)

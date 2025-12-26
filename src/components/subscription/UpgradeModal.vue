@@ -46,18 +46,18 @@
 
               <!-- Title -->
               <h3 class="text-2xl font-display font-bold text-center text-neutral-900 dark:text-neutral-100 mb-3">
-                {{ title }}
+                {{ displayTitle }}
               </h3>
 
               <!-- Message -->
               <p class="text-center text-neutral-600 dark:text-neutral-400 mb-6">
-                {{ message }}
+                {{ displayMessage }}
               </p>
 
               <!-- Features List -->
               <div class="space-y-3 mb-8">
                 <div
-                  v-for="feature in features"
+                  v-for="feature in displayFeatures"
                   :key="feature"
                   class="flex items-start gap-3"
                 >
@@ -75,20 +75,18 @@
                   @click="close"
                   class="w-full px-6 py-4 bg-gradient-primary hover:shadow-glow-primary text-white font-bold text-lg rounded-xl transition-all text-center"
                 >
-                  Upgrade to Premium
+                  {{ $t('premium.upgradeModal.upgradeButton') }}
                 </router-link>
                 <button
                   @click="close"
                   class="w-full px-6 py-3 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-300 font-medium rounded-xl transition-colors"
                 >
-                  Maybe Later
+                  {{ $t('premium.upgradeModal.maybeLater') }}
                 </button>
               </div>
 
               <!-- Pricing -->
-              <p class="text-center text-sm text-neutral-500 dark:text-neutral-400 mt-4">
-                Only <span class="font-bold">IDR 25,000/month</span> · Cancel anytime
-              </p>
+              <p class="text-center text-sm text-neutral-500 dark:text-neutral-400 mt-4" v-html="$t('premium.upgradeModal.pricing')"></p>
             </div>
           </transition>
         </div>
@@ -98,33 +96,34 @@
 </template>
 
 <script setup>
-// defineProps and defineEmits are compiler macros - no import needed
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
-defineProps({
+const { t } = useI18n()
+
+const props = defineProps({
   isOpen: {
     type: Boolean,
     default: false,
   },
   title: {
     type: String,
-    default: 'Premium Feature',
+    default: null,
   },
   message: {
     type: String,
-    default: 'This feature is available for Premium users only.',
+    default: null,
   },
   features: {
     type: Array,
-    default: () => [
-      'Unlimited wallets & debts',
-      'Financial reports & analytics',
-      'Trend charts & insights',
-      'Category breakdown analysis',
-      'Excel & PDF export',
-      'Priority support',
-    ],
+    default: null,
   },
 })
+
+// Computed props with i18n fallbacks
+const displayTitle = computed(() => props.title || t('premium.upgradeModal.defaultTitle'))
+const displayMessage = computed(() => props.message || t('premium.upgradeModal.defaultMessage'))
+const displayFeatures = computed(() => props.features || t('premium.upgradeModal.defaultFeatures'))
 
 const emit = defineEmits(['close'])
 

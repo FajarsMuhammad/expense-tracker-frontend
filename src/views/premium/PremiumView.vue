@@ -11,10 +11,10 @@
                 <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
                 </svg>
-                <span class="text-white font-bold">Premium Active</span>
+                <span class="text-white font-bold">{{ $t('premium.status.premiumActive') }}</span>
               </div>
-              <p class="text-white/90">Valid until: {{ formatDate(subscriptionEndDate) }}</p>
-              <p class="text-white text-sm">{{ daysRemaining }} days remaining</p>
+              <p class="text-white/90">{{ $t('premium.status.validUntil', { date: formatDate(subscriptionEndDate) }) }}</p>
+              <p class="text-white text-sm">{{ $t('premium.status.daysRemaining', { count: daysRemaining }) }}</p>
             </div>
           </div>
         </div>
@@ -27,17 +27,17 @@
                 <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
                 </svg>
-                <span class="text-white font-bold">Trial Period Active</span>
+                <span class="text-white font-bold">{{ $t('premium.status.trialActive') }}</span>
               </div>
-              <p class="text-white/90">{{ daysRemaining }} days remaining</p>
-              <p class="text-white text-sm">Enjoy all premium features for free!</p>
+              <p class="text-white/90">{{ $t('premium.status.daysRemaining', { count: daysRemaining }) }}</p>
+              <p class="text-white text-sm">{{ $t('premium.status.enjoyPremium') }}</p>
             </div>
             <button
               @click="handleUpgrade"
               :disabled="upgrading"
               class="px-6 py-3 bg-white text-yellow-600 font-bold rounded-lg shadow-lg hover:bg-neutral-50 transition-all disabled:opacity-50"
             >
-              {{ upgrading ? 'Processing...' : 'Subscribe Now - IDR 25,000/month' }}
+              {{ upgrading ? $t('premium.status.processing') : $t('premium.status.subscribeNow') }}
             </button>
           </div>
         </div>
@@ -63,16 +63,16 @@
 
           <!-- Title -->
           <h1 class="text-4xl md:text-6xl font-display font-bold text-white mb-4">
-            Upgrade to Premium
+            {{ $t('premium.hero.title') }}
           </h1>
           <p class="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto">
-            Unlock unlimited features and take control of your finances like never before
+            {{ $t('premium.hero.subtitle') }}
           </p>
 
           <!-- Pricing -->
           <div class="mb-8">
-            <p class="text-3xl md:text-4xl font-bold text-white">IDR 25,000</p>
-            <p class="text-white/90">per month</p>
+            <p class="text-3xl md:text-4xl font-bold text-white">{{ $t('premium.hero.price') }}</p>
+            <p class="text-white/90">{{ $t('premium.hero.perMonth') }}</p>
           </div>
 
           <!-- CTA Button -->
@@ -84,9 +84,9 @@
             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
             </svg>
-            {{ upgrading ? 'Processing...' : loading ? 'Loading...' : 'Subscribe to Premium' }}
+            {{ upgrading ? $t('premium.status.processing') : loading ? $t('premium.status.loading') : $t('premium.hero.subscribeToPremium') }}
           </button>
-          <p class="text-white/80 text-sm mt-4">Only IDR 25,000/month · Cancel anytime</p>
+          <p class="text-white/80 text-sm mt-4">{{ $t('premium.hero.onlyPerMonth') }}</p>
         </div>
       </div>
 
@@ -100,11 +100,9 @@
           </div>
           <div>
             <h3 class="text-lg font-bold text-neutral-900 dark:text-neutral-100 mb-2">
-              Did you know?
+              {{ $t('premium.trial.title') }}
             </h3>
-            <p class="text-neutral-700 dark:text-neutral-300 text-sm leading-relaxed">
-              New users automatically get a <span class="font-bold text-yellow-600 dark:text-yellow-400">14-day FREE trial</span> of all Premium features when they register!
-              Experience unlimited wallets, advanced reports, and Excel/PDF export before deciding to subscribe.
+            <p class="text-neutral-700 dark:text-neutral-300 text-sm leading-relaxed" v-html="$t('premium.trial.description')">
             </p>
           </div>
         </div>
@@ -113,41 +111,41 @@
       <!-- Features Comparison Table -->
       <div class="bg-white dark:bg-dark-card rounded-2xl shadow-soft-lg p-8 mb-12">
         <h2 class="text-3xl font-display font-bold text-neutral-900 dark:text-neutral-100 mb-8 text-center">
-          Feature Comparison
+          {{ $t('premium.comparison.title') }}
         </h2>
 
         <div class="overflow-x-auto">
           <table class="w-full">
             <thead>
               <tr class="border-b border-neutral-200 dark:border-neutral-700">
-                <th class="px-6 py-4 text-left text-sm font-bold text-neutral-900 dark:text-neutral-100">Feature</th>
-                <th class="px-6 py-4 text-center text-sm font-bold text-neutral-600 dark:text-neutral-400">Free</th>
-                <th class="px-6 py-4 text-center text-sm font-bold text-primary-600 dark:text-primary-400">Premium</th>
+                <th class="px-6 py-4 text-left text-sm font-bold text-neutral-900 dark:text-neutral-100">{{ $t('premium.comparison.feature') }}</th>
+                <th class="px-6 py-4 text-center text-sm font-bold text-neutral-600 dark:text-neutral-400">{{ $t('premium.comparison.free') }}</th>
+                <th class="px-6 py-4 text-center text-sm font-bold text-primary-600 dark:text-primary-400">{{ $t('premium.comparison.premium') }}</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-neutral-200 dark:divide-neutral-700">
               <tr>
-                <td class="px-6 py-4 text-neutral-900 dark:text-neutral-100">Wallets</td>
+                <td class="px-6 py-4 text-neutral-900 dark:text-neutral-100">{{ $t('premium.comparison.wallets') }}</td>
                 <td class="px-6 py-4 text-center text-neutral-600 dark:text-neutral-400">1</td>
-                <td class="px-6 py-4 text-center text-primary-600 dark:text-primary-400 font-bold">Unlimited</td>
+                <td class="px-6 py-4 text-center text-primary-600 dark:text-primary-400 font-bold">{{ $t('premium.comparison.unlimited') }}</td>
               </tr>
               <tr>
-                <td class="px-6 py-4 text-neutral-900 dark:text-neutral-100">Categories</td>
+                <td class="px-6 py-4 text-neutral-900 dark:text-neutral-100">{{ $t('premium.comparison.categories') }}</td>
                 <td class="px-6 py-4 text-center text-neutral-600 dark:text-neutral-400">10</td>
-                <td class="px-6 py-4 text-center text-primary-600 dark:text-primary-400 font-bold">Unlimited</td>
+                <td class="px-6 py-4 text-center text-primary-600 dark:text-primary-400 font-bold">{{ $t('premium.comparison.unlimited') }}</td>
               </tr>
               <tr>
-                <td class="px-6 py-4 text-neutral-900 dark:text-neutral-100">Export Format</td>
-                <td class="px-6 py-4 text-center text-neutral-600 dark:text-neutral-400">CSV (100 records)</td>
-                <td class="px-6 py-4 text-center text-primary-600 dark:text-primary-400 font-bold">CSV, Excel, PDF (10,000 records)</td>
+                <td class="px-6 py-4 text-neutral-900 dark:text-neutral-100">{{ $t('premium.comparison.exportFormat') }}</td>
+                <td class="px-6 py-4 text-center text-neutral-600 dark:text-neutral-400">{{ $t('premium.comparison.csvLimited') }}</td>
+                <td class="px-6 py-4 text-center text-primary-600 dark:text-primary-400 font-bold">{{ $t('premium.comparison.csvExcelPdf') }}</td>
               </tr>
               <tr>
-                <td class="px-6 py-4 text-neutral-900 dark:text-neutral-100">Date Range</td>
-                <td class="px-6 py-4 text-center text-neutral-600 dark:text-neutral-400">90 days</td>
-                <td class="px-6 py-4 text-center text-primary-600 dark:text-primary-400 font-bold">365 days</td>
+                <td class="px-6 py-4 text-neutral-900 dark:text-neutral-100">{{ $t('premium.comparison.dateRange') }}</td>
+                <td class="px-6 py-4 text-center text-neutral-600 dark:text-neutral-400">{{ $t('premium.comparison.days90') }}</td>
+                <td class="px-6 py-4 text-center text-primary-600 dark:text-primary-400 font-bold">{{ $t('premium.comparison.days365') }}</td>
               </tr>
               <tr>
-                <td class="px-6 py-4 text-neutral-900 dark:text-neutral-100">Advanced Reports</td>
+                <td class="px-6 py-4 text-neutral-900 dark:text-neutral-100">{{ $t('premium.comparison.advancedReports') }}</td>
                 <td class="px-6 py-4 text-center text-neutral-600 dark:text-neutral-400">
                   <svg class="w-5 h-5 mx-auto text-red-500" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
@@ -160,7 +158,7 @@
                 </td>
               </tr>
               <tr>
-                <td class="px-6 py-4 text-neutral-900 dark:text-neutral-100">Cloud Backup</td>
+                <td class="px-6 py-4 text-neutral-900 dark:text-neutral-100">{{ $t('premium.comparison.cloudBackup') }}</td>
                 <td class="px-6 py-4 text-center text-neutral-600 dark:text-neutral-400">
                   <svg class="w-5 h-5 mx-auto text-red-500" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
@@ -173,7 +171,7 @@
                 </td>
               </tr>
               <tr>
-                <td class="px-6 py-4 text-neutral-900 dark:text-neutral-100">Priority Support</td>
+                <td class="px-6 py-4 text-neutral-900 dark:text-neutral-100">{{ $t('premium.comparison.prioritySupport') }}</td>
                 <td class="px-6 py-4 text-center text-neutral-600 dark:text-neutral-400">
                   <svg class="w-5 h-5 mx-auto text-red-500" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
@@ -196,7 +194,7 @@
             :disabled="upgrading || loading"
             class="px-8 py-4 bg-gradient-primary text-white font-bold text-lg rounded-xl shadow-lg hover:shadow-glow-primary transition-all hover:scale-105 disabled:opacity-50"
           >
-            {{ upgrading ? 'Processing...' : 'Upgrade to Premium' }}
+            {{ upgrading ? $t('premium.status.processing') : $t('premium.comparison.upgradeToPremium') }}
           </button>
         </div>
       </div>
@@ -213,10 +211,10 @@
               </svg>
             </div>
             <h3 class="text-2xl font-display font-bold text-neutral-900 dark:text-neutral-100 mb-3">
-              Unlimited Wallets
+              {{ $t('premium.features.unlimitedWallets.title') }}
             </h3>
             <p class="text-neutral-600 dark:text-neutral-400 leading-relaxed">
-              Create as many wallets as you need to organize your personal, business, and savings finances separately.
+              {{ $t('premium.features.unlimitedWallets.description') }}
             </p>
           </div>
         </div>
@@ -231,10 +229,10 @@
               </svg>
             </div>
             <h3 class="text-2xl font-display font-bold text-neutral-900 dark:text-neutral-100 mb-3">
-              Advanced Analytics
+              {{ $t('premium.features.advancedAnalytics.title') }}
             </h3>
             <p class="text-neutral-600 dark:text-neutral-400 leading-relaxed">
-              Get detailed insights with custom reports, spending patterns, and financial forecasting tools.
+              {{ $t('premium.features.advancedAnalytics.description') }}
             </p>
           </div>
         </div>
@@ -249,10 +247,10 @@
               </svg>
             </div>
             <h3 class="text-2xl font-display font-bold text-neutral-900 dark:text-neutral-100 mb-3">
-              Unlimited Categories
+              {{ $t('premium.features.unlimitedCategories.title') }}
             </h3>
             <p class="text-neutral-600 dark:text-neutral-400 leading-relaxed">
-              Create custom categories and subcategories to track every aspect of your spending habits.
+              {{ $t('premium.features.unlimitedCategories.description') }}
             </p>
           </div>
         </div>
@@ -267,10 +265,10 @@
               </svg>
             </div>
             <h3 class="text-2xl font-display font-bold text-neutral-900 dark:text-neutral-100 mb-3">
-              Priority Support
+              {{ $t('premium.features.prioritySupport.title') }}
             </h3>
             <p class="text-neutral-600 dark:text-neutral-400 leading-relaxed">
-              Get help when you need it with dedicated priority support and faster response times.
+              {{ $t('premium.features.prioritySupport.description') }}
             </p>
           </div>
         </div>
@@ -285,10 +283,10 @@
               </svg>
             </div>
             <h3 class="text-2xl font-display font-bold text-neutral-900 dark:text-neutral-100 mb-3">
-              Data Export
+              {{ $t('premium.features.dataExport.title') }}
             </h3>
             <p class="text-neutral-600 dark:text-neutral-400 leading-relaxed">
-              Export your financial data in multiple formats (CSV, PDF, Excel) for your records and analysis.
+              {{ $t('premium.features.dataExport.description') }}
             </p>
           </div>
         </div>
@@ -303,10 +301,10 @@
               </svg>
             </div>
             <h3 class="text-2xl font-display font-bold text-neutral-900 dark:text-neutral-100 mb-3">
-              Cloud Backup
+              {{ $t('premium.features.cloudBackup.title') }}
             </h3>
             <p class="text-neutral-600 dark:text-neutral-400 leading-relaxed">
-              Automatic cloud backup to keep your financial data safe and accessible from anywhere.
+              {{ $t('premium.features.cloudBackup.description') }}
             </p>
           </div>
         </div>
@@ -315,10 +313,10 @@
       <!-- Final CTA -->
       <div v-if="isFree || isTrial" class="text-center py-12 bg-gradient-to-r from-primary-50 to-accent-lavender/20 dark:from-dark-surface dark:to-dark-card rounded-2xl">
         <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 dark:text-neutral-100 mb-4">
-          Ready to upgrade?
+          {{ $t('premium.cta.title') }}
         </h2>
         <p class="text-lg text-neutral-600 dark:text-neutral-400 mb-8 max-w-2xl mx-auto">
-          {{ isTrial ? 'Subscribe now to continue enjoying premium features after your trial ends' : 'Join thousands of users who are taking control of their finances with Premium' }}
+          {{ isTrial ? $t('premium.cta.descriptionTrial') : $t('premium.cta.descriptionFree') }}
         </p>
         <button
           class="px-12 py-5 bg-gradient-primary hover:shadow-glow-primary text-white font-display font-bold text-xl rounded-2xl shadow-xl transition-all duration-300 hover:scale-105 inline-flex items-center gap-3 disabled:opacity-50"
@@ -328,7 +326,7 @@
           <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
           </svg>
-          {{ upgrading ? 'Processing...' : isTrial ? 'Subscribe Now - IDR 25,000/month' : 'Get Started with Premium' }}
+          {{ upgrading ? $t('premium.status.processing') : isTrial ? $t('premium.status.subscribeNow') : $t('premium.cta.getStarted') }}
         </button>
       </div>
     </div>
@@ -337,8 +335,11 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import { useSubscription } from '@/composables/useSubscription'
+
+const { t } = useI18n()
 
 const {
   subscription,

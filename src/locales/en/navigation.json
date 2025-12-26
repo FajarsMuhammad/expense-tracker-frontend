@@ -1,0 +1,16 @@
+{
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "wallets": "Wallets",
+    "transactions": "Transactions",
+    "categories": "Categories",
+    "debts": "Debts",
+    "reports": "Reports",
+    "premium": "Premium"
+  },
+  "menu": {
+    "profile": "Profile",
+    "settings": "Settings",
+    "logout": "Log out"
+  }
+}

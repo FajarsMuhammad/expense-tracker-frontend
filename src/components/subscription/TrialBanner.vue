@@ -23,14 +23,14 @@
         <!-- Text -->
         <div>
           <h3 class="text-lg sm:text-xl font-bold text-white mb-1">
-            Premium Trial Active
+            {{ $t('premium.trialBanner.title') }}
           </h3>
           <p class="text-white/90 text-sm sm:text-base">
-            <span class="font-semibold">{{ daysRemaining }} {{ daysRemaining === 1 ? 'day' : 'days' }}</span> remaining
-            until {{ formatEndDate }}
+            <span class="font-semibold">{{ $t('premium.trialBanner.daysRemaining', { count: daysRemaining }) }}</span> {{ $t('premium.trialBanner.remaining') }}
+            {{ $t('premium.trialBanner.until', { date: formatEndDate }) }}
           </p>
           <p class="text-white/80 text-xs sm:text-sm mt-1">
-            Enjoying unlimited wallets, reports & Excel/PDF export!
+            {{ $t('premium.trialBanner.enjoying') }}
           </p>
         </div>
       </div>
@@ -41,7 +41,7 @@
           to="/premium"
           class="block w-full sm:w-auto px-6 py-3 bg-white hover:bg-neutral-50 text-yellow-600 font-bold rounded-lg shadow-lg hover:shadow-xl transition-all text-center"
         >
-          Subscribe Now - IDR 25,000/month
+          {{ $t('premium.trialBanner.subscribeButton') }}
         </router-link>
       </div>
     </div>
@@ -55,7 +55,7 @@
         ></div>
       </div>
       <p class="text-white/70 text-xs mt-1 text-right">
-        {{ progressPercentage.toFixed(0) }}% of trial used
+        {{ $t('premium.trialBanner.progressUsed', { percent: progressPercentage.toFixed(0) }) }}
       </p>
     </div>
   </div>
@@ -63,8 +63,11 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 import { useSubscriptionStore } from '@/stores/subscription'
+
+const { t } = useI18n()
 
 const subscriptionStore = useSubscriptionStore()
 const { subscription, isTrial, daysRemaining } = storeToRefs(subscriptionStore)

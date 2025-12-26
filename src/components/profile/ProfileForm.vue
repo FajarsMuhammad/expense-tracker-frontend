@@ -4,8 +4,8 @@
     <AppInput
       id="name"
       v-model="formData.name"
-      label="Name"
-      placeholder="Enter your name"
+      :label="$t('profile.form.name')"
+      :placeholder="$t('profile.form.namePlaceholder')"
       required
       :error="errors.name"
       @blur="validateField('name')"
@@ -14,7 +14,7 @@
     <!-- Locale Select -->
     <div>
       <label for="locale" class="block text-sm font-medium mb-1">
-        Language/Region <span class="text-muted">(Optional)</span>
+        {{ $t('profile.form.locale') }}
       </label>
       <select
         id="locale"
@@ -22,21 +22,18 @@
         class="w-full px-4 py-2 border border-neutral-300 dark:border-dark-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-dark-surface"
         @blur="validateField('locale')"
       >
-        <option value="">Select language/region</option>
+        <option value="">{{ $t('profile.form.selectLocale') }}</option>
         <option v-for="locale in locales" :key="locale.value" :value="locale.value">
           {{ locale.label }}
         </option>
       </select>
       <p v-if="errors.locale" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ errors.locale }}</p>
-      <p v-else class="mt-1 text-xs text-muted">
-        This will affect date, number, and currency formats
-      </p>
     </div>
 
     <!-- Email (Read-only) -->
     <div>
       <label for="email" class="block text-sm font-medium mb-1">
-        Email
+        {{ $t('profile.form.email') }}
       </label>
       <input
         id="email"
@@ -45,18 +42,15 @@
         disabled
         class="w-full px-4 py-2 border border-neutral-300 dark:border-dark-border rounded-lg bg-neutral-50 dark:bg-neutral-800 cursor-not-allowed opacity-60"
       />
-      <p class="mt-1 text-xs text-muted">
-        Email cannot be changed
-      </p>
     </div>
 
     <!-- Action Buttons -->
     <div class="flex gap-2 md:gap-3 pt-4">
       <AppButton type="submit" :loading="loading" class="flex-1 !py-2 md:!py-2.5 !text-xs md:!text-sm">
-        {{ loading ? 'Saving...' : 'Save' }}
+        {{ loading ? $t('profile.form.saving') : $t('profile.form.save') }}
       </AppButton>
       <AppButton type="button" variant="secondary" @click="$emit('cancel')" class="flex-1 !py-2 md:!py-2.5 !text-xs md:!text-sm">
-        Cancel
+        {{ $t('profile.form.cancel') }}
       </AppButton>
     </div>
   </form>
@@ -64,8 +58,11 @@
 
 <script setup>
 import { ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import AppInput from '@/components/common/AppInput.vue'
 import AppButton from '@/components/common/AppButton.vue'
+
+const { t } = useI18n()
 
 const props = defineProps({
   profile: {
@@ -124,11 +121,11 @@ function validateField(field) {
 
   if (field === 'name') {
     if (!formData.value.name || formData.value.name.trim().length < 2) {
-      errors.value.name = 'Name must be at least 2 characters'
+      errors.value.name = t('profile.form.nameRequired')
       return false
     }
     if (formData.value.name.length > 100) {
-      errors.value.name = 'Name must not exceed 100 characters'
+      errors.value.name = t('profile.form.nameRequired')
       return false
     }
   }

@@ -4,9 +4,9 @@
       <!-- Header -->
       <div class="flex flex-col gap-2 md:gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 class="text-lg md:text-xl lg:text-2xl font-bold text-neutral-900 dark:text-neutral-100">Debts</h1>
+          <h1 class="text-lg md:text-xl lg:text-2xl font-bold text-neutral-900 dark:text-neutral-100">{{ $t('debts.title') }}</h1>
           <p class="mt-1 text-[10px] md:text-xs text-neutral-600 dark:text-neutral-400">
-            Manage your payables and receivables
+            {{ $t('debts.subtitle') }}
           </p>
         </div>
         <!-- Desktop Add Button -->
@@ -15,7 +15,7 @@
           class="hidden md:inline-flex items-center gap-1.5 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-all hover:bg-primary-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:bg-primary-500 dark:hover:bg-primary-600"
         >
           <PlusIcon class="size-4" />
-          Add
+          {{ $t('debts.add') }}
         </router-link>
       </div>
 
@@ -36,7 +36,12 @@
               <ArrowUpCircleIcon class="size-4 md:size-5 lg:size-6 text-red-600 dark:text-red-400" />
             </div>
             <div class="flex-1 min-w-0 overflow-hidden">
-              <p class="text-[10px] md:text-xs lg:text-sm font-medium text-red-600 dark:text-red-400">You Owe</p>
+              <div class="flex items-center gap-1.5 md:gap-2">
+                <p class="text-[10px] md:text-xs lg:text-sm font-medium text-red-600 dark:text-red-400">{{ $t('debts.summary.youOwe') }}</p>
+                <span class="inline-flex items-center justify-center min-w-[18px] md:min-w-[20px] h-[18px] md:h-[20px] px-1 md:px-1.5 rounded-full bg-red-600/10 dark:bg-red-400/10 text-[9px] md:text-[10px] font-semibold text-red-700 dark:text-red-300">
+                  {{ payableCount }}
+                </span>
+              </div>
               <p class="text-xs md:text-sm lg:text-lg font-bold text-red-700 dark:text-red-300 break-all leading-tight">
                 {{ formatCurrency(totalPayable) }}
               </p>
@@ -51,7 +56,12 @@
               <ArrowDownCircleIcon class="size-4 md:size-5 lg:size-6 text-green-600 dark:text-green-400" />
             </div>
             <div class="flex-1 min-w-0 overflow-hidden">
-              <p class="text-[10px] md:text-xs lg:text-sm font-medium text-green-600 dark:text-green-400">Owed to You</p>
+              <div class="flex items-center gap-1.5 md:gap-2">
+                <p class="text-[10px] md:text-xs lg:text-sm font-medium text-green-600 dark:text-green-400">{{ $t('debts.summary.owedToYou') }}</p>
+                <span class="inline-flex items-center justify-center min-w-[18px] md:min-w-[20px] h-[18px] md:h-[20px] px-1 md:px-1.5 rounded-full bg-green-600/10 dark:bg-green-400/10 text-[9px] md:text-[10px] font-semibold text-green-700 dark:text-green-300">
+                  {{ receivableCount }}
+                </span>
+              </div>
               <p class="text-xs md:text-sm lg:text-lg font-bold text-green-700 dark:text-green-300 break-all leading-tight">
                 {{ formatCurrency(totalReceivable) }}
               </p>
@@ -66,7 +76,7 @@
               <ScaleIcon class="size-4 md:size-5 lg:size-6 text-blue-600 dark:text-blue-400" />
             </div>
             <div class="flex-1 min-w-0 overflow-hidden">
-              <p class="text-[10px] md:text-xs lg:text-sm font-medium text-blue-600 dark:text-blue-400">Net Position</p>
+              <p class="text-[10px] md:text-xs lg:text-sm font-medium text-blue-600 dark:text-blue-400">{{ $t('debts.summary.netPosition') }}</p>
               <p :class="netPositionColor" class="text-xs md:text-sm lg:text-lg font-bold break-all leading-tight">
                 {{ formatCurrency(Math.abs(netPosition)) }}
               </p>
@@ -81,7 +91,7 @@
               <ExclamationCircleIcon class="size-4 md:size-5 lg:size-6 text-orange-600 dark:text-orange-400" />
             </div>
             <div class="flex-1 min-w-0">
-              <p class="text-[10px] md:text-xs lg:text-sm font-medium text-orange-600 dark:text-orange-400">Overdue</p>
+              <p class="text-[10px] md:text-xs lg:text-sm font-medium text-orange-600 dark:text-orange-400">{{ $t('debts.summary.overdue') }}</p>
               <p class="text-xs md:text-sm lg:text-lg font-bold text-orange-700 dark:text-orange-300">
                 {{ overdueDebts.length }}
               </p>
@@ -97,7 +107,7 @@
           class="inline-flex items-center gap-2 rounded-lg border border-neutral-300 bg-white px-4 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50 dark:border-neutral-600 dark:bg-dark-card dark:text-neutral-300 dark:hover:bg-neutral-800"
         >
           <FunnelIcon class="size-5" />
-          {{ showFilters ? 'Hide' : 'Show' }} Filters
+          {{ showFilters ? $t('debts.filters.hide') : $t('debts.filters.show') }} {{ $t('debts.filters.type') }}
           <span
             v-if="activeFilterCount > 0"
             class="inline-flex items-center rounded-full bg-primary-100 px-2 py-0.5 text-xs font-semibold text-primary-700 dark:bg-primary-900/20 dark:text-primary-300"
@@ -134,10 +144,10 @@
     <!-- Delete Confirmation Dialog -->
     <AppConfirmDialog
       v-model="showDeleteDialog"
-      title="Delete Debt"
-      :message="`Are you sure you want to delete debt for ${debtToDelete?.counterpartyName}? This action cannot be undone.`"
-      confirm-text="Delete"
-      cancel-text="Cancel"
+      :title="$t('debts.deleteConfirm.title')"
+      :message="deleteMessage"
+      :confirm-text="$t('debts.deleteConfirm.confirm')"
+      :cancel-text="$t('debts.deleteConfirm.cancel')"
       @confirm="confirmDelete"
       @cancel="showDeleteDialog = false"
     />
@@ -147,6 +157,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { useDebt } from '@/composables/useDebt'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import DebtList from '@/components/debt/DebtList.vue'
@@ -162,6 +173,7 @@ import {
 } from '@heroicons/vue/24/outline'
 
 const router = useRouter()
+const { t } = useI18n()
 const {
   debts,
   loading,
@@ -170,6 +182,8 @@ const {
   overdueDebts,
   totalPayable,
   totalReceivable,
+  payableCount,
+  receivableCount,
   netPosition,
   loadDebts,
   handleDeleteDebt,
@@ -196,6 +210,11 @@ const netPositionColor = computed(() => {
   } else {
     return 'text-red-700 dark:text-red-300'
   }
+})
+
+const deleteMessage = computed(() => {
+  if (!debtToDelete.value) return ''
+  return t('debts.deleteConfirm.message', { name: debtToDelete.value.counterpartyName })
 })
 
 function handleEdit(debt) {

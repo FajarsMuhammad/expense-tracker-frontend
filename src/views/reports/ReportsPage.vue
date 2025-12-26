@@ -4,10 +4,10 @@
     <div class="mb-3 md:mb-4 lg:mb-6 flex flex-col gap-2 md:gap-3 sm:flex-row sm:items-center sm:justify-between">
       <div>
         <h1 class="text-base md:text-lg lg:text-xl font-bold text-neutral-900 dark:text-neutral-100">
-          Financial Reports
+          {{ $t('reports.title') }}
         </h1>
         <p class="mt-0.5 md:mt-1 text-[10px] md:text-xs text-neutral-600 dark:text-neutral-400">
-          View your financial summary and export data
+          {{ $t('reports.subtitle') }}
         </p>
       </div>
 
@@ -31,7 +31,7 @@
     <!-- Summary Cards Grid -->
     <div class="mb-4 md:mb-5 lg:mb-6 grid grid-cols-1 gap-2 md:gap-3 lg:gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <SummaryCard
-        title="Total Income"
+        :title="$t('reports.summary.totalIncome')"
         :value="totalIncome"
         icon="BanknotesIcon"
         variant="success"
@@ -40,7 +40,7 @@
       />
 
       <SummaryCard
-        title="Total Expense"
+        :title="$t('reports.summary.totalExpense')"
         :value="totalExpense"
         icon="BanknotesIcon"
         variant="danger"
@@ -49,7 +49,7 @@
       />
 
       <SummaryCard
-        title="Net Balance"
+        :title="$t('reports.summary.netBalance')"
         :value="netBalance"
         icon="ScaleIcon"
         :variant="netBalance >= 0 ? 'success' : 'danger'"
@@ -58,7 +58,7 @@
       />
 
       <SummaryCard
-        title="Transactions"
+        :title="$t('reports.summary.transactions')"
         :value="transactionCount"
         icon="ChartBarIcon"
         variant="primary"
@@ -72,7 +72,7 @@
       <AppCard>
         <div class="mb-2 md:mb-3 flex items-center justify-between">
           <h2 class="text-sm md:text-base font-bold text-neutral-900 dark:text-neutral-100">
-            Category Breakdown
+            {{ $t('reports.categoryBreakdown.title') }}
           </h2>
         </div>
 
@@ -116,7 +116,7 @@
             class="text-[10px] md:text-xs font-medium text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
             @click="showAllCategories = !showAllCategories"
           >
-            {{ showAllCategories ? 'Show Less' : `Show All ${categoryBreakdown.length} Categories` }}
+            {{ showAllCategories ? $t('reports.categoryBreakdown.showLess') : $t('reports.categoryBreakdown.showAll', { count: categoryBreakdown.length }) }}
           </button>
         </div>
       </AppCard>
@@ -127,7 +127,7 @@
       <AppCard>
         <div class="mb-2 md:mb-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 md:gap-3">
           <h2 class="text-sm md:text-base font-bold text-neutral-900 dark:text-neutral-100">
-            Income vs Expense Trend
+            {{ $t('reports.trend.title') }}
           </h2>
 
           <!-- Granularity Selector -->
@@ -155,16 +155,16 @@
             <thead class="border-b border-neutral-200 dark:border-neutral-700">
               <tr>
                 <th class="pb-1.5 md:pb-2 pr-1.5 md:pr-2 text-left font-medium text-neutral-700 dark:text-neutral-300">
-                  Date
+                  {{ $t('reports.trend.date') }}
                 </th>
                 <th class="pb-1.5 md:pb-2 pr-1.5 md:pr-2 text-right font-medium text-neutral-700 dark:text-neutral-300">
-                  Income
+                  {{ $t('reports.trend.income') }}
                 </th>
                 <th class="pb-1.5 md:pb-2 pr-1.5 md:pr-2 text-right font-medium text-neutral-700 dark:text-neutral-300">
-                  Expense
+                  {{ $t('reports.trend.expense') }}
                 </th>
                 <th class="pb-1.5 md:pb-2 text-right font-medium text-neutral-700 dark:text-neutral-300">
-                  Balance
+                  {{ $t('reports.trend.balance') }}
                 </th>
               </tr>
             </thead>
@@ -192,7 +192,7 @@
 
           <div v-if="trendData.length > 10" class="mt-4 text-center">
             <p class="text-sm text-neutral-600 dark:text-neutral-400">
-              Showing 10 of {{ trendData.length }} entries
+              {{ $t('reports.trend.showing', { current: 10, total: trendData.length }) }}
             </p>
           </div>
         </div>
@@ -201,15 +201,15 @@
 
     <!-- Empty State -->
     <div
-      v-if="!isLoading && !hasSummary"
+      v-if="!summaryLoading && !hasSummary"
       class="rounded-lg border-2 border-dashed border-neutral-300 bg-neutral-50 py-12 text-center dark:border-neutral-700 dark:bg-neutral-900/20"
     >
       <ChartBarIcon class="mx-auto size-12 text-neutral-400" />
       <h3 class="mt-4 text-lg font-semibold text-neutral-900 dark:text-neutral-100">
-        No Data Available
+        {{ $t('reports.empty.title') }}
       </h3>
       <p class="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
-        Select a date range to view your financial reports
+        {{ $t('reports.empty.description') }}
       </p>
     </div>
 
@@ -232,7 +232,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import AppCard from '@/components/common/AppCard.vue'
@@ -245,6 +246,8 @@ import { useExport } from '@/composables/useExport'
 import { useExportStore } from '@/stores/export'
 import { ChartBarIcon } from '@heroicons/vue/24/outline'
 import { GRANULARITY } from '@/config/api.config'
+
+const { t } = useI18n()
 
 // Composables
 const {
@@ -281,11 +284,11 @@ const showAllCategories = ref(false)
 const showUpgradeModal = ref(false)
 const upgradeMessage = ref('')
 
-const granularityOptions = [
-  { label: 'Daily', value: GRANULARITY.DAILY },
-  { label: 'Weekly', value: GRANULARITY.WEEKLY },
-  { label: 'Monthly', value: GRANULARITY.MONTHLY },
-]
+const granularityOptions = computed(() => [
+  { label: t('reports.granularity.daily'), value: GRANULARITY.DAILY },
+  { label: t('reports.granularity.weekly'), value: GRANULARITY.WEEKLY },
+  { label: t('reports.granularity.monthly'), value: GRANULARITY.MONTHLY },
+])
 
 // Methods
 async function handleDateRangeChange({ startDate, endDate }) {
