@@ -1,0 +1,16 @@
+{
+  "sidebar": {
+    "dashboard": "Dasbor",
+    "wallets": "Dompet",
+    "transactions": "Transaksi",
+    "categories": "Kategori",
+    "debts": "Utang Piutang",
+    "reports": "Laporan",
+    "premium": "Premium"
+  },
+  "menu": {
+    "profile": "Profil",
+    "settings": "Pengaturan",
+    "logout": "Keluar"
+  }
+}

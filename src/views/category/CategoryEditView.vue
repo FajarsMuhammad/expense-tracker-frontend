@@ -1,31 +1,42 @@
 <template>
   <AppLayout>
-    <div class="max-w-2xl mx-auto">
-      <h1 class="text-2xl md:text-3xl font-bold mb-6">Edit Category</h1>
+    <div class="mx-auto max-w-3xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
+      <!-- Header with Back Button -->
+      <FormHeader :title="$t('categories.edit.title')" :description="$t('categories.edit.description')" />
 
-      <AppSkeleton v-if="loading" :count="1" height="300px" />
+      <!-- Loading Skeleton -->
+      <div v-if="loading && !currentCategory" class="rounded-lg bg-white p-6 shadow-sm dark:bg-dark-card sm:p-8">
+        <AppSkeleton class="h-96" />
+      </div>
 
-      <AppCard v-else-if="currentCategory">
+      <!-- Form Card -->
+      <div v-else-if="currentCategory" class="rounded-lg bg-white p-6 shadow-sm dark:bg-dark-card sm:p-8">
         <CategoryForm
           :category="currentCategory"
           :loading="loading"
           @submit="handleSubmit"
-          @cancel="$router.push('/categories')"
+          @cancel="handleCancel"
         />
-      </AppCard>
+      </div>
+
+      <!-- Error State -->
+      <div v-else class="rounded-lg bg-red-50 p-6 text-center dark:bg-red-900/10">
+        <p class="text-red-700 dark:text-red-300">Category not found</p>
+      </div>
     </div>
   </AppLayout>
 </template>
 
 <script setup>
 import { onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import AppLayout from '@/components/layout/AppLayout.vue'
-import AppCard from '@/components/common/AppCard.vue'
 import AppSkeleton from '@/components/common/AppSkeleton.vue'
+import FormHeader from '@/components/common/FormHeader.vue'
 import CategoryForm from '@/components/category/CategoryForm.vue'
 import { useCategory } from '@/composables/useCategory'
 
+const router = useRouter()
 const route = useRoute()
 const { currentCategory, loading, loadCategory, handleUpdateCategory } = useCategory()
 
@@ -35,5 +46,9 @@ onMounted(() => {
 
 async function handleSubmit(categoryData) {
   await handleUpdateCategory(route.params.id, categoryData)
+}
+
+function handleCancel() {
+  router.back()
 }
 </script>
