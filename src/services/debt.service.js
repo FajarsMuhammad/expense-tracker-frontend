@@ -109,4 +109,30 @@ export default {
     const response = await api.post(API_ENDPOINTS.DEBTS.MARK_PAID(debtId))
     return response.data
   },
+
+  /**
+   * Update a payment
+   * @param {string} debtId - Debt ID
+   * @param {string} paymentId - Payment ID
+   * @param {Object} paymentData - Updated payment data
+   * @param {number} paymentData.amount - Payment amount
+   * @param {string} paymentData.paidAt - Payment date/time (ISO format)
+   * @param {string} paymentData.note - Optional note
+   * @returns {Promise<Object>} Updated debt object with payment
+   */
+  async updatePayment(debtId, paymentId, paymentData) {
+    const response = await api.put(API_ENDPOINTS.DEBTS.PAYMENT_BY_ID(debtId, paymentId), paymentData)
+    return response.data
+  },
+
+  /**
+   * Delete a payment
+   * @param {string} debtId - Debt ID
+   * @param {string} paymentId - Payment ID
+   * @returns {Promise<Object>} Updated debt object
+   */
+  async deletePayment(debtId, paymentId) {
+    const response = await api.delete(API_ENDPOINTS.DEBTS.PAYMENT_BY_ID(debtId, paymentId))
+    return response.data
+  },
 }

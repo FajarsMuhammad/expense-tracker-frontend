@@ -1,8 +1,50 @@
 <template>
   <AppLayout>
     <div class="max-w-6xl mx-auto">
-      <!-- Hero Section -->
-      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-primary-600 via-primary-500 to-accent-lavender p-8 md:p-16 mb-12 shadow-glow-primary">
+      <!-- Current Subscription Status -->
+      <div v-if="!loading && subscription" class="mb-8">
+        <!-- Premium Active -->
+        <div v-if="isPremium && isActive" class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-green-500 to-green-600 p-6 shadow-glow-income">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="flex items-center gap-2 mb-2">
+                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
+                </svg>
+                <span class="text-white font-bold">Premium Active</span>
+              </div>
+              <p class="text-white/90">Valid until: {{ formatDate(subscriptionEndDate) }}</p>
+              <p class="text-white text-sm">{{ daysRemaining }} days remaining</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trial Period -->
+        <div v-else-if="isPremium && isTrial" class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-yellow-400 to-yellow-500 p-6 shadow-glow-income">
+          <div class="flex items-center justify-between">
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-2">
+                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
+                </svg>
+                <span class="text-white font-bold">Trial Period Active</span>
+              </div>
+              <p class="text-white/90">{{ daysRemaining }} days remaining</p>
+              <p class="text-white text-sm">Enjoy all premium features for free!</p>
+            </div>
+            <button
+              @click="handleUpgrade"
+              :disabled="upgrading"
+              class="px-6 py-3 bg-white text-yellow-600 font-bold rounded-lg shadow-lg hover:bg-neutral-50 transition-all disabled:opacity-50"
+            >
+              {{ upgrading ? 'Processing...' : 'Subscribe Now - IDR 25,000/month' }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero Section (shown for free users) -->
+      <div v-if="isFree" class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-primary-600 via-primary-500 to-accent-lavender p-8 md:p-16 mb-12 shadow-glow-primary">
         <!-- Background decoration -->
         <div class="absolute inset-0 opacity-10">
           <div class="absolute -right-16 -top-16 w-64 h-64 bg-white rounded-full"></div>
@@ -27,15 +69,134 @@
             Unlock unlimited features and take control of your finances like never before
           </p>
 
+          <!-- Pricing -->
+          <div class="mb-8">
+            <p class="text-3xl md:text-4xl font-bold text-white">IDR 25,000</p>
+            <p class="text-white/90">per month</p>
+          </div>
+
           <!-- CTA Button -->
           <button
-            class="px-12 py-5 bg-white hover:bg-neutral-50 text-primary-600 font-display font-bold text-xl rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105 inline-flex items-center gap-3"
+            class="px-12 py-5 bg-white hover:bg-neutral-50 text-primary-600 font-display font-bold text-xl rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105 inline-flex items-center gap-3 disabled:opacity-50"
             @click="handleUpgrade"
+            :disabled="upgrading || loading"
           >
             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
             </svg>
-            Get Premium Now
+            {{ upgrading ? 'Processing...' : loading ? 'Loading...' : 'Subscribe to Premium' }}
+          </button>
+          <p class="text-white/80 text-sm mt-4">Only IDR 25,000/month · Cancel anytime</p>
+        </div>
+      </div>
+
+      <!-- Trial Info Banner (for free users) -->
+      <div v-if="isFree" class="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border-2 border-yellow-200 dark:border-yellow-800 rounded-2xl p-6 mb-8">
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0">
+            <svg class="w-8 h-8 text-yellow-600 dark:text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-neutral-900 dark:text-neutral-100 mb-2">
+              Did you know?
+            </h3>
+            <p class="text-neutral-700 dark:text-neutral-300 text-sm leading-relaxed">
+              New users automatically get a <span class="font-bold text-yellow-600 dark:text-yellow-400">14-day FREE trial</span> of all Premium features when they register!
+              Experience unlimited wallets, advanced reports, and Excel/PDF export before deciding to subscribe.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Features Comparison Table -->
+      <div class="bg-white dark:bg-dark-card rounded-2xl shadow-soft-lg p-8 mb-12">
+        <h2 class="text-3xl font-display font-bold text-neutral-900 dark:text-neutral-100 mb-8 text-center">
+          Feature Comparison
+        </h2>
+
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead>
+              <tr class="border-b border-neutral-200 dark:border-neutral-700">
+                <th class="px-6 py-4 text-left text-sm font-bold text-neutral-900 dark:text-neutral-100">Feature</th>
+                <th class="px-6 py-4 text-center text-sm font-bold text-neutral-600 dark:text-neutral-400">Free</th>
+                <th class="px-6 py-4 text-center text-sm font-bold text-primary-600 dark:text-primary-400">Premium</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-neutral-200 dark:divide-neutral-700">
+              <tr>
+                <td class="px-6 py-4 text-neutral-900 dark:text-neutral-100">Wallets</td>
+                <td class="px-6 py-4 text-center text-neutral-600 dark:text-neutral-400">1</td>
+                <td class="px-6 py-4 text-center text-primary-600 dark:text-primary-400 font-bold">Unlimited</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 text-neutral-900 dark:text-neutral-100">Categories</td>
+                <td class="px-6 py-4 text-center text-neutral-600 dark:text-neutral-400">10</td>
+                <td class="px-6 py-4 text-center text-primary-600 dark:text-primary-400 font-bold">Unlimited</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 text-neutral-900 dark:text-neutral-100">Export Format</td>
+                <td class="px-6 py-4 text-center text-neutral-600 dark:text-neutral-400">CSV (100 records)</td>
+                <td class="px-6 py-4 text-center text-primary-600 dark:text-primary-400 font-bold">CSV, Excel, PDF (10,000 records)</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 text-neutral-900 dark:text-neutral-100">Date Range</td>
+                <td class="px-6 py-4 text-center text-neutral-600 dark:text-neutral-400">90 days</td>
+                <td class="px-6 py-4 text-center text-primary-600 dark:text-primary-400 font-bold">365 days</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 text-neutral-900 dark:text-neutral-100">Advanced Reports</td>
+                <td class="px-6 py-4 text-center text-neutral-600 dark:text-neutral-400">
+                  <svg class="w-5 h-5 mx-auto text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                  </svg>
+                </td>
+                <td class="px-6 py-4 text-center text-primary-600 dark:text-primary-400">
+                  <svg class="w-5 h-5 mx-auto text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                </td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 text-neutral-900 dark:text-neutral-100">Cloud Backup</td>
+                <td class="px-6 py-4 text-center text-neutral-600 dark:text-neutral-400">
+                  <svg class="w-5 h-5 mx-auto text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                  </svg>
+                </td>
+                <td class="px-6 py-4 text-center text-primary-600 dark:text-primary-400">
+                  <svg class="w-5 h-5 mx-auto text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                </td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 text-neutral-900 dark:text-neutral-100">Priority Support</td>
+                <td class="px-6 py-4 text-center text-neutral-600 dark:text-neutral-400">
+                  <svg class="w-5 h-5 mx-auto text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                  </svg>
+                </td>
+                <td class="px-6 py-4 text-center text-primary-600 dark:text-primary-400">
+                  <svg class="w-5 h-5 mx-auto text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Upgrade Button in Table -->
+        <div v-if="isFree" class="mt-8 text-center">
+          <button
+            @click="handleUpgrade"
+            :disabled="upgrading || loading"
+            class="px-8 py-4 bg-gradient-primary text-white font-bold text-lg rounded-xl shadow-lg hover:shadow-glow-primary transition-all hover:scale-105 disabled:opacity-50"
+          >
+            {{ upgrading ? 'Processing...' : 'Upgrade to Premium' }}
           </button>
         </div>
       </div>
@@ -138,35 +299,36 @@
           <div class="relative z-10">
             <div class="w-14 h-14 rounded-2xl bg-gradient-expense flex items-center justify-center mb-4 shadow-glow-expense">
               <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
               </svg>
             </div>
             <h3 class="text-2xl font-display font-bold text-neutral-900 dark:text-neutral-100 mb-3">
-              Budget Alerts
+              Cloud Backup
             </h3>
             <p class="text-neutral-600 dark:text-neutral-400 leading-relaxed">
-              Set custom budget limits and receive real-time notifications when you're approaching them.
+              Automatic cloud backup to keep your financial data safe and accessible from anywhere.
             </p>
           </div>
         </div>
       </div>
 
-      <!-- CTA Section -->
-      <div class="text-center py-12">
+      <!-- Final CTA -->
+      <div v-if="isFree || isTrial" class="text-center py-12 bg-gradient-to-r from-primary-50 to-accent-lavender/20 dark:from-dark-surface dark:to-dark-card rounded-2xl">
         <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 dark:text-neutral-100 mb-4">
           Ready to upgrade?
         </h2>
         <p class="text-lg text-neutral-600 dark:text-neutral-400 mb-8 max-w-2xl mx-auto">
-          Join thousands of users who are taking control of their finances with Premium
+          {{ isTrial ? 'Subscribe now to continue enjoying premium features after your trial ends' : 'Join thousands of users who are taking control of their finances with Premium' }}
         </p>
         <button
-          class="px-12 py-5 bg-gradient-primary hover:shadow-glow-primary text-white font-display font-bold text-xl rounded-2xl shadow-xl transition-all duration-300 hover:scale-105 inline-flex items-center gap-3"
+          class="px-12 py-5 bg-gradient-primary hover:shadow-glow-primary text-white font-display font-bold text-xl rounded-2xl shadow-xl transition-all duration-300 hover:scale-105 inline-flex items-center gap-3 disabled:opacity-50"
           @click="handleUpgrade"
+          :disabled="upgrading || loading"
         >
           <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
           </svg>
-          Get Started with Premium
+          {{ upgrading ? 'Processing...' : isTrial ? 'Subscribe Now - IDR 25,000/month' : 'Get Started with Premium' }}
         </button>
       </div>
     </div>
@@ -174,11 +336,46 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue'
 import AppLayout from '@/components/layout/AppLayout.vue'
+import { useSubscription } from '@/composables/useSubscription'
 
-function handleUpgrade() {
-  // TODO: Navigate to payment/checkout page
-  console.log('Upgrade to premium clicked')
-  // router.push('/premium/checkout')
+const {
+  subscription,
+  loading,
+  isPremium,
+  isFree,
+  isTrial,
+  isActive,
+  daysRemaining,
+  subscriptionEndDate,
+  loadSubscription,
+  upgradeToPremium,
+  formatDate,
+} = useSubscription()
+
+const upgrading = ref(false)
+
+onMounted(async () => {
+  await loadSubscription()
+})
+
+async function handleUpgrade() {
+  if (upgrading.value) return
+
+  upgrading.value = true
+  try {
+    const result = await upgradeToPremium(1)
+    console.log('Upgrade result:', result)
+
+    // Refresh subscription data
+    if (result.success) {
+      await loadSubscription()
+    }
+  } catch (error) {
+    console.error('Upgrade failed:', error)
+  } finally {
+    upgrading.value = false
+  }
 }
 </script>

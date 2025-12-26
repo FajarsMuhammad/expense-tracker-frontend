@@ -45,7 +45,7 @@
     </div>
 
     <!-- Navigation -->
-    <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+    <nav class="flex-1 px-4 pt-8 pb-6 space-y-2 overflow-y-auto">
       <router-link
         v-for="item in navItems"
         :key="item.path"
@@ -185,6 +185,23 @@ const navItems = [
         'stroke-linejoin': 'round',
         'stroke-width': '2',
         d: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'
+      })
+    ])
+  },
+  {
+    path: '/profile',
+    label: 'Profile',
+    icon: (props) => h('svg', {
+      ...props,
+      fill: 'none',
+      stroke: 'currentColor',
+      viewBox: '0 0 24 24'
+    }, [
+      h('path', {
+        'stroke-linecap': 'round',
+        'stroke-linejoin': 'round',
+        'stroke-width': '2',
+        d: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'
       })
     ])
   }
