@@ -45,7 +45,7 @@
     </div>
 
     <!-- Navigation -->
-    <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+    <nav class="flex-1 px-4 pt-8 pb-6 space-y-2 overflow-y-auto">
       <router-link
         v-for="item in navItems"
         :key="item.path"
@@ -71,7 +71,8 @@
 
 <script setup>
 import { useRoute } from 'vue-router'
-import { h } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { h, computed } from 'vue'
 
 defineProps({
   isOpen: {
@@ -83,12 +84,13 @@ defineProps({
 defineEmits(['close'])
 
 const route = useRoute()
+const { t } = useI18n()
 
-// Navigation items with icons
-const navItems = [
+// Navigation items with icons - using computed for reactive translations
+const navItems = computed(() => [
   {
     path: '/dashboard',
-    label: 'Dashboard',
+    label: t('navigation.sidebar.dashboard'),
     icon: (props) => h('svg', {
       ...props,
       fill: 'none',
@@ -105,7 +107,7 @@ const navItems = [
   },
   {
     path: '/wallets',
-    label: 'Wallets',
+    label: t('navigation.sidebar.wallets'),
     icon: (props) => h('svg', {
       ...props,
       fill: 'none',
@@ -122,7 +124,7 @@ const navItems = [
   },
   {
     path: '/transactions',
-    label: 'Transactions',
+    label: t('navigation.sidebar.transactions'),
     icon: (props) => h('svg', {
       ...props,
       fill: 'none',
@@ -139,7 +141,7 @@ const navItems = [
   },
   {
     path: '/categories',
-    label: 'Categories',
+    label: t('navigation.sidebar.categories'),
     icon: (props) => h('svg', {
       ...props,
       fill: 'none',
@@ -156,7 +158,7 @@ const navItems = [
   },
   {
     path: '/debts',
-    label: 'Debts',
+    label: t('navigation.sidebar.debts'),
     icon: (props) => h('svg', {
       ...props,
       fill: 'none',
@@ -173,7 +175,7 @@ const navItems = [
   },
   {
     path: '/reports',
-    label: 'Reports',
+    label: t('navigation.sidebar.reports'),
     icon: (props) => h('svg', {
       ...props,
       fill: 'none',
@@ -187,8 +189,25 @@ const navItems = [
         d: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'
       })
     ])
+  },
+  {
+    path: '/profile',
+    label: t('navigation.sidebar.profile'),
+    icon: (props) => h('svg', {
+      ...props,
+      fill: 'none',
+      stroke: 'currentColor',
+      viewBox: '0 0 24 24'
+    }, [
+      h('path', {
+        'stroke-linecap': 'round',
+        'stroke-linejoin': 'round',
+        'stroke-width': '2',
+        d: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'
+      })
+    ])
   }
-]
+])
 
 function isActive(path) {
   return route.path.startsWith(path)

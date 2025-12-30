@@ -8,6 +8,30 @@
  * Production: https://api.expensetracker.com/api/v1
  */
 
+// Validate required environment variables
+const validateEnv = () => {
+  const required = {
+    VITE_API_BASE_URL: import.meta.env.VITE_API_BASE_URL,
+    VITE_APP_NAME: import.meta.env.VITE_APP_NAME,
+    VITE_MIDTRANS_CLIENT_KEY: import.meta.env.VITE_MIDTRANS_CLIENT_KEY,
+    VITE_MIDTRANS_IS_PRODUCTION: import.meta.env.VITE_MIDTRANS_IS_PRODUCTION,
+  }
+
+  const missing = Object.entries(required)
+    .filter(([_, value]) => value === undefined)
+    .map(([key]) => key)
+
+  if (missing.length > 0) {
+    throw new Error(
+      `Missing required environment variables: ${missing.join(', ')}\n` +
+        'Please check your .env file or copy from .env.example'
+    )
+  }
+}
+
+// Run validation
+validateEnv()
+
 // API Base URL from environment variable
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
@@ -28,7 +52,8 @@ export const API_ENDPOINTS = {
 
   // User
   USER: {
-    ME: '/me',
+    ME: '/users/me',
+    UPDATE_PROFILE: '/users/me',
   },
 
   // Wallets
@@ -55,6 +80,7 @@ export const API_ENDPOINTS = {
     BASE: '/debts',
     BY_ID: (id) => `/debts/${id}`,
     PAYMENTS: (id) => `/debts/${id}/payments`,
+    PAYMENT_BY_ID: (debtId, paymentId) => `/debts/${debtId}/payments/${paymentId}`,
     MARK_PAID: (id) => `/debts/${id}/mark-paid`,
   },
 
@@ -78,6 +104,20 @@ export const API_ENDPOINTS = {
     TRANSACTIONS: '/export/transactions',
     DEBTS: '/export/debts',
     SUMMARY: '/export/summary',
+  },
+
+  // Subscriptions
+  SUBSCRIPTIONS: {
+    BASE: '/subscriptions',
+    ME: '/subscriptions/me',
+    UPGRADE: '/subscriptions/upgrade',
+    TRIAL_ELIGIBILITY: '/subscriptions/trial-eligibility',
+  },
+
+  // Payments
+  PAYMENTS: {
+    BASE: '/payments',
+    SUBSCRIPTION: '/payments/subscription',
   },
 }
 
@@ -177,6 +217,55 @@ export const GRANULARITY = {
   MONTHLY: 'MONTHLY',
 }
 
+/**
+ * Subscription tiers
+ */
+export const SUBSCRIPTION_TIERS = {
+  FREE: 'FREE',
+  PREMIUM: 'PREMIUM',
+}
+
+/**
+ * Subscription status
+ */
+export const SUBSCRIPTION_STATUS = {
+  ACTIVE: 'ACTIVE',
+  TRIAL: 'TRIAL',
+  EXPIRED: 'EXPIRED',
+  CANCELLED: 'CANCELLED',
+  PENDING: 'PENDING',
+}
+
+/**
+ * Payment status
+ */
+export const PAYMENT_STATUS = {
+  PENDING: 'PENDING',
+  SUCCESS: 'SUCCESS',
+  FAILED: 'FAILED',
+  EXPIRED: 'EXPIRED',
+  CANCELLED: 'CANCELLED',
+  REFUNDED: 'REFUNDED',
+}
+
+/**
+ * Payment methods
+ */
+export const PAYMENT_METHODS = {
+  CREDIT_CARD: 'CREDIT_CARD',
+  DEBIT_CARD: 'DEBIT_CARD',
+  GOPAY: 'GOPAY',
+  QRIS: 'QRIS',
+  BCA_VA: 'BCA_VA',
+  BNI_VA: 'BNI_VA',
+  BRI_VA: 'BRI_VA',
+  MANDIRI_VA: 'MANDIRI_VA',
+  PERMATA_VA: 'PERMATA_VA',
+  CIMB_VA: 'CIMB_VA',
+  INDOMARET: 'INDOMARET',
+  ALFAMART: 'ALFAMART',
+}
+
 export default {
   API_BASE_URL,
   API_VERSION,
@@ -192,4 +281,8 @@ export default {
   EXPORT_FORMATS,
   EXPORT_TYPES,
   GRANULARITY,
+  SUBSCRIPTION_TIERS,
+  SUBSCRIPTION_STATUS,
+  PAYMENT_STATUS,
+  PAYMENT_METHODS,
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-6">
     <div v-if="incomeCategories.length > 0">
-      <h3 class="text-lg font-semibold mb-3">Income Categories</h3>
+      <h3 class="text-lg font-semibold mb-3">{{ $t('categories.list.incomeCategories') }}</h3>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <AppCard
           v-for="category in incomeCategories"
@@ -15,7 +15,7 @@
               />
               <div>
                 <p class="font-medium">{{ category.name }}</p>
-                <p v-if="category.isDefault" class="text-xs text-muted">Default</p>
+                <p v-if="category.isDefault" class="text-xs text-muted">{{ $t('categories.list.default') }}</p>
               </div>
             </div>
 
@@ -53,7 +53,7 @@
     </div>
 
     <div v-if="expenseCategories.length > 0">
-      <h3 class="text-lg font-semibold mb-3">Expense Categories</h3>
+      <h3 class="text-lg font-semibold mb-3">{{ $t('categories.list.expenseCategories') }}</h3>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <AppCard
           v-for="category in expenseCategories"
@@ -67,7 +67,7 @@
               />
               <div>
                 <p class="font-medium">{{ category.name }}</p>
-                <p v-if="category.isDefault" class="text-xs text-muted">Default</p>
+                <p v-if="category.isDefault" class="text-xs text-muted">{{ $t('categories.list.default') }}</p>
               </div>
             </div>
 

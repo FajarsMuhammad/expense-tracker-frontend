@@ -2,7 +2,7 @@
   <AppLayout>
     <div class="mx-auto max-w-3xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
       <!-- Header with Back Button -->
-      <FormHeader title="Edit Debt" description="Update debt information" />
+      <FormHeader :title="$t('debts.edit.title')" :description="$t('debts.edit.description')" />
 
       <!-- Loading Skeleton -->
       <div v-if="loading && !currentDebt" class="rounded-lg bg-white p-6 shadow-sm dark:bg-dark-card sm:p-8">

@@ -92,6 +92,23 @@
         </div>
       </div>
 
+      <!-- Total Debts Info -->
+      <div class="rounded-xl bg-neutral-50 p-4 dark:bg-neutral-800/50">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="rounded-lg bg-neutral-100 p-2 dark:bg-neutral-700/50">
+              <DocumentTextIcon class="size-6 text-neutral-600 dark:text-neutral-400" />
+            </div>
+            <div>
+              <p class="text-sm font-medium text-neutral-600 dark:text-neutral-400">Total Active Debts</p>
+              <p class="text-xl font-bold text-neutral-900 dark:text-neutral-100">
+                {{ totalDebts }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Overdue Alert -->
       <div v-if="overdueCount > 0" class="rounded-xl bg-orange-50 p-4 dark:bg-orange-900/10">
         <div class="flex items-center gap-3">
@@ -134,6 +151,7 @@ import {
   ExclamationCircleIcon,
   ArrowRightIcon,
   PlusIcon,
+  DocumentTextIcon,
 } from '@heroicons/vue/24/outline'
 
 const props = defineProps({

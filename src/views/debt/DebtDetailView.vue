@@ -10,24 +10,24 @@
       <!-- Debt Content -->
       <template v-else-if="currentDebt">
         <!-- Header with Actions -->
-        <div class="flex items-start justify-between gap-4">
-          <div class="flex items-center gap-4">
+        <div class="space-y-4">
+          <div class="flex items-start gap-3">
             <button
               @click="router.back()"
-              class="rounded-lg p-2 text-neutral-600 transition-colors hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
+              class="flex-shrink-0 rounded-lg p-2 text-neutral-600 transition-colors hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
             >
-              <ArrowLeftIcon class="size-6" />
+              <ArrowLeftIcon class="size-5 sm:size-6" />
             </button>
-            <div>
-              <h1 class="text-3xl font-bold text-neutral-900 dark:text-neutral-100">
+            <div class="min-w-0 flex-1">
+              <h1 class="truncate text-xl font-bold text-neutral-900 dark:text-neutral-100 sm:text-2xl lg:text-3xl">
                 {{ currentDebt?.counterpartyName }}
               </h1>
-              <div class="mt-2 flex items-center gap-2">
+              <div class="mt-2 flex flex-wrap items-center gap-2">
                 <span
                   :class="typeClasses"
-                  class="inline-flex items-center gap-1.5 rounded-lg px-3 py-1 text-xs font-bold uppercase"
+                  class="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-bold uppercase sm:px-3"
                 >
-                  <component :is="typeIcon" class="size-4" />
+                  <component :is="typeIcon" class="size-3.5 sm:size-4" />
                   {{ typeLabel }}
                 </span>
                 <DebtStatusBadge v-if="currentDebt" :status="currentDebt.status" :is-overdue="currentDebt.isOverdue" />
@@ -39,17 +39,17 @@
           <div class="flex gap-2">
             <button
               @click="handleEdit"
-              class="rounded-lg border border-neutral-300 bg-white px-4 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50 dark:border-neutral-600 dark:bg-dark-card dark:text-neutral-300 dark:hover:bg-neutral-800"
+              class="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-neutral-300 bg-white px-3 py-2 text-xs font-medium text-neutral-700 transition-colors hover:bg-neutral-50 dark:border-neutral-600 dark:bg-dark-card dark:text-neutral-300 dark:hover:bg-neutral-800 sm:flex-none sm:px-4 sm:text-sm"
             >
-              <PencilIcon class="inline size-4" />
-              Edit
+              <PencilIcon class="size-4" />
+              <span>{{ t('debts.detail.edit') }}</span>
             </button>
             <button
               @click="showDeleteDialog = true"
-              class="rounded-lg border border-red-300 bg-red-50 px-4 py-2 text-sm font-medium text-red-700 transition-colors hover:bg-red-100 dark:border-red-700 dark:bg-red-900/20 dark:text-red-300 dark:hover:bg-red-900/30"
+              class="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-red-300 bg-red-50 px-3 py-2 text-xs font-medium text-red-700 transition-colors hover:bg-red-100 dark:border-red-700 dark:bg-red-900/20 dark:text-red-300 dark:hover:bg-red-900/30 sm:flex-none sm:px-4 sm:text-sm"
             >
-              <TrashIcon class="inline size-4" />
-              Delete
+              <TrashIcon class="size-4" />
+              <span>{{ t('debts.detail.delete') }}</span>
             </button>
           </div>
         </div>
@@ -60,26 +60,26 @@
           <div class="space-y-6">
             <!-- Debt Summary Card -->
             <div class="rounded-lg bg-white p-6 shadow-sm dark:bg-dark-card">
-              <h2 class="mb-4 text-lg font-semibold text-neutral-900 dark:text-neutral-100">Debt Summary</h2>
+              <h2 class="mb-4 text-lg font-semibold text-neutral-900 dark:text-neutral-100">{{ t('debts.detail.debtSummary') }}</h2>
 
               <!-- Amounts -->
               <div class="space-y-4">
                 <div class="flex items-center justify-between">
-                  <span class="text-sm text-neutral-600 dark:text-neutral-400">Total Amount</span>
+                  <span class="text-sm text-neutral-600 dark:text-neutral-400">{{ t('debts.detail.totalAmount') }}</span>
                   <span class="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
                     {{ formatCurrency(currentDebt?.totalAmount) }}
                   </span>
                 </div>
 
                 <div class="flex items-center justify-between">
-                  <span class="text-sm text-neutral-600 dark:text-neutral-400">Paid Amount</span>
+                  <span class="text-sm text-neutral-600 dark:text-neutral-400">{{ t('debts.detail.paidAmount') }}</span>
                   <span class="text-lg font-semibold text-green-600 dark:text-green-400">
                     {{ formatCurrency(currentDebt?.paidAmount) }}
                   </span>
                 </div>
 
                 <div class="flex items-center justify-between border-t border-neutral-200 pt-4 dark:border-neutral-700">
-                  <span class="font-medium text-neutral-700 dark:text-neutral-300">Remaining Amount</span>
+                  <span class="font-medium text-neutral-700 dark:text-neutral-300">{{ t('debts.detail.remainingAmount') }}</span>
                   <span :class="remainingAmountColor" class="text-2xl font-bold">
                     {{ formatCurrency(currentDebt?.remainingAmount) }}
                   </span>
@@ -94,11 +94,11 @@
 
             <!-- Debt Information Card -->
             <div class="rounded-lg bg-white p-6 shadow-sm dark:bg-dark-card">
-              <h2 class="mb-4 text-lg font-semibold text-neutral-900 dark:text-neutral-100">Information</h2>
+              <h2 class="mb-4 text-lg font-semibold text-neutral-900 dark:text-neutral-100">{{ t('debts.detail.information') }}</h2>
 
               <div class="space-y-3">
                 <div class="flex items-start justify-between">
-                  <span class="text-sm text-neutral-600 dark:text-neutral-400">Due Date</span>
+                  <span class="text-sm text-neutral-600 dark:text-neutral-400">{{ t('debts.detail.dueDate') }}</span>
                   <span :class="dueDateColor" class="text-right text-sm font-semibold">
                     {{ formatDate(currentDebt?.dueDate) }}
                     <span class="block text-xs">{{ daysUntilDue }}</span>
@@ -106,61 +106,56 @@
                 </div>
 
                 <div class="flex items-start justify-between">
-                  <span class="text-sm text-neutral-600 dark:text-neutral-400">Payments Made</span>
+                  <span class="text-sm text-neutral-600 dark:text-neutral-400">{{ t('debts.detail.paymentsMade') }}</span>
                   <span class="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                     {{ currentDebt?.paymentCount || 0 }}
                   </span>
                 </div>
 
                 <div class="flex items-start justify-between">
-                  <span class="text-sm text-neutral-600 dark:text-neutral-400">Created</span>
+                  <span class="text-sm text-neutral-600 dark:text-neutral-400">{{ t('debts.detail.created') }}</span>
                   <span class="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                     {{ formatDateTime(currentDebt?.createdAt) }}
                   </span>
                 </div>
 
                 <div class="flex items-start justify-between">
-                  <span class="text-sm text-neutral-600 dark:text-neutral-400">Last Updated</span>
+                  <span class="text-sm text-neutral-600 dark:text-neutral-400">{{ t('debts.detail.lastUpdated') }}</span>
                   <span class="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                     {{ formatDateTime(currentDebt?.updatedAt) }}
                   </span>
                 </div>
 
                 <div v-if="currentDebt?.note" class="border-t border-neutral-200 pt-3 dark:border-neutral-700">
-                  <p class="mb-1 text-sm font-medium text-neutral-700 dark:text-neutral-300">Note</p>
+                  <p class="mb-1 text-sm font-medium text-neutral-700 dark:text-neutral-300">{{ t('debts.detail.note') }}</p>
                   <p class="text-sm text-neutral-600 dark:text-neutral-400">{{ currentDebt?.note }}</p>
                 </div>
               </div>
             </div>
-
-            <!-- Mark as Paid Button -->
-            <button
-              v-if="currentDebt?.status !== DEBT_STATUS.PAID"
-              @click="showMarkPaidDialog = true"
-              class="w-full rounded-lg bg-green-600 px-6 py-3 font-medium text-white transition-colors hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:bg-green-500 dark:hover:bg-green-600"
-            >
-              <CheckCircleIcon class="inline size-5" />
-              Mark as Fully Paid
-            </button>
           </div>
 
           <!-- Right Column: Payment History -->
           <div class="space-y-6">
             <!-- Payment History Card -->
-            <div class="rounded-lg bg-white p-6 shadow-sm dark:bg-dark-card">
-              <div class="mb-4 flex items-center justify-between">
-                <h2 class="text-lg font-semibold text-neutral-900 dark:text-neutral-100">Payment History</h2>
+            <div class="rounded-lg bg-white p-4 shadow-sm dark:bg-dark-card sm:p-6">
+              <div class="mb-4 flex items-center justify-between gap-2">
+                <h2 class="truncate text-base font-semibold text-neutral-900 dark:text-neutral-100 sm:text-lg">{{ t('debts.detail.paymentHistory') }}</h2>
                 <button
                   v-if="currentDebt?.status !== DEBT_STATUS.PAID"
-                  @click="showPaymentModal = true"
-                  class="rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600"
+                  @click="handleAddPaymentClick"
+                  class="group flex flex-shrink-0 items-center gap-1.5 rounded-lg bg-gradient-to-r from-primary-600 to-primary-700 px-2.5 py-1.5 text-xs font-semibold text-white shadow-sm transition-all hover:shadow-md hover:from-primary-700 hover:to-primary-800 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:from-primary-500 dark:to-primary-600 dark:hover:from-primary-600 dark:hover:to-primary-700 sm:px-4 sm:py-2"
                 >
-                  <PlusIcon class="inline size-4" />
-                  Add Payment
+                  <PlusIcon class="size-3.5 flex-shrink-0 text-white transition-transform group-hover:scale-110 sm:size-4" />
+                  <span class="text-white">{{ t('debts.detail.add') }}</span>
                 </button>
               </div>
 
-              <PaymentHistory :payments="currentDebt?.payments" />
+              <PaymentHistory
+                :payments="currentDebt?.payments"
+                :readonly="currentDebt?.status === DEBT_STATUS.PAID"
+                @edit-payment="handleEditPaymentClick"
+                @delete-payment="handleDeletePaymentClick"
+              />
             </div>
           </div>
         </div>
@@ -168,35 +163,41 @@
 
       <!-- Error State -->
       <div v-else class="rounded-lg bg-red-50 p-6 text-center dark:bg-red-900/10">
-        <p class="text-red-700 dark:text-red-300">Debt not found</p>
+        <p class="text-red-700 dark:text-red-300">{{ t('debts.detail.debtNotFound') }}</p>
       </div>
     </div>
 
-    <!-- Add Payment Modal -->
-    <AppModal v-model="showPaymentModal" title="Add Payment">
-      <PaymentForm :debt="currentDebt" :loading="loading" @submit="handleAddPaymentSubmit" @cancel="showPaymentModal = false" />
+    <!-- Add/Edit Payment Modal -->
+    <AppModal v-model="showPaymentModal" :title="editingPayment ? t('debts.detail.editPayment') : t('debts.detail.addPayment')">
+      <PaymentForm
+        :debt="currentDebt"
+        :payment="editingPayment"
+        :loading="loading"
+        @submit="handlePaymentSubmit"
+        @cancel="handleCancelPaymentForm"
+      />
     </AppModal>
 
     <!-- Delete Confirmation Dialog -->
     <AppConfirmDialog
       v-model="showDeleteDialog"
-      title="Delete Debt"
-      :message="`Are you sure you want to delete this debt? This action cannot be undone.`"
-      confirm-text="Delete"
-      cancel-text="Cancel"
+      :title="t('debts.detail.deleteDebt')"
+      :message="t('debts.detail.deleteDebtConfirm')"
+      :confirm-text="t('common.buttons.delete')"
+      :cancel-text="t('common.buttons.cancel')"
       @confirm="confirmDelete"
       @cancel="showDeleteDialog = false"
     />
 
-    <!-- Mark as Paid Confirmation Dialog -->
+    <!-- Delete Payment Confirmation Dialog -->
     <AppConfirmDialog
-      v-model="showMarkPaidDialog"
-      title="Mark as Paid"
-      :message="`Are you sure you want to mark this debt as fully paid? This will set the remaining amount to zero.`"
-      confirm-text="Mark as Paid"
-      cancel-text="Cancel"
-      @confirm="confirmMarkAsPaid"
-      @cancel="showMarkPaidDialog = false"
+      v-model="showDeletePaymentDialog"
+      :title="t('debts.detail.deletePayment')"
+      :message="t('debts.detail.deletePaymentConfirm')"
+      :confirm-text="t('common.buttons.delete')"
+      :cancel-text="t('common.buttons.cancel')"
+      @confirm="confirmDeletePayment"
+      @cancel="showDeletePaymentDialog = false"
     />
   </AppLayout>
 </template>
@@ -204,6 +205,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { useDebt } from '@/composables/useDebt'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import AppSkeleton from '@/components/common/AppSkeleton.vue'
@@ -220,17 +222,27 @@ import {
   PlusIcon,
   ArrowUpCircleIcon,
   ArrowDownCircleIcon,
-  CheckCircleIcon,
 } from '@heroicons/vue/24/outline'
 import { DEBT_TYPES, DEBT_STATUS } from '@/config/api.config'
 
 const router = useRouter()
 const route = useRoute()
-const { currentDebt, loading, loadDebt, handleDeleteDebt, handleAddPayment, handleMarkAsPaid } = useDebt()
+const { t } = useI18n()
+const {
+  currentDebt,
+  loading,
+  loadDebt,
+  handleDeleteDebt,
+  handleAddPayment,
+  handleUpdatePayment,
+  handleDeletePayment,
+} = useDebt()
 
 const showPaymentModal = ref(false)
 const showDeleteDialog = ref(false)
-const showMarkPaidDialog = ref(false)
+const showDeletePaymentDialog = ref(false)
+const editingPayment = ref(null)
+const deletingPayment = ref(null)
 
 const typeClasses = computed(() => {
   if (!currentDebt.value) return ''
@@ -243,7 +255,9 @@ const typeClasses = computed(() => {
 
 const typeLabel = computed(() => {
   if (!currentDebt.value) return ''
-  return currentDebt.value.type === DEBT_TYPES.PAYABLE ? 'You Owe' : 'Owed to You'
+  return currentDebt.value.type === DEBT_TYPES.PAYABLE
+    ? t('debts.detail.youOwe')
+    : t('debts.detail.owedToYou')
 })
 
 const typeIcon = computed(() => {
@@ -281,13 +295,13 @@ const daysUntilDue = computed(() => {
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 
   if (currentDebt.value.status === DEBT_STATUS.PAID) {
-    return 'Paid'
+    return t('debts.detail.paid')
   } else if (diffDays < 0) {
-    return `${Math.abs(diffDays)} days overdue`
+    return t('debts.detail.daysOverdue', { count: Math.abs(diffDays) })
   } else if (diffDays === 0) {
-    return 'Due today'
+    return t('debts.detail.dueToday')
   } else {
-    return `${diffDays} days remaining`
+    return t('debts.detail.daysRemaining', { count: diffDays })
   }
 })
 
@@ -301,16 +315,55 @@ async function confirmDelete() {
   router.push('/debts')
 }
 
+function handleAddPaymentClick() {
+  editingPayment.value = null
+  showPaymentModal.value = true
+}
+
+function handleEditPaymentClick(payment) {
+  editingPayment.value = payment
+  showPaymentModal.value = true
+}
+
+function handleDeletePaymentClick(payment) {
+  deletingPayment.value = payment
+  showDeletePaymentDialog.value = true
+}
+
+function handleCancelPaymentForm() {
+  showPaymentModal.value = false
+  editingPayment.value = null
+}
+
+async function handlePaymentSubmit(paymentData) {
+  if (editingPayment.value) {
+    await handleEditPaymentSubmit(paymentData)
+  } else {
+    await handleAddPaymentSubmit(paymentData)
+  }
+}
+
 async function handleAddPaymentSubmit(paymentData) {
   await handleAddPayment(route.params.id, paymentData)
   showPaymentModal.value = false
+  editingPayment.value = null
   // Reload to ensure all calculated fields are fresh
   await loadDebt(route.params.id)
 }
 
-async function confirmMarkAsPaid() {
-  await handleMarkAsPaid(route.params.id)
-  showMarkPaidDialog.value = false
+async function handleEditPaymentSubmit(paymentData) {
+  await handleUpdatePayment(route.params.id, editingPayment.value.id, paymentData)
+  showPaymentModal.value = false
+  editingPayment.value = null
+  // Reload to ensure all calculated fields are fresh
+  await loadDebt(route.params.id)
+}
+
+async function confirmDeletePayment() {
+  if (!deletingPayment.value) return
+  await handleDeletePayment(route.params.id, deletingPayment.value.id)
+  showDeletePaymentDialog.value = false
+  deletingPayment.value = null
   // Reload to ensure all calculated fields are fresh
   await loadDebt(route.params.id)
 }

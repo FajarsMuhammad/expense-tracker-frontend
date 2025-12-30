@@ -53,6 +53,18 @@ export const useDebtStore = defineStore('debt', () => {
       .reduce((sum, debt) => sum + debt.remainingAmount, 0)
   })
 
+  const payableCount = computed(() => {
+    return debts.value.filter(
+      (debt) => debt.type === DEBT_TYPES.PAYABLE && debt.status !== DEBT_STATUS.PAID
+    ).length
+  })
+
+  const receivableCount = computed(() => {
+    return debts.value.filter(
+      (debt) => debt.type === DEBT_TYPES.RECEIVABLE && debt.status !== DEBT_STATUS.PAID
+    ).length
+  })
+
   const netPosition = computed(() => {
     // Positive: you are owed more than you owe
     // Negative: you owe more than you are owed
@@ -192,14 +204,19 @@ export const useDebtStore = defineStore('debt', () => {
     error.value = null
     try {
       const data = await debtService.addPayment(id, paymentData)
+
+      // Backend returns { payment, updatedDebt }
+      // Extract the updatedDebt from response
+      const updatedDebt = data.updatedDebt || data
+
       // Update the debt in the list
       const index = debts.value.findIndex((d) => d.id === id)
       if (index !== -1) {
-        debts.value[index] = data
+        debts.value[index] = updatedDebt
       }
       // Update current debt if it's the same
       if (currentDebt.value?.id === id) {
-        currentDebt.value = data
+        currentDebt.value = updatedDebt
       }
       return data
     } catch (err) {
@@ -223,6 +240,60 @@ export const useDebtStore = defineStore('debt', () => {
       // Update current debt if it's the same
       if (currentDebt.value?.id === id) {
         currentDebt.value = data
+      }
+      return data
+    } catch (err) {
+      error.value = err.message
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
+  async function updatePayment(debtId, paymentId, paymentData) {
+    loading.value = true
+    error.value = null
+    try {
+      const data = await debtService.updatePayment(debtId, paymentId, paymentData)
+
+      // Backend returns { payment, updatedDebt }
+      const updatedDebt = data.updatedDebt || data
+
+      // Update the debt in the list
+      const index = debts.value.findIndex((d) => d.id === debtId)
+      if (index !== -1) {
+        debts.value[index] = updatedDebt
+      }
+      // Update current debt if it's the same
+      if (currentDebt.value?.id === debtId) {
+        currentDebt.value = updatedDebt
+      }
+      return data
+    } catch (err) {
+      error.value = err.message
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
+  async function deletePayment(debtId, paymentId) {
+    loading.value = true
+    error.value = null
+    try {
+      const data = await debtService.deletePayment(debtId, paymentId)
+
+      // Backend returns updatedDebt
+      const updatedDebt = data
+
+      // Update the debt in the list
+      const index = debts.value.findIndex((d) => d.id === debtId)
+      if (index !== -1) {
+        debts.value[index] = updatedDebt
+      }
+      // Update current debt if it's the same
+      if (currentDebt.value?.id === debtId) {
+        currentDebt.value = updatedDebt
       }
       return data
     } catch (err) {
@@ -263,6 +334,8 @@ export const useDebtStore = defineStore('debt', () => {
     overdueDebts,
     totalPayable,
     totalReceivable,
+    payableCount,
+    receivableCount,
     netPosition,
     openDebts,
     partialDebts,
@@ -274,6 +347,8 @@ export const useDebtStore = defineStore('debt', () => {
     updateDebt,
     deleteDebt,
     addPaymentToDebt,
+    updatePayment,
+    deletePayment,
     markDebtAsPaid,
     setFilters,
     resetFilters,

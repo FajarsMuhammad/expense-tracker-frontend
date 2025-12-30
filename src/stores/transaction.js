@@ -27,6 +27,10 @@ export const useTransactionStore = defineStore('transaction', () => {
     dateTo: null,
   })
 
+  // Summary state (from API response)
+  const incomeTotal = ref(0)
+  const expenseTotal = ref(0)
+
   // Computed properties
   const hasTransactions = computed(() => transactions.value.length > 0)
 
@@ -38,51 +42,48 @@ export const useTransactionStore = defineStore('transaction', () => {
 
   const hasMore = computed(() => !pagination.value.last)
 
-  const incomeTotal = computed(() => {
-    return transactions.value
-      .filter((t) => t.type === 'INCOME')
-      .reduce((sum, t) => sum + t.amount, 0)
-  })
-
-  const expenseTotal = computed(() => {
-    return transactions.value
-      .filter((t) => t.type === 'EXPENSE')
-      .reduce((sum, t) => sum + t.amount, 0)
-  })
-
   // Actions
   async function fetchTransactions(params = {}, append = false) {
     loading.value = true
     error.value = null
     try {
+      // Map filter field names to API parameter names
       const requestParams = {
-        ...filters.value,
+        walletId: filters.value.walletId,
+        categoryId: filters.value.categoryId,
+        type: filters.value.type,
+        from: filters.value.dateFrom, // Map dateFrom → from
+        to: filters.value.dateTo,     // Map dateTo → to
         ...params,
         page: params.page ?? pagination.value.page,
         size: params.size ?? pagination.value.size,
       }
 
-      const data = await transactionService.getAllTransactions(requestParams)
+      const response = await transactionService.getAllTransactions(requestParams)
 
       if (append) {
         // Append to existing transactions for "load more"
-        transactions.value = [...transactions.value, ...data.content]
+        transactions.value = [...transactions.value, ...response.transactions.content]
       } else {
         // Replace transactions for new search/filter
-        transactions.value = data.content
+        transactions.value = response.transactions.content
       }
 
       // Update pagination info
       pagination.value = {
-        page: data.pageable.pageNumber,
-        size: data.pageable.pageSize,
-        totalElements: data.totalElements,
-        totalPages: data.totalPages,
-        first: data.first,
-        last: data.last,
+        page: response.transactions.pageable.pageNumber,
+        size: response.transactions.pageable.pageSize,
+        totalElements: response.transactions.totalElements,
+        totalPages: response.transactions.totalPages,
+        first: response.transactions.first,
+        last: response.transactions.last,
       }
 
-      return data
+      // Update totals from API response
+      incomeTotal.value = response.incomeTotal || 0
+      expenseTotal.value = response.expenseTotal || 0
+
+      return response
     } catch (err) {
       error.value = err.message
       throw err

@@ -56,29 +56,6 @@ function getMimeType(format) {
   }
 }
 
-/**
- * Build query string from filter parameters
- * @param {Object} filter - Filter parameters
- * @returns {string} Query string
- */
-function buildQueryString(filter = {}) {
-  const queryParams = new URLSearchParams()
-
-  Object.entries(filter).forEach(([key, value]) => {
-    if (value !== null && value !== undefined && value !== '') {
-      if (Array.isArray(value)) {
-        if (value.length > 0) {
-          value.forEach((item) => queryParams.append(key, item))
-        }
-      } else {
-        queryParams.append(key, value)
-      }
-    }
-  })
-
-  return queryParams.toString()
-}
-
 export default {
   /**
    * Export transactions to specified format
@@ -103,9 +80,10 @@ export default {
     const exportData = response.data
 
     // Auto-download if base64 data is returned
-    if (exportData.base64Data) {
+    if (exportData.base64Content || exportData.base64Data) {
       const mimeType = getMimeType(exportRequest.format)
-      downloadBase64File(exportData.base64Data, exportData.fileName, mimeType)
+      const base64Data = exportData.base64Content || exportData.base64Data
+      downloadBase64File(base64Data, exportData.fileName, mimeType)
     }
 
     return exportData
@@ -132,9 +110,10 @@ export default {
     const exportData = response.data
 
     // Auto-download if base64 data is returned
-    if (exportData.base64Data) {
+    if (exportData.base64Content || exportData.base64Data) {
       const mimeType = getMimeType(exportRequest.format)
-      downloadBase64File(exportData.base64Data, exportData.fileName, mimeType)
+      const base64Data = exportData.base64Content || exportData.base64Data
+      downloadBase64File(base64Data, exportData.fileName, mimeType)
     }
 
     return exportData
@@ -161,9 +140,10 @@ export default {
     const exportData = response.data
 
     // Auto-download if base64 data is returned
-    if (exportData.base64Data) {
+    if (exportData.base64Content || exportData.base64Data) {
       const mimeType = getMimeType(exportRequest.format)
-      downloadBase64File(exportData.base64Data, exportData.fileName, mimeType)
+      const base64Data = exportData.base64Content || exportData.base64Data
+      downloadBase64File(base64Data, exportData.fileName, mimeType)
     }
 
     return exportData

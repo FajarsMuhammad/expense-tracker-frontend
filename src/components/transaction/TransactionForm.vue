@@ -3,7 +3,7 @@
     <!-- Type Toggle -->
     <div>
       <label class="block text-sm font-medium mb-2">
-        Type <span class="text-red-500">*</span>
+        {{ $t('transactions.form.type') }} <span class="text-red-500">*</span>
       </label>
       <div class="flex gap-3">
         <button
@@ -15,7 +15,7 @@
             ? 'bg-income text-white shadow-lg'
             : 'bg-neutral-100 dark:bg-dark-card text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-dark-surface'"
         >
-          + Income
+          + {{ $t('transactions.income') }}
         </button>
         <button
           type="button"
@@ -26,11 +26,11 @@
             ? 'bg-expense text-white shadow-lg'
             : 'bg-neutral-100 dark:bg-dark-card text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-dark-surface'"
         >
-          - Expense
+          - {{ $t('transactions.expense') }}
         </button>
       </div>
       <p v-if="isEditMode" class="mt-1 text-xs text-muted">
-        Transaction type cannot be changed after creation
+        {{ $t('transactions.form.typeCannotChange') }}
       </p>
       <p v-if="errors.type" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ errors.type }}</p>
     </div>
@@ -38,7 +38,7 @@
     <!-- Wallet Selector (custom dropdown) -->
     <div>
       <label for="wallet" class="block text-sm font-medium mb-1">
-        Wallet <span class="text-red-500">*</span>
+        {{ $t('transactions.form.wallet') }} <span class="text-red-500">*</span>
       </label>
 
       <DropdownBase class="relative">
@@ -73,7 +73,7 @@
               <input
                 v-model="walletQuery"
                 type="search"
-                placeholder="Search wallets..."
+                :placeholder="$t('transactions.form.walletPlaceholder')"
                 class="w-full px-3 py-2 rounded-md border border-neutral-200 dark:border-dark-border bg-white dark:bg-dark-surface text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
             </div>
@@ -84,7 +84,7 @@
                 :class="!formData.walletId ? 'font-medium' : ''"
                 @click.stop.prevent="selectWallet('', close)"
               >
-                Select wallet
+                {{ $t('transactions.form.selectWallet') }}
               </button>
 
               <template v-for="wallet in filteredWallets" :key="wallet.id">
@@ -97,7 +97,7 @@
                 </button>
               </template>
 
-              <div v-if="filteredWallets.length === 0" class="px-3 py-2 text-sm text-muted">No wallets found</div>
+              <div v-if="filteredWallets.length === 0" class="px-3 py-2 text-sm text-muted">{{ $t('transactions.form.noWalletsFound') }}</div>
             </div>
           </div>
         </template>
@@ -109,7 +109,7 @@
     <!-- Category Selector (custom dropdown) -->
     <div>
       <label for="category" class="block text-sm font-medium mb-1">
-        Category <span class="text-red-500">*</span>
+        {{ $t('transactions.form.category') }} <span class="text-red-500">*</span>
       </label>
 
       <DropdownBase class="relative">
@@ -144,7 +144,7 @@
               <input
                 v-model="categoryQuery"
                 type="search"
-                placeholder="Search categories..."
+                :placeholder="$t('transactions.form.categoryPlaceholder')"
                 class="w-full px-3 py-2 rounded-md border border-neutral-200 dark:border-dark-border bg-white dark:bg-dark-surface text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
                 :disabled="!formData.type"
               />
@@ -156,7 +156,7 @@
                 :class="!formData.categoryId ? 'font-medium' : ''"
                 @click.stop.prevent="selectCategory('', close)"
               >
-                Select category
+                {{ $t('transactions.form.selectCategory') }}
               </button>
 
               <template v-for="category in filteredCategoriesByQuery" :key="category.id">
@@ -169,7 +169,7 @@
                 </button>
               </template>
 
-              <div v-if="filteredCategoriesByQuery.length === 0" class="px-3 py-2 text-sm text-muted">No categories</div>
+              <div v-if="filteredCategoriesByQuery.length === 0" class="px-3 py-2 text-sm text-muted">{{ $t('transactions.form.noCategories') }}</div>
             </div>
           </div>
         </template>
@@ -179,26 +179,24 @@
     </div>
 
     <!-- Amount Input -->
-    <AppInput
+    <CurrencyInput
       id="amount"
-      v-model.number="formData.amount"
-      type="number"
-      step="0.01"
-      min="0.01"
-      label="Amount"
-      placeholder="0.00"
+      v-model="formData.amount"
+      :label="$t('transactions.form.amount')"
+      placeholder="0"
       required
+      :min="1"
       :error="errors.amount"
     />
 
     <!-- Date Input -->
     <div>
       <label for="date" class="block text-sm font-medium mb-1">
-        Date <span class="text-red-500">*</span>
+        {{ $t('transactions.form.date') }} <span class="text-red-500">*</span>
       </label>
       <input
         id="date"
-        v-model="formData.date"
+        v-model.lazy="formData.date"
         type="date"
         :max="maxDate"
         class="w-full px-4 py-2 border border-neutral-300 dark:border-dark-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-dark-surface"
@@ -210,7 +208,7 @@
     <!-- Note Textarea -->
     <div>
       <label for="note" class="block text-sm font-medium mb-1">
-        Note <span class="text-muted">(Optional)</span>
+        {{ $t('transactions.form.note') }} <span class="text-muted">{{ $t('transactions.form.noteOptional') }}</span>
       </label>
       <textarea
         id="note"
@@ -218,18 +216,18 @@
         maxlength="500"
         rows="3"
         class="w-full px-4 py-2 border border-neutral-300 dark:border-dark-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-dark-surface resize-none"
-        placeholder="Add a note about this transaction..."
+        :placeholder="$t('transactions.form.notePlaceholder')"
       />
-      <p class="mt-1 text-xs text-muted text-right">{{ formData.note?.length || 0 }}/500</p>
+      <p class="mt-1 text-xs text-muted text-right">{{ $t('transactions.form.charactersCount', { count: formData.note?.length || 0 }) }}</p>
     </div>
 
     <!-- Action Buttons -->
-    <div class="flex gap-3 pt-4">
-      <AppButton type="submit" :loading="loading" class="flex-1">
-        {{ isEditMode ? 'Update Transaction' : 'Create Transaction' }}
+    <div class="flex gap-2 md:gap-3 pt-4">
+      <AppButton type="submit" :loading="loading" class="flex-1 !py-2 md:!py-2.5 !text-xs md:!text-sm">
+        {{ loading ? $t('transactions.form.saving') : $t('transactions.form.save') }}
       </AppButton>
-      <AppButton type="button" variant="secondary" @click="$emit('cancel')" class="flex-1">
-        Cancel
+      <AppButton type="button" variant="secondary" @click="$emit('cancel')" class="flex-1 !py-2 md:!py-2.5 !text-xs md:!text-sm">
+        {{ $t('transactions.form.cancel') }}
       </AppButton>
     </div>
   </form>
@@ -237,9 +235,13 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import AppInput from '@/components/common/AppInput.vue'
 import AppButton from '@/components/common/AppButton.vue'
 import DropdownBase from '@/components/common/DropdownBase.vue'
+import CurrencyInput from '@/components/common/CurrencyInput.vue'
+
+const { t: $t } = useI18n()
 
 const props = defineProps({
   transaction: {
@@ -308,14 +310,14 @@ const filteredCategoriesByQuery = computed(() => {
 
 // Labels for triggers
 const walletLabel = computed(() => {
-  if (!formData.value.walletId) return 'Select wallet'
+  if (!formData.value.walletId) return $t('transactions.form.selectWallet')
   const w = props.wallets.find(x => x.id === formData.value.walletId)
-  return w ? `${w.name} (${w.currency})` : 'Select wallet'
+  return w ? `${w.name} (${w.currency})` : $t('transactions.form.selectWallet')
 })
 const categoryLabel = computed(() => {
-  if (!formData.value.categoryId) return formData.value.type ? 'Select category' : 'Select type first'
+  if (!formData.value.categoryId) return formData.value.type ? $t('transactions.form.selectCategory') : $t('transactions.form.selectTypeFirst')
   const c = props.categories.find(x => x.id === formData.value.categoryId)
-  return c ? c.name : (formData.value.type ? 'Select category' : 'Select type first')
+  return c ? c.name : (formData.value.type ? $t('transactions.form.selectCategory') : $t('transactions.form.selectTypeFirst'))
 })
 
 // Initialize form with transaction data if in edit mode

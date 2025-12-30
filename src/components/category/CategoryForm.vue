@@ -3,8 +3,8 @@
     <AppInput
       id="name"
       v-model="formData.name"
-      label="Category Name"
-      placeholder="e.g., Freelance, Groceries, Transportation"
+      :label="$t('categories.form.name')"
+      :placeholder="$t('categories.form.namePlaceholder')"
       required
       :error="errors.name"
       @blur="validateField('name')"
@@ -12,7 +12,7 @@
 
     <div>
       <label for="type" class="block text-sm font-medium mb-1">
-        Type <span class="text-red-500">*</span>
+        {{ $t('categories.form.type') }} <span class="text-red-500">*</span>
       </label>
       <select
         id="type"
@@ -22,31 +22,35 @@
         required
         @blur="validateField('type')"
       >
-        <option value="">Select type</option>
-        <option value="INCOME">Income</option>
-        <option value="EXPENSE">Expense</option>
+        <option value="">{{ $t('categories.form.selectType') }}</option>
+        <option value="INCOME">{{ $t('categories.form.typeIncome') }}</option>
+        <option value="EXPENSE">{{ $t('categories.form.typeExpense') }}</option>
       </select>
       <p v-if="isEditMode" class="mt-1 text-xs text-muted">
-        Category type cannot be changed after creation
+        {{ $t('categories.form.typeHint') }}
       </p>
       <p v-if="errors.type" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ errors.type }}</p>
     </div>
 
-    <div class="flex gap-3 pt-4">
-      <AppButton type="submit" :loading="loading" class="flex-1">
-        {{ isEditMode ? 'Update Category' : 'Create Category' }}
+    <!-- Action Buttons -->
+    <div class="flex gap-2 md:gap-3 pt-4">
+      <AppButton type="submit" :loading="loading" class="flex-1 !py-2 md:!py-2.5 !text-xs md:!text-sm">
+        {{ loading ? $t('categories.form.saving') : $t('categories.form.save') }}
       </AppButton>
-      <AppButton type="button" variant="secondary" @click="$emit('cancel')" class="flex-1">
-        Cancel
+      <AppButton type="button" variant="secondary" @click="$emit('cancel')" class="flex-1 !py-2 md:!py-2.5 !text-xs md:!text-sm">
+        {{ $t('categories.form.cancel') }}
       </AppButton>
     </div>
   </form>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import AppInput from '@/components/common/AppInput.vue'
 import AppButton from '@/components/common/AppButton.vue'
+
+const { t } = useI18n()
 
 const props = defineProps({
   category: {
@@ -61,7 +65,7 @@ const props = defineProps({
 
 const emit = defineEmits(['submit', 'cancel'])
 
-const isEditMode = !!props.category
+const isEditMode = computed(() => !!props.category)
 
 const formData = ref({
   name: '',
@@ -72,14 +76,29 @@ const errors = ref({})
 const hasAttemptedSubmit = ref(false)
 const touchedFields = ref(new Set())
 
-onMounted(() => {
-  if (props.category) {
-    formData.value = {
-      name: props.category.name,
-      type: props.category.type,
+// Watch for category prop changes to update form data
+watch(
+  () => props.category,
+  (newCategory) => {
+    if (newCategory) {
+      formData.value = {
+        name: newCategory.name || '',
+        type: newCategory.type || '',
+      }
+    } else {
+      // Reset form for create mode
+      formData.value = {
+        name: '',
+        type: '',
+      }
     }
-  }
-})
+    // Reset validation state when category changes
+    errors.value = {}
+    hasAttemptedSubmit.value = false
+    touchedFields.value = new Set()
+  },
+  { immediate: true }
+)
 
 function validateField(fieldName) {
   // Only validate on blur if user has attempted submit OR field was previously touched
@@ -97,9 +116,9 @@ function validateField(fieldName) {
 
   // Validate specific field
   if (fieldName === 'name' && !formData.value.name?.trim()) {
-    errors.value.name = 'Category name is required'
+    errors.value.name = t('categories.form.nameRequired')
   } else if (fieldName === 'type' && !formData.value.type) {
-    errors.value.type = 'Please select a type'
+    errors.value.type = t('categories.form.typeRequired')
   }
 }
 
@@ -107,11 +126,11 @@ function validateForm() {
   const newErrors = {}
 
   if (!formData.value.name?.trim()) {
-    newErrors.name = 'Category name is required'
+    newErrors.name = t('categories.form.nameRequired')
   }
 
   if (!formData.value.type) {
-    newErrors.type = 'Please select a type'
+    newErrors.type = t('categories.form.typeRequired')
   }
 
   errors.value = newErrors

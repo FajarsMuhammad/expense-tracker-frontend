@@ -2,7 +2,7 @@
   <AppLayout>
     <div class="mx-auto max-w-3xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
       <!-- Header with Back Button -->
-      <FormHeader title="Create Debt" description="Add a new payable or receivable debt" />
+      <FormHeader :title="$t('debts.create.title')" :description="$t('debts.create.description')" />
 
       <!-- Form Card -->
       <div class="rounded-lg bg-white p-6 shadow-sm dark:bg-dark-card sm:p-8">
