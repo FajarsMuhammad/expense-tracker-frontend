@@ -7,11 +7,8 @@
     </div>
 
     <!-- Empty State -->
-    <AppEmpty
-      v-else-if="!loading && !hasTransactions"
-      :title="$t('transactions.empty.title')"
-      :description="$t('transactions.empty.description')"
-    >
+    <AppEmpty v-else-if="!loading && !hasTransactions" :title="$t('transactions.empty.title')"
+      :description="$t('transactions.empty.description')">
       <AppButton @click="$router.push('/transactions/create')">
         {{ $t('transactions.empty.create') }}
       </AppButton>
@@ -20,19 +17,19 @@
     <!-- Transaction Cards -->
     <div v-else class="space-y-4">
       <!-- Total Transaction Info -->
-      <div v-if="totalTransactions > 0" class="relative overflow-hidden rounded-xl bg-gradient-to-br from-primary-50 via-white to-primary-50/30 dark:from-primary-950/30 dark:via-dark-card dark:to-primary-950/20 border border-primary-100 dark:border-primary-900/30 shadow-sm">
-        <!-- Decorative Background Elements -->
-        <div class="absolute top-0 right-0 w-32 h-32 bg-primary-100/40 dark:bg-primary-900/20 rounded-full blur-3xl -mr-16 -mt-16"></div>
-        <div class="absolute bottom-0 left-0 w-24 h-24 bg-primary-200/30 dark:bg-primary-800/10 rounded-full blur-2xl -ml-12 -mb-12"></div>
-
+      <div v-if="totalTransactions > 0"
+        class="relative overflow-hidden rounded-xl bg-white dark:bg-dark-card border border-primary-100 dark:border-primary-900/30 shadow-sm">
         <div class="relative px-4 md:px-5 py-3 md:py-4">
           <div class="flex items-center justify-between gap-3">
             <!-- Left: Icon & Label -->
             <div class="flex items-center gap-2.5 md:gap-3">
               <!-- Icon -->
-              <div class="flex-shrink-0 w-10 h-10 md:w-11 md:h-11 rounded-xl bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center shadow-sm">
-                <svg class="w-5 h-5 md:w-6 md:h-6 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+              <div
+                class="flex-shrink-0 w-10 h-10 md:w-11 md:h-11 rounded-xl bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center shadow-sm">
+                <svg class="w-5 h-5 md:w-6 md:h-6 text-primary-600 dark:text-primary-400" fill="none"
+                  stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                 </svg>
               </div>
 
@@ -62,24 +59,14 @@
 
       <!-- Transaction Cards -->
       <div class="grid gap-4">
-        <TransactionCard
-          v-for="transaction in transactions"
-          :key="transaction.id"
-          :transaction="transaction"
-          @edit="$emit('edit', transaction)"
-          @delete="$emit('delete', transaction)"
-        />
+        <TransactionCard v-for="transaction in transactions" :key="transaction.id" :transaction="transaction"
+          @edit="$emit('edit', transaction)" @delete="$emit('delete', transaction)" />
       </div>
     </div>
 
     <!-- Load More Button -->
     <div v-if="hasMore && hasTransactions" class="flex justify-center pt-4">
-      <AppButton
-        @click="$emit('load-more')"
-        :loading="loading"
-        variant="secondary"
-        class="min-w-[200px]"
-      >
+      <AppButton @click="$emit('load-more')" :loading="loading" variant="secondary" class="min-w-[200px]">
         <svg v-if="!loading" class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
         </svg>
