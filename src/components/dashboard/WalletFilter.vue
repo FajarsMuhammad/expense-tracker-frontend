@@ -1,62 +1,50 @@
 <template>
   <div>
-    <label for="wallet-filter" class="block text-sm font-medium text-neutral-700 dark:text-neutral-200 mb-2">
-      {{ $t('dashboard.walletFilter.label') }}
-    </label>
-    <DropdownBase class="relative">
+    <DropdownBase class="relative min-w-[240px]">
       <template #trigger="{ toggle, isOpen }">
-        <button
-          id="wallet-filter"
-          type="button"
-          @click.stop="toggle"
-          :aria-expanded="String(isOpen)"
-          class="w-full flex items-center justify-between px-4 py-2 bg-white dark:bg-dark-card border border-neutral-300 dark:border-dark-border rounded-xl text-neutral-900 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-colors"
-        >
-          <span class="truncate">{{ selectedLabel }}</span>
-          <svg class="w-4 h-4 text-neutral-500 ml-2" viewBox="0 0 20 20" fill="none" stroke="currentColor">
-            <path d="M6 8l4 4 4-4" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"/>
+        <button id="wallet-filter" type="button" @click.stop="toggle" :aria-expanded="String(isOpen)"
+          class="w-full flex items-center justify-between px-4 py-2.5 bg-white dark:bg-dark-card border border-neutral-200 dark:border-dark-border rounded-xl text-neutral-900 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-neutral-100/10 transition-all duration-200 shadow-soft hover:border-neutral-300 dark:hover:border-neutral-700 group">
+          <div class="flex flex-col items-start mr-2">
+            <span
+              class="text-[10px] uppercase tracking-widest font-bold text-neutral-400 dark:text-neutral-500 mb-0.5">{{
+                $t('dashboard.walletFilter.label') }}</span>
+            <span class="font-bold text-sm truncate">{{ selectedLabel }}</span>
+          </div>
+          <svg class="w-5 h-5 text-neutral-400 group-hover:text-neutral-600 transition-transform duration-200"
+            :class="isOpen ? 'rotate-180' : ''" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+            <path d="M6 8l4 4 4-4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
           </svg>
         </button>
       </template>
 
       <template #menu="{ close }">
-        <div
-          class="mt-2 w-full bg-surface-card border border-surface rounded-lg shadow-surface-lg z-50 p-2"
-          role="menu"
-          aria-labelledby="wallet-filter"
-          @click.stop
-        >
+        <div class="mt-2 w-full bg-surface-card border border-surface rounded-lg shadow-surface-lg z-50 p-2" role="menu"
+          aria-labelledby="wallet-filter" @click.stop>
           <!-- optional search -->
           <div class="px-2 pb-2">
-            <input
-              v-model="walletQuery"
-              type="search"
-              :placeholder="$t('dashboard.walletFilter.searchPlaceholder')"
-              class="w-full px-3 py-2 rounded-md border border-neutral-200 dark:border-dark-border bg-white dark:bg-dark-surface text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-            />
+            <input v-model="walletQuery" type="search" :placeholder="$t('dashboard.walletFilter.searchPlaceholder')"
+              class="w-full px-3 py-2 rounded-md border border-neutral-200 dark:border-dark-border bg-white dark:bg-dark-surface text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" />
           </div>
 
           <div class="max-h-44 overflow-auto">
             <!-- All Wallets option -->
-            <button
-              class="w-full text-left px-3 py-2 rounded-md hover:bg-surface-muted"
-              :class="selectedWalletId === null ? 'font-medium' : ''"
-              @click.stop.prevent="selectWallet(null, close)"
-            >
+            <button class="w-full text-left px-3 py-2 rounded-md hover:bg-surface-muted"
+              :class="selectedWalletId === null ? 'font-medium' : ''" @click.stop.prevent="selectWallet(null, close)">
               {{ $t('dashboard.walletFilter.allWallets') }}
             </button>
 
             <template v-for="wallet in filteredWallets" :key="wallet.id">
               <button
                 class="w-full text-left px-3 py-2 rounded-md hover:bg-surface-muted flex items-center justify-between"
-                @click.stop.prevent="selectWallet(wallet.id, close)"
-              >
+                @click.stop.prevent="selectWallet(wallet.id, close)">
                 <span class="truncate">{{ wallet.name }} ({{ wallet.currency }})</span>
-                <span class="text-xs text-muted" v-if="wallet.balance !== undefined">{{ formatCurrency(wallet.balance, wallet.currency) }}</span>
+                <span class="text-xs text-muted" v-if="wallet.balance !== undefined">{{ formatCurrency(wallet.balance,
+                  wallet.currency) }}</span>
               </button>
             </template>
 
-            <div v-if="filteredWallets.length === 0" class="px-3 py-2 text-sm text-muted">{{ $t('dashboard.walletFilter.noWalletsFound') }}</div>
+            <div v-if="filteredWallets.length === 0" class="px-3 py-2 text-sm text-muted">{{
+              $t('dashboard.walletFilter.noWalletsFound') }}</div>
           </div>
         </div>
       </template>
@@ -132,7 +120,15 @@ function handleChange(event) {
 
 <style scoped>
 /* reuse small surface utility variables you're already using */
-.bg-surface-card { background-color: var(--surface-card); }
-.border-surface { border-color: var(--border); }
-.shadow-surface-lg { box-shadow: var(--shadow-soft-lg); }
+.bg-surface-card {
+  background-color: var(--surface-card);
+}
+
+.border-surface {
+  border-color: var(--border);
+}
+
+.shadow-surface-lg {
+  box-shadow: var(--shadow-soft-lg);
+}
 </style>

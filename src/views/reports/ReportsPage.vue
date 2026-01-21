@@ -12,198 +12,150 @@
       </div>
 
       <!-- Export Button -->
-      <ExportButton
-        :exporting="isExporting"
-        :progress="exportProgress"
-        @export="handleExport"
-      />
+      <ExportButton :exporting="isExporting" :progress="exportProgress" @export="handleExport" />
     </div>
 
     <!-- Date Range Picker -->
     <div class="mb-3 md:mb-4 lg:mb-5">
-      <DateRangePicker
-        v-model:start-date="dateRange.startDate"
-        v-model:end-date="dateRange.endDate"
-        @change="handleDateRangeChange"
-      />
+      <DateRangePicker v-model:start-date="dateRange.startDate" v-model:end-date="dateRange.endDate"
+        @change="handleDateRangeChange" />
     </div>
 
     <!-- Summary Cards Grid -->
     <div class="mb-4 md:mb-5 lg:mb-6 grid grid-cols-1 gap-2 md:gap-3 lg:gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      <SummaryCard
-        :title="$t('reports.summary.totalIncome')"
-        :value="totalIncome"
-        icon="BanknotesIcon"
-        variant="success"
-        format="currency"
-        :loading="summaryLoading"
-      />
+      <SummaryCard :title="$t('reports.summary.totalIncome')" :value="totalIncome" icon="BanknotesIcon"
+        variant="success" format="currency" :loading="summaryLoading" />
 
-      <SummaryCard
-        :title="$t('reports.summary.totalExpense')"
-        :value="totalExpense"
-        icon="BanknotesIcon"
-        variant="danger"
-        format="currency"
-        :loading="summaryLoading"
-      />
+      <SummaryCard :title="$t('reports.summary.totalExpense')" :value="totalExpense" icon="BanknotesIcon"
+        variant="danger" format="currency" :loading="summaryLoading" />
 
-      <SummaryCard
-        :title="$t('reports.summary.netBalance')"
-        :value="netBalance"
-        icon="ScaleIcon"
-        :variant="netBalance >= 0 ? 'success' : 'danger'"
-        format="currency"
-        :loading="summaryLoading"
-      />
+      <SummaryCard :title="$t('reports.summary.netBalance')" :value="netBalance" icon="ScaleIcon"
+        :variant="netBalance >= 0 ? 'success' : 'danger'" format="currency" :loading="summaryLoading" />
 
-      <SummaryCard
-        :title="$t('reports.summary.transactions')"
-        :value="transactionCount"
-        icon="ChartBarIcon"
-        variant="primary"
-        format="number"
-        :loading="summaryLoading"
-      />
+      <SummaryCard :title="$t('reports.summary.transactions')" :value="transactionCount" icon="ChartBarIcon"
+        variant="primary" format="number" :loading="summaryLoading" />
     </div>
 
     <!-- Category Breakdown Section -->
-    <div v-if="hasCategoryBreakdown" class="mb-4 md:mb-5 lg:mb-6">
-      <AppCard>
-        <div class="mb-2 md:mb-3 flex items-center justify-between">
-          <h2 class="text-sm md:text-base font-bold text-neutral-900 dark:text-neutral-100">
+    <div v-if="hasCategoryBreakdown" class="mb-8 animate-fade-in-up animation-delay-300">
+      <AppCard class="p-6">
+        <div class="mb-6 flex items-center justify-between">
+          <h2 class="text-lg font-display font-bold text-neutral-900 dark:text-neutral-100 tracking-tight">
             {{ $t('reports.categoryBreakdown.title') }}
           </h2>
         </div>
 
-        <div class="space-y-2 md:space-y-2.5">
-          <div
-            v-for="category in topCategories"
-            :key="category.categoryId"
-            class="flex items-center gap-2 md:gap-3"
-          >
-            <!-- Progress Bar -->
+        <div class="space-y-6">
+          <div v-for="category in topCategories" :key="category.categoryId" class="group">
             <div class="flex-1 min-w-0">
-              <div class="mb-0.5 md:mb-1 flex items-center justify-between gap-1.5 md:gap-2">
-                <span class="text-[10px] md:text-xs font-medium text-neutral-700 dark:text-neutral-300 truncate">
+              <div class="mb-2 flex items-center justify-between">
+                <span class="text-xs font-bold text-neutral-700 dark:text-neutral-300 uppercase tracking-widest">
                   {{ category.categoryName }}
                 </span>
-                <span class="text-[10px] md:text-xs font-semibold text-neutral-900 dark:text-neutral-100 flex-shrink-0">
-                  {{ formatCurrency(category.totalAmount) }}
-                </span>
+                <div class="flex items-center gap-3">
+                  <span class="text-xs font-bold text-neutral-400 dark:text-neutral-500">
+                    {{ category.percentage.toFixed(1) }}%
+                  </span>
+                  <span class="text-sm font-bold text-neutral-900 dark:text-neutral-100">
+                    {{ formatCurrency(category.totalAmount) }}
+                  </span>
+                </div>
               </div>
-              <div class="h-1.5 md:h-2 w-full overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700">
+              <div
+                class="h-2.5 w-full overflow-hidden rounded-full bg-neutral-100 dark:bg-dark-surface p-0.5 border border-neutral-200/50 dark:border-dark-border/50">
                 <div
-                  class="h-full rounded-full bg-gradient-to-r from-primary-500 to-blue-500 transition-all duration-500"
-                  :style="{ width: `${category.percentage}%` }"
-                ></div>
+                  class="h-full rounded-full bg-neutral-900 dark:bg-neutral-100 transition-all duration-1000 ease-in-out shadow-sm"
+                  :style="{ width: `${category.percentage}%` }"></div>
               </div>
-            </div>
-
-            <!-- Percentage -->
-            <div class="text-right flex-shrink-0">
-              <span class="text-[10px] md:text-xs font-medium text-neutral-600 dark:text-neutral-400">
-                {{ category.percentage.toFixed(1) }}%
-              </span>
             </div>
           </div>
         </div>
 
         <!-- Show all categories link -->
-        <div v-if="categoryBreakdown.length > 5" class="mt-2 md:mt-3 text-center">
-          <button
-            type="button"
-            class="text-[10px] md:text-xs font-medium text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
-            @click="showAllCategories = !showAllCategories"
-          >
-            {{ showAllCategories ? $t('reports.categoryBreakdown.showLess') : $t('reports.categoryBreakdown.showAll', { count: categoryBreakdown.length }) }}
+        <div v-if="categoryBreakdown.length > 5"
+          class="mt-8 text-center border-t border-neutral-100 dark:border-dark-border pt-4">
+          <button type="button"
+            class="text-xs font-bold text-neutral-400 dark:text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 uppercase tracking-widest transition-colors"
+            @click="showAllCategories = !showAllCategories">
+            {{ showAllCategories ? $t('reports.categoryBreakdown.showLess') :
+              $t('reports.categoryBreakdown.showAll', {
+                count: categoryBreakdown.length
+              }) }}
           </button>
         </div>
       </AppCard>
     </div>
 
-    <!-- Trend Chart Section (Placeholder) -->
-    <div v-if="hasTrendData" class="mb-4 md:mb-5 lg:mb-6">
-      <AppCard>
-        <div class="mb-2 md:mb-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 md:gap-3">
-          <h2 class="text-sm md:text-base font-bold text-neutral-900 dark:text-neutral-100">
+    <!-- Trend Chart Section (Stacked) -->
+    <div v-if="hasTrendData" class="mb-8 animate-fade-in-up animation-delay-400">
+      <AppCard class="p-6">
+        <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <h2 class="text-lg font-display font-bold text-neutral-900 dark:text-neutral-100 tracking-tight">
             {{ $t('reports.trend.title') }}
           </h2>
 
           <!-- Granularity Selector -->
-          <div class="flex gap-0.5 rounded-lg border border-neutral-300 p-0.5 dark:border-neutral-600">
-            <button
-              v-for="gran in granularityOptions"
-              :key="gran.value"
-              type="button"
-              class="rounded px-1.5 md:px-2 py-0.5 md:py-1 text-[9px] md:text-[10px] font-medium transition-colors"
-              :class="
-                filters.granularity === gran.value
-                  ? 'bg-primary-600 text-white dark:bg-primary-500'
-                  : 'text-neutral-600 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800'
-              "
-              @click="changeGranularity(gran.value)"
-            >
+          <div class="flex gap-1 p-1 bg-neutral-100 dark:bg-dark-surface rounded-xl">
+            <button v-for="gran in granularityOptions" :key="gran.value" type="button"
+              class="rounded-lg px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest transition-all duration-200"
+              :class="filters.granularity === gran.value
+                ? 'bg-white dark:bg-neutral-100 text-neutral-900 shadow-sm'
+                : 'text-neutral-500 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-300'
+                " @click="changeGranularity(gran.value)">
               {{ gran.label }}
             </button>
           </div>
         </div>
 
-        <!-- Simple Table View (Placeholder for chart) -->
-        <div class="overflow-x-auto">
-          <table class="w-full text-[10px] md:text-xs">
-            <thead class="border-b border-neutral-200 dark:border-neutral-700">
-              <tr>
-                <th class="pb-1.5 md:pb-2 pr-1.5 md:pr-2 text-left font-medium text-neutral-700 dark:text-neutral-300">
+        <!-- Monochrome Table View -->
+        <div class="overflow-hidden border border-neutral-200 dark:border-dark-border rounded-xl">
+          <table class="w-full text-left">
+            <thead>
+              <tr class="bg-neutral-50 dark:bg-dark-surface">
+                <th
+                  class="px-5 py-3 text-[10px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-widest">
                   {{ $t('reports.trend.date') }}
                 </th>
-                <th class="pb-1.5 md:pb-2 pr-1.5 md:pr-2 text-right font-medium text-neutral-700 dark:text-neutral-300">
+                <th
+                  class="px-5 py-3 text-[10px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-widest text-right">
                   {{ $t('reports.trend.income') }}
                 </th>
-                <th class="pb-1.5 md:pb-2 pr-1.5 md:pr-2 text-right font-medium text-neutral-700 dark:text-neutral-300">
+                <th
+                  class="px-5 py-3 text-[10px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-widest text-right">
                   {{ $t('reports.trend.expense') }}
                 </th>
-                <th class="pb-1.5 md:pb-2 text-right font-medium text-neutral-700 dark:text-neutral-300">
+                <th
+                  class="px-5 py-3 text-[10px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-widest text-right">
                   {{ $t('reports.trend.balance') }}
                 </th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-neutral-200 dark:divide-neutral-700">
-              <tr
-                v-for="(item, index) in trendData.slice(0, 10)"
-                :key="index"
-                class="hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
-              >
-                <td class="py-1.5 md:py-2 pr-1.5 md:pr-2 text-neutral-900 dark:text-neutral-100">
+            <tbody class="divide-y divide-neutral-100 dark:divide-dark-border">
+              <tr v-for="(item, index) in trendData.slice(0, 10)" :key="index"
+                class="hover:bg-neutral-50 dark:hover:bg-dark-surface/50 transition-colors">
+                <td class="px-5 py-3 text-sm font-bold text-neutral-900 dark:text-neutral-100">
                   {{ formatDate(item.date) }}
                 </td>
-                <td class="py-1.5 md:py-2 pr-1.5 md:pr-2 text-right font-medium text-green-600 dark:text-green-400">
+                <td class="px-5 py-3 text-sm font-bold text-right text-neutral-900 dark:text-neutral-100 tabular-nums">
                   {{ formatCurrency(item.income) }}
                 </td>
-                <td class="py-1.5 md:py-2 pr-1.5 md:pr-2 text-right font-medium text-red-600 dark:text-red-400">
+                <td class="px-5 py-3 text-sm font-bold text-right text-neutral-400 dark:text-neutral-500 tabular-nums">
                   {{ formatCurrency(item.expense) }}
                 </td>
-                <td class="py-1.5 md:py-2 text-right font-semibold" :class="getNetBalanceColor(item.balance)">
+                <td class="px-5 py-3 text-sm font-bold text-right tabular-nums"
+                  :class="item.balance >= 0 ? 'text-neutral-900 dark:text-neutral-100' : 'text-neutral-400 dark:text-neutral-600'">
                   {{ formatCurrency(item.balance) }}
                 </td>
               </tr>
             </tbody>
           </table>
-
-          <div v-if="trendData.length > 10" class="mt-4 text-center">
-            <p class="text-sm text-neutral-600 dark:text-neutral-400">
-              {{ $t('reports.trend.showing', { current: 10, total: trendData.length }) }}
-            </p>
-          </div>
         </div>
       </AppCard>
     </div>
 
     <!-- Empty State -->
-    <div
-      v-if="!summaryLoading && !hasSummary"
-      class="rounded-lg border-2 border-dashed border-neutral-300 bg-neutral-50 py-12 text-center dark:border-neutral-700 dark:bg-neutral-900/20"
-    >
+    <div v-if="!summaryLoading && !hasSummary"
+      class="rounded-lg border-2 border-dashed border-neutral-300 bg-neutral-50 py-12 text-center dark:border-neutral-700 dark:bg-neutral-900/20">
       <ChartBarIcon class="mx-auto size-12 text-neutral-400" />
       <h3 class="mt-4 text-lg font-semibold text-neutral-900 dark:text-neutral-100">
         {{ $t('reports.empty.title') }}
@@ -214,20 +166,14 @@
     </div>
 
     <!-- Upgrade Modal -->
-    <UpgradeModal
-      :is-open="showUpgradeModal"
-      title="Premium Feature"
-      :message="upgradeMessage"
-      :features="[
-        'Financial summary reports',
-        'Trend analytics & charts',
-        'Category breakdown insights',
-        'Unlimited export formats (Excel, PDF)',
-        'Advanced date range filters',
-        'Priority support'
-      ]"
-      @close="showUpgradeModal = false"
-    />
+    <UpgradeModal :is-open="showUpgradeModal" title="Premium Feature" :message="upgradeMessage" :features="[
+      'Financial summary reports',
+      'Trend analytics & charts',
+      'Category breakdown insights',
+      'Unlimited export formats (Excel, PDF)',
+      'Advanced date range filters',
+      'Priority support'
+    ]" @close="showUpgradeModal = false" />
   </AppLayout>
 </template>
 
