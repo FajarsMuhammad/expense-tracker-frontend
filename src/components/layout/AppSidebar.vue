@@ -2,70 +2,74 @@
   <!-- Mobile Overlay -->
   <Teleport to="body">
     <Transition name="fade">
-      <div
-        v-if="isOpen"
-        class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 md:hidden"
-        @click="$emit('close')"
-      />
+      <div v-if="isOpen" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden" @click="$emit('close')" />
     </Transition>
   </Teleport>
 
   <!-- Sidebar -->
   <aside
-    class="fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-b from-white via-primary-50/30 to-white dark:from-dark-surface dark:via-dark-card dark:to-dark-surface backdrop-blur-xl transform transition-all duration-300 shadow-soft-xl md:translate-x-0"
-    :class="isOpen ? 'translate-x-0' : '-translate-x-full'"
-  >
+    class="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-dark-surface border-r border-neutral-200 dark:border-dark-border transform transition-all duration-300 ease-smooth md:translate-x-0 flex flex-col"
+    :class="isOpen ? 'translate-x-0' : '-translate-x-full'">
     <!-- Logo Section -->
-    <div class="flex items-center gap-3 px-6 h-16 border-b border-neutral-200/50 dark:border-dark-border">
-      <div class="w-10 h-10 rounded-2xl bg-gradient-primary shadow-glow-primary flex items-center justify-center">
-        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-          <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"/>
-          <path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"/>
+    <div class="flex items-center gap-3 px-6 h-16 border-b border-neutral-200 dark:border-dark-border flex-shrink-0">
+      <div class="w-10 h-10 rounded-xl bg-neutral-900 dark:bg-neutral-100 shadow-soft flex items-center justify-center">
+        <svg class="w-5 h-5 text-white dark:text-neutral-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       </div>
-      <span class="text-lg font-display font-extrabold bg-gradient-primary bg-clip-text text-transparent tracking-tight">
-        MoneyTrack
-      </span>
+      <div class="flex flex-col">
+        <span class="text-base font-display font-bold text-neutral-900 dark:text-neutral-100 tracking-tight">
+          MoneyTrack
+        </span>
+        <span class="text-[10px] font-medium text-neutral-500 dark:text-neutral-500 uppercase tracking-wider">
+          Expense Tracker
+        </span>
+      </div>
 
       <!-- Mobile close button -->
-      <button
-        @click="$emit('close')"
-        class="md:hidden ml-auto p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-dark-card transition-all duration-300"
-        aria-label="Close menu"
-      >
-        <svg class="w-5 h-5 text-neutral-700 dark:text-neutral-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M6 18L18 6M6 6l12 12"
-          />
+      <button @click="$emit('close')"
+        class="md:hidden ml-auto p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-dark-hover transition-all duration-200"
+        aria-label="Close menu">
+        <svg class="w-5 h-5 text-neutral-600 dark:text-neutral-400" fill="none" stroke="currentColor"
+          viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
     </div>
 
     <!-- Navigation -->
-    <nav class="flex-1 px-4 pt-8 pb-6 space-y-2 overflow-y-auto">
-      <router-link
-        v-for="item in navItems"
-        :key="item.path"
-        :to="item.path"
-        class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 group relative overflow-hidden"
-        :class="isActive(item.path)
-          ? 'bg-gradient-primary text-white shadow-glow-primary'
-          : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-dark-card hover:text-primary-600 dark:hover:text-primary-400'"
-        @click="$emit('close')"
-      >
-        <!-- Gradient overlay on hover for inactive items -->
-        <div
-          v-if="!isActive(item.path)"
-          class="absolute inset-0 bg-gradient-primary opacity-0 group-hover:opacity-10 transition-opacity duration-300 rounded-2xl"
-        ></div>
+    <nav class="flex-1 px-3 pt-6 pb-4 space-y-1 overflow-y-auto hide-scrollbar">
+      <div class="mb-2 px-3">
+        <span class="text-[11px] font-bold text-neutral-400 dark:text-neutral-600 uppercase tracking-widest">
+          Menu
+        </span>
+      </div>
 
-        <component :is="item.icon" class="w-5 h-5 relative z-10 group-hover:scale-110 transition-transform duration-300" />
-        <span class="font-medium relative z-10">{{ item.label }}</span>
+      <router-link v-for="item in navItems" :key="item.path" :to="item.path" @click="$emit('close')"
+        class="group relative" :class="isActive(item.path) ? 'nav-item-active' : 'nav-item'">
+        <component :is="item.icon" class="w-5 h-5 transition-all duration-200 group-hover:scale-110"
+          :class="isActive(item.path) ? 'text-white dark:text-neutral-900' : 'text-neutral-500 dark:text-neutral-500 group-hover:text-neutral-900 dark:group-hover:text-neutral-100'" />
+        <span class="text-sm font-bold">{{ item.label }}</span>
+
+        <!-- Active indicator dot -->
+        <div v-if="isActive(item.path)"
+          class="absolute right-4 w-1.5 h-1.5 rounded-full bg-white dark:bg-neutral-900" />
       </router-link>
     </nav>
+
+    <!-- Bottom section -->
+    <div class="px-3 py-4 border-t border-neutral-200 dark:border-dark-border flex-shrink-0">
+      <div
+        class="px-4 py-4 rounded-2xl bg-neutral-50 dark:bg-dark-surface border border-neutral-100 dark:border-dark-border">
+        <p class="text-[10px] font-bold text-neutral-400 dark:text-neutral-600 uppercase tracking-widest mb-1">
+          Need help?
+        </p>
+        <p class="text-xs font-bold text-neutral-600 dark:text-neutral-400 leading-tight">
+          Track your expenses smarter
+        </p>
+      </div>
+    </div>
   </aside>
 </template>
 
@@ -86,7 +90,7 @@ defineEmits(['close'])
 const route = useRoute()
 const { t } = useI18n()
 
-// Navigation items with icons - using computed for reactive translations
+// Navigation items with icons
 const navItems = computed(() => [
   {
     path: '/dashboard',

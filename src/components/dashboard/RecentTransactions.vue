@@ -3,61 +3,60 @@
     <!-- Header -->
     <div class="mb-6 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 p-3 shadow-lg">
-          <ClipboardDocumentListIcon class="size-6 text-white" />
+        <div class="w-11 h-11 rounded-xl bg-neutral-100 dark:bg-dark-surface flex items-center justify-center">
+          <ClipboardDocumentListIcon class="w-5 h-5 text-neutral-600 dark:text-neutral-400" />
         </div>
         <div>
-          <h3 class="text-lg font-bold text-neutral-900 dark:text-neutral-100">{{ $t('dashboard.recentTransactions') }}</h3>
-          <p class="text-sm text-neutral-600 dark:text-neutral-400">Your latest financial activities</p>
+          <h3 class="text-base font-display font-bold text-neutral-900 dark:text-neutral-100">
+            {{ $t('dashboard.recentTransactions') }}
+          </h3>
+          <p class="text-xs text-neutral-500 dark:text-neutral-500">Your latest financial activities</p>
         </div>
       </div>
-      <router-link
-        to="/transactions"
-        class="rounded-lg p-2 text-neutral-600 transition-colors hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
-      >
-        <ArrowRightIcon class="size-5" />
+      <router-link to="/transactions"
+        class="p-2.5 rounded-xl text-neutral-500 dark:text-neutral-500 hover:bg-neutral-100 dark:hover:bg-dark-hover hover:text-neutral-900 dark:hover:text-neutral-100 transition-all duration-200">
+        <ArrowRightIcon class="w-5 h-5" />
       </router-link>
     </div>
 
     <!-- Empty State -->
-    <div v-if="transactions.length === 0" class="py-8 text-center">
-      <ClipboardDocumentListIcon class="mx-auto size-12 text-neutral-400" />
-      <p class="mt-2 text-sm text-neutral-600 dark:text-neutral-400">{{ $t('dashboard.noTransactions') }}</p>
-      <router-link
-        to="/transactions/create"
-        class="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600"
-      >
-        <PlusIcon class="size-4" />
+    <div v-if="transactions.length === 0" class="py-12 text-center">
+      <div
+        class="w-16 h-16 mx-auto rounded-2xl bg-neutral-100 dark:bg-dark-surface flex items-center justify-center mb-4">
+        <ClipboardDocumentListIcon class="w-8 h-8 text-neutral-400 dark:text-neutral-600" />
+      </div>
+      <p class="text-sm text-neutral-600 dark:text-neutral-400 mb-4">{{ $t('dashboard.noTransactions') }}</p>
+      <router-link to="/transactions/create"
+        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 text-sm font-medium shadow-soft hover:shadow-soft-lg transition-all duration-200">
+        <PlusIcon class="w-4 h-4" />
         Add Transaction
       </router-link>
     </div>
 
     <!-- Transactions List -->
-    <div v-else class="space-y-3">
-      <div
-        v-for="transaction in transactions"
-        :key="transaction.id"
-        class="rounded-xl p-3 transition-all hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
-      >
+    <div v-else class="space-y-2">
+      <div v-for="(transaction, index) in transactions" :key="transaction.id"
+        class="group rounded-xl p-3 -mx-1 hover:bg-neutral-50 dark:hover:bg-dark-hover transition-all duration-200 cursor-pointer"
+        :class="{ 'animate-fade-in-up': true }" :style="{ animationDelay: `${index * 50}ms` }">
         <div class="flex items-center justify-between gap-3">
           <!-- Left: Icon + Info -->
           <div class="flex items-center gap-3 flex-1 min-w-0">
             <div
-              class="w-10 h-10 flex-shrink-0 rounded-lg flex items-center justify-center"
-              :class="transaction.type === 'INCOME' ? 'bg-green-100 dark:bg-green-900/20' : 'bg-red-100 dark:bg-red-900/20'"
-            >
-              <component
-                :is="transaction.type === 'INCOME' ? ArrowDownCircleIcon : ArrowUpCircleIcon"
-                class="size-6"
-                :class="transaction.type === 'INCOME' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'"
-              />
+              class="w-10 h-10 flex-shrink-0 rounded-xl flex items-center justify-center transition-transform duration-200 group-hover:scale-105"
+              :class="transaction.type === 'INCOME'
+                ? 'bg-income/10 dark:bg-income/20'
+                : 'bg-expense/10 dark:bg-expense/20'">
+              <component :is="transaction.type === 'INCOME' ? ArrowDownCircleIcon : ArrowUpCircleIcon" class="w-5 h-5"
+                :class="transaction.type === 'INCOME'
+                  ? 'text-income dark:text-income-muted'
+                  : 'text-expense dark:text-expense-muted'" />
             </div>
 
             <div class="flex-1 min-w-0">
-              <p class="font-semibold text-sm text-neutral-900 dark:text-neutral-100 truncate">
+              <p class="font-medium text-sm text-neutral-900 dark:text-neutral-100 truncate">
                 {{ transaction.categoryName || $t('dashboard.uncategorized') }}
               </p>
-              <p class="text-xs text-neutral-500 dark:text-neutral-400">
+              <p class="text-xs text-neutral-500 dark:text-neutral-500 mt-0.5">
                 {{ formatDate(transaction.date) }} • {{ transaction.walletName }}
               </p>
             </div>
@@ -65,10 +64,9 @@
 
           <!-- Right: Amount -->
           <div class="text-right flex-shrink-0">
-            <p
-              class="font-bold text-base"
-              :class="transaction.type === 'INCOME' ? 'text-green-700 dark:text-green-300' : 'text-red-700 dark:text-red-300'"
-            >
+            <p class="font-bold text-sm tabular-nums" :class="transaction.type === 'INCOME'
+              ? 'text-income dark:text-income-muted'
+              : 'text-expense dark:text-expense-muted'">
               {{ transaction.type === 'INCOME' ? '+' : '-' }}{{ formatCurrency(transaction.amount, 'IDR') }}
             </p>
           </div>
@@ -76,12 +74,10 @@
       </div>
 
       <!-- View All Button -->
-      <router-link
-        to="/transactions"
-        class="mt-4 flex items-center justify-center gap-2 rounded-lg border border-neutral-300 bg-white px-4 py-3 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50 dark:border-neutral-600 dark:bg-dark-bg dark:text-neutral-300 dark:hover:bg-neutral-800"
-      >
+      <router-link to="/transactions"
+        class="mt-4 flex items-center justify-center gap-2 px-4 py-3 -mx-1 rounded-xl border border-neutral-200 dark:border-dark-border bg-neutral-50 dark:bg-dark-surface text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-dark-hover transition-all duration-200 group">
         {{ $t('dashboard.viewAll') }}
-        <ArrowRightIcon class="size-4" />
+        <ArrowRightIcon class="w-4 h-4 transition-transform group-hover:translate-x-1" />
       </router-link>
     </div>
   </AppCard>
@@ -106,3 +102,22 @@ defineProps({
   },
 })
 </script>
+
+<style scoped>
+.animate-fade-in-up {
+  animation: fadeInUp 0.4s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>

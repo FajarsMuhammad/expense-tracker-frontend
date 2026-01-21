@@ -4,80 +4,72 @@
       <!-- Trial Banner -->
       <TrialBanner />
 
-      <!-- Header -->
-      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <h1 class="text-2xl md:text-3xl font-display font-bold text-neutral-900 dark:text-neutral-100">{{ $t('dashboard.title') }}</h1>
+      <!-- Header & Filter Row -->
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+        <div>
+          <h1 class="text-2xl font-display font-bold text-neutral-900 dark:text-neutral-100 tracking-tight">
+            {{ $t('dashboard.title') }}
+          </h1>
+          <p class="text-sm text-neutral-500 dark:text-neutral-500">
+            Track your financial progress
+          </p>
+        </div>
 
-      </div>
-
-      <!-- Wallet Filter -->
-      <div class="mb-6 max-w-xs">
-        <WalletFilter
-          :wallets="wallets"
-          :selected-wallet-id="selectedWalletId"
-          @update:selected-wallet-id="handleWalletFilter"
-        />
+        <WalletFilter :wallets="wallets" :selected-wallet-id="selectedWalletId"
+          @update:selected-wallet-id="handleWalletFilter" />
       </div>
 
       <!-- Loading State -->
-      <AppSkeleton v-if="loading" :count="4" height="120px" class="mb-6" />
+      <div v-if="loading">
+        <AppSkeleton type="stats" :count="4" grid class="mb-6" />
+        <div class="grid gap-6 xl:grid-cols-3">
+          <AppSkeleton type="chart" height="320px" class="xl:col-span-2" />
+          <div class="space-y-6">
+            <AppSkeleton type="list" :count="5" />
+            <AppSkeleton type="list" :count="3" />
+          </div>
+        </div>
+      </div>
 
       <!-- Dashboard Content -->
-      <div v-else>
+      <div v-else class="space-y-6">
         <!-- Balance Cards Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
-          <BalanceCard
-            :label="$t('dashboard.walletBalance')"
-            :value="summary.walletBalance || 0"
-            currency="IDR"
-            type="neutral"
-            :icon-svg="walletIcon"
-          />
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+          <BalanceCard :label="$t('dashboard.walletBalance')" :value="summary.walletBalance || 0" currency="IDR"
+            type="neutral" :icon-svg="walletIcon" class="animate-fade-in-up" />
 
-          <BalanceCard
-            :label="$t('dashboard.todayIncome')"
-            :value="summary.todayIncome || 0"
-            currency="IDR"
-            type="positive"
-            :icon-svg="incomeIcon"
-          />
+          <BalanceCard :label="$t('dashboard.todayIncome')" :value="summary.todayIncome || 0" currency="IDR"
+            type="positive" :icon-svg="incomeIcon" class="animate-fade-in-up animation-delay-100" />
 
-          <BalanceCard
-            :label="$t('dashboard.todayExpense')"
-            :value="summary.todayExpense || 0"
-            currency="IDR"
-            type="negative"
-            :icon-svg="expenseIcon"
-          />
+          <BalanceCard :label="$t('dashboard.todayExpense')" :value="summary.todayExpense || 0" currency="IDR"
+            type="negative" :icon-svg="expenseIcon" class="animate-fade-in-up animation-delay-200" />
 
-          <BalanceCard
-            :label="$t('dashboard.netToday')"
-            :value="netToday"
-            currency="IDR"
-            :type="netToday >= 0 ? 'positive' : 'negative'"
-            :icon-svg="netIcon"
-          />
+          <BalanceCard :label="$t('dashboard.netToday')" :value="netToday" currency="IDR"
+            :type="netToday >= 0 ? 'positive' : 'negative'" :icon-svg="netIcon"
+            class="animate-fade-in-up animation-delay-300" />
         </div>
 
-        <!-- Weekly Trend Chart -->
-        <div class="mb-6 md:mb-8">
-          <WeeklyTrendChart :data="summary.weeklyTrend || []" />
-        </div>
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 items-start">
+          <!-- Left Column: Chart (Takes 2 cols on XL) -->
+          <div class="xl:col-span-2 animate-fade-in-up animation-delay-200">
+            <WeeklyTrendChart :data="summary.weeklyTrend || []" />
+          </div>
 
-        <!-- Two Column Grid: Recent Transactions & Debt Summary -->
-        <div class="grid gap-6 lg:grid-cols-2">
-          <!-- Recent Transactions -->
-          <RecentTransactions :transactions="summary.recentTransactions || []" />
+          <!-- Right Column: Transactions & Debt (Takes 1 col on XL) -->
+          <div class="space-y-6 xl:col-span-1">
+            <!-- Recent Transactions -->
+            <div class="animate-fade-in-up animation-delay-300">
+              <RecentTransactions :transactions="summary.recentTransactions || []" />
+            </div>
 
-          <!-- Debt Summary -->
-          <DebtSummaryCard
-            :total-payable="debtTotalPayable"
-            :total-receivable="debtTotalReceivable"
-            :net-position="debtNetPosition"
-            :overdue-count="debtOverdueCount"
-            :total-debts="debtTotalDebts"
-            :loading="debtLoading"
-          />
+            <!-- Debt Summary -->
+            <div class="animate-fade-in-up animation-delay-400">
+              <DebtSummaryCard :total-payable="debtTotalPayable" :total-receivable="debtTotalReceivable"
+                :net-position="debtNetPosition" :overdue-count="debtOverdueCount" :total-debts="debtTotalDebts"
+                :loading="debtLoading" />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -88,7 +80,6 @@
 import { onMounted, computed, defineAsyncComponent } from 'vue'
 import { storeToRefs } from 'pinia'
 import AppLayout from '@/components/layout/AppLayout.vue'
-import AppButton from '@/components/common/AppButton.vue'
 import AppSkeleton from '@/components/common/AppSkeleton.vue'
 import BalanceCard from '@/components/dashboard/BalanceCard.vue'
 import RecentTransactions from '@/components/dashboard/RecentTransactions.vue'
@@ -125,11 +116,14 @@ const {
 // Computed for overdue count
 const debtOverdueCount = computed(() => overdueDebts.value.length)
 
-// SVG Icons
-const walletIcon = `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>`
-const incomeIcon = `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12" /></svg>`
-const expenseIcon = `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 13l-5 5m0 0l-5-5m5 5V6" /></svg>`
-const netIcon = `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 00 2-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>`
+// SVG Icons - Monochrome style
+const walletIcon = `<svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" /></svg>`
+
+const incomeIcon = `<svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19.5v-15m0 0l-6.75 6.75M12 4.5l6.75 6.75" /></svg>`
+
+const expenseIcon = `<svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m0 0l6.75-6.75M12 19.5l-6.75-6.75" /></svg>`
+
+const netIcon = `<svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" /></svg>`
 
 onMounted(async () => {
   // Load subscription first to show trial banner
@@ -139,3 +133,21 @@ onMounted(async () => {
   await loadDebts()
 })
 </script>
+
+<style scoped>
+.animation-delay-100 {
+  animation-delay: 100ms;
+}
+
+.animation-delay-200 {
+  animation-delay: 200ms;
+}
+
+.animation-delay-300 {
+  animation-delay: 300ms;
+}
+
+.animation-delay-400 {
+  animation-delay: 400ms;
+}
+</style>

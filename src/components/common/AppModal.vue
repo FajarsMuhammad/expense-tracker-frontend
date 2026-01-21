@@ -1,44 +1,42 @@
 <template>
   <Teleport to="body">
     <Transition name="modal">
-      <div
-        v-if="modelValue"
-        class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-        @click.self="close"
-        @keydown="handleKeydown"
-      >
-        <div
-          ref="modalRef"
-          class="bg-white dark:bg-dark-card rounded-lg shadow-xl max-w-md w-full mx-4"
-          role="dialog"
-          aria-modal="true"
-        >
-          <div class="px-6 py-4 border-b border-gray-200 dark:border-dark-border">
+      <div v-if="modelValue" class="fixed inset-0 z-50 flex items-center justify-center p-4" @click.self="close"
+        @keydown="handleKeydown">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+
+        <!-- Modal -->
+        <div ref="modalRef"
+          class="relative bg-white dark:bg-dark-card rounded-2xl shadow-soft-2xl w-full max-w-md border border-neutral-200/50 dark:border-dark-border animate-scale-in"
+          :class="sizeClasses" role="dialog" aria-modal="true">
+          <!-- Header -->
+          <div class="px-6 py-5 border-b border-neutral-200/50 dark:border-dark-border">
             <div class="flex items-center justify-between">
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
+              <h3 class="text-lg font-display font-bold text-neutral-900 dark:text-neutral-100">
                 <slot name="title">{{ title }}</slot>
               </h3>
               <button
-                class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-                @click="close"
-                :aria-label="$t('common.modal.close')"
-              >
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    fill-rule="evenodd"
-                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                    clip-rule="evenodd"
-                  />
+                class="p-2 -mr-2 rounded-xl text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-dark-hover transition-all duration-200"
+                @click="close" :aria-label="$t('common.modal.close')">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
+            <p v-if="subtitle" class="mt-1 text-sm text-neutral-500 dark:text-neutral-500">
+              {{ subtitle }}
+            </p>
           </div>
 
-          <div class="px-6 py-4 text-gray-900 dark:text-gray-100">
+          <!-- Body -->
+          <div class="px-6 py-5 text-neutral-700 dark:text-neutral-300">
             <slot />
           </div>
 
-          <div v-if="$slots.footer" class="px-6 py-4 border-t border-gray-200 dark:border-dark-border bg-gray-50 dark:bg-dark-surface">
+          <!-- Footer -->
+          <div v-if="$slots.footer"
+            class="px-6 py-4 border-t border-neutral-200/50 dark:border-dark-border bg-neutral-50 dark:bg-dark-surface rounded-b-2xl">
             <slot name="footer" />
           </div>
         </div>
@@ -48,11 +46,17 @@
 </template>
 
 <script setup>
-import { ref, watch, nextTick } from 'vue'
+import { ref, watch, nextTick, computed } from 'vue'
 
 const props = defineProps({
   modelValue: Boolean,
   title: String,
+  subtitle: String,
+  size: {
+    type: String,
+    default: 'md',
+    validator: (v) => ['sm', 'md', 'lg', 'xl', 'full'].includes(v),
+  },
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -60,9 +64,23 @@ const emit = defineEmits(['update:modelValue'])
 const modalRef = ref(null)
 const previousActiveElement = ref(null)
 
+const sizeClasses = computed(() => {
+  const sizes = {
+    sm: 'max-w-sm',
+    md: 'max-w-md',
+    lg: 'max-w-lg',
+    xl: 'max-w-xl',
+    full: 'max-w-4xl',
+  }
+  return sizes[props.size]
+})
+
 // Watch for modal open/close to manage focus
 watch(() => props.modelValue, async (isOpen) => {
   if (isOpen) {
+    // Prevent body scroll
+    document.body.style.overflow = 'hidden'
+
     // Store the element that had focus before modal opened
     previousActiveElement.value = document.activeElement
 
@@ -79,6 +97,9 @@ watch(() => props.modelValue, async (isOpen) => {
       }
     }
   } else {
+    // Restore body scroll
+    document.body.style.overflow = ''
+
     // Return focus to previously focused element when modal closes
     if (previousActiveElement.value && previousActiveElement.value.focus) {
       previousActiveElement.value.focus()
@@ -127,13 +148,30 @@ function handleKeydown(event) {
 </script>
 
 <style scoped>
-.modal-enter-active,
+.modal-enter-active {
+  transition: opacity 0.2s ease-out;
+}
+
 .modal-leave-active {
-  transition: opacity 0.3s ease;
+  transition: opacity 0.15s ease-in;
 }
 
 .modal-enter-from,
 .modal-leave-to {
   opacity: 0;
+}
+
+.modal-enter-active>div:last-child {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease-out;
+}
+
+.modal-leave-active>div:last-child {
+  transition: transform 0.15s ease-in, opacity 0.15s ease-in;
+}
+
+.modal-enter-from>div:last-child,
+.modal-leave-to>div:last-child {
+  opacity: 0;
+  transform: scale(0.95) translateY(10px);
 }
 </style>

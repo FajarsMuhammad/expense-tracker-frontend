@@ -3,54 +3,55 @@
     <!-- Header -->
     <div class="mb-6 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 p-3 shadow-lg">
-          <BanknotesIcon class="size-6 text-white" />
+        <div class="w-11 h-11 rounded-xl bg-neutral-100 dark:bg-dark-surface flex items-center justify-center">
+          <BanknotesIcon class="w-5 h-5 text-neutral-600 dark:text-neutral-400" />
         </div>
         <div>
-          <h3 class="text-lg font-bold text-neutral-900 dark:text-neutral-100">Debt Overview</h3>
-          <p class="text-sm text-neutral-600 dark:text-neutral-400">Track your payables and receivables</p>
+          <h3 class="text-base font-display font-bold text-neutral-900 dark:text-neutral-100">
+            Debt Overview
+          </h3>
+          <p class="text-xs text-neutral-500 dark:text-neutral-500">Track your payables and receivables</p>
         </div>
       </div>
-      <router-link
-        to="/debts"
-        class="rounded-lg p-2 text-neutral-600 transition-colors hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
-      >
-        <ArrowRightIcon class="size-5" />
+      <router-link to="/debts"
+        class="p-2.5 rounded-xl text-neutral-500 dark:text-neutral-500 hover:bg-neutral-100 dark:hover:bg-dark-hover hover:text-neutral-900 dark:hover:text-neutral-100 transition-all duration-200">
+        <ArrowRightIcon class="w-5 h-5" />
       </router-link>
     </div>
 
     <!-- Loading State -->
-    <div v-if="loading" class="space-y-4">
-      <AppSkeleton class="h-20" />
-      <AppSkeleton class="h-20" />
-      <AppSkeleton class="h-16" />
+    <div v-if="loading" class="space-y-3">
+      <AppSkeleton height="80px" />
+      <AppSkeleton height="80px" />
+      <AppSkeleton height="64px" />
     </div>
 
     <!-- Empty State -->
-    <div v-else-if="totalDebts === 0" class="py-8 text-center">
-      <BanknotesIcon class="mx-auto size-12 text-neutral-400" />
-      <p class="mt-2 text-sm text-neutral-600 dark:text-neutral-400">No debts yet</p>
-      <router-link
-        to="/debts/create"
-        class="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600"
-      >
-        <PlusIcon class="size-4" />
+    <div v-else-if="totalDebts === 0" class="py-12 text-center">
+      <div
+        class="w-16 h-16 mx-auto rounded-2xl bg-neutral-100 dark:bg-dark-surface flex items-center justify-center mb-4">
+        <BanknotesIcon class="w-8 h-8 text-neutral-400 dark:text-neutral-600" />
+      </div>
+      <p class="text-sm text-neutral-600 dark:text-neutral-400 mb-4">No debts yet</p>
+      <router-link to="/debts/create"
+        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 text-sm font-medium shadow-soft hover:shadow-soft-lg transition-all duration-200">
+        <PlusIcon class="w-4 h-4" />
         Add Debt
       </router-link>
     </div>
 
     <!-- Content -->
-    <div v-else class="space-y-4">
+    <div v-else class="space-y-3">
       <!-- Payable -->
-      <div class="rounded-xl bg-red-50 p-4 dark:bg-red-900/10">
+      <div class="rounded-xl bg-expense/5 dark:bg-expense/10 p-4 border border-expense/10 dark:border-expense/20">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-3">
-            <div class="rounded-lg bg-red-100 p-2 dark:bg-red-900/20">
-              <ArrowUpCircleIcon class="size-6 text-red-600 dark:text-red-400" />
+            <div class="w-10 h-10 rounded-xl bg-expense/10 dark:bg-expense/20 flex items-center justify-center">
+              <ArrowUpCircleIcon class="w-5 h-5 text-expense dark:text-expense-muted" />
             </div>
             <div>
-              <p class="text-sm font-medium text-red-600 dark:text-red-400">You Owe</p>
-              <p class="text-xl font-bold text-red-700 dark:text-red-300">
+              <p class="text-xs font-medium text-expense dark:text-expense-muted uppercase tracking-wider">You Owe</p>
+              <p class="text-xl font-bold text-expense-dark dark:text-expense-muted mt-0.5 tabular-nums">
                 {{ formatCurrency(totalPayable) }}
               </p>
             </div>
@@ -59,15 +60,15 @@
       </div>
 
       <!-- Receivable -->
-      <div class="rounded-xl bg-green-50 p-4 dark:bg-green-900/10">
+      <div class="rounded-xl bg-income/5 dark:bg-income/10 p-4 border border-income/10 dark:border-income/20">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-3">
-            <div class="rounded-lg bg-green-100 p-2 dark:bg-green-900/20">
-              <ArrowDownCircleIcon class="size-6 text-green-600 dark:text-green-400" />
+            <div class="w-10 h-10 rounded-xl bg-income/10 dark:bg-income/20 flex items-center justify-center">
+              <ArrowDownCircleIcon class="w-5 h-5 text-income dark:text-income-muted" />
             </div>
             <div>
-              <p class="text-sm font-medium text-green-600 dark:text-green-400">Owed to You</p>
-              <p class="text-xl font-bold text-green-700 dark:text-green-300">
+              <p class="text-xs font-medium text-income dark:text-income-muted uppercase tracking-wider">Owed to You</p>
+              <p class="text-xl font-bold text-income-dark dark:text-income-muted mt-0.5 tabular-nums">
                 {{ formatCurrency(totalReceivable) }}
               </p>
             </div>
@@ -76,16 +77,24 @@
       </div>
 
       <!-- Net Position -->
-      <div class="rounded-xl border-2 border-dashed p-4" :class="netPositionBorderClass">
+      <div class="rounded-xl p-4 border-2 border-dashed" :class="netPosition >= 0
+        ? 'border-income/30 dark:border-income/40 bg-income/5 dark:bg-income/10'
+        : 'border-expense/30 dark:border-expense/40 bg-expense/5 dark:bg-expense/10'">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-3">
-            <div :class="netPositionIconBgClass" class="rounded-lg p-2">
-              <ScaleIcon :class="netPositionIconClass" class="size-6" />
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center"
+              :class="netPosition >= 0 ? 'bg-income/10 dark:bg-income/20' : 'bg-expense/10 dark:bg-expense/20'">
+              <ScaleIcon class="w-5 h-5"
+                :class="netPosition >= 0 ? 'text-income dark:text-income-muted' : 'text-expense dark:text-expense-muted'" />
             </div>
             <div>
-              <p :class="netPositionTextClass" class="text-sm font-medium">Net Position</p>
-              <p :class="netPositionAmountClass" class="text-xl font-bold">
-                {{ netPositionPrefix }}{{ formatCurrency(Math.abs(netPosition)) }}
+              <p class="text-xs font-medium uppercase tracking-wider"
+                :class="netPosition >= 0 ? 'text-income dark:text-income-muted' : 'text-expense dark:text-expense-muted'">
+                Net Position
+              </p>
+              <p class="text-xl font-bold mt-0.5 tabular-nums"
+                :class="netPosition >= 0 ? 'text-income-dark dark:text-income-muted' : 'text-expense-dark dark:text-expense-muted'">
+                {{ netPosition >= 0 ? '+' : '' }}{{ formatCurrency(Math.abs(netPosition)) }}
               </p>
             </div>
           </div>
@@ -93,15 +102,17 @@
       </div>
 
       <!-- Total Debts Info -->
-      <div class="rounded-xl bg-neutral-50 p-4 dark:bg-neutral-800/50">
+      <div
+        class="rounded-xl bg-neutral-50 dark:bg-dark-surface p-4 border border-neutral-200/50 dark:border-dark-border">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-3">
-            <div class="rounded-lg bg-neutral-100 p-2 dark:bg-neutral-700/50">
-              <DocumentTextIcon class="size-6 text-neutral-600 dark:text-neutral-400" />
+            <div class="w-10 h-10 rounded-xl bg-neutral-100 dark:bg-dark-hover flex items-center justify-center">
+              <DocumentTextIcon class="w-5 h-5 text-neutral-600 dark:text-neutral-400" />
             </div>
             <div>
-              <p class="text-sm font-medium text-neutral-600 dark:text-neutral-400">Total Active Debts</p>
-              <p class="text-xl font-bold text-neutral-900 dark:text-neutral-100">
+              <p class="text-xs font-medium text-neutral-500 dark:text-neutral-500 uppercase tracking-wider">Total
+                Active Debts</p>
+              <p class="text-xl font-bold text-neutral-900 dark:text-neutral-100 mt-0.5">
                 {{ totalDebts }}
               </p>
             </div>
@@ -110,17 +121,16 @@
       </div>
 
       <!-- Overdue Alert -->
-      <div v-if="overdueCount > 0" class="rounded-xl bg-orange-50 p-4 dark:bg-orange-900/10">
+      <div v-if="overdueCount > 0"
+        class="rounded-xl bg-warning/10 dark:bg-warning/20 p-4 border border-warning/20 dark:border-warning/30">
         <div class="flex items-center gap-3">
-          <ExclamationCircleIcon class="size-6 text-orange-600 dark:text-orange-400" />
-          <div class="flex-1">
-            <p class="text-sm font-medium text-orange-700 dark:text-orange-300">
+          <ExclamationCircleIcon class="w-6 h-6 text-warning flex-shrink-0" />
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-medium text-warning">
               {{ overdueCount }} {{ overdueCount === 1 ? 'debt is' : 'debts are' }} overdue
             </p>
-            <router-link
-              to="/debts?overdue=true"
-              class="text-sm font-semibold text-orange-600 hover:text-orange-700 dark:text-orange-400 dark:hover:text-orange-300"
-            >
+            <router-link to="/debts?overdue=true"
+              class="text-xs font-semibold text-warning hover:underline underline-offset-2">
               View overdue debts →
             </router-link>
           </div>
@@ -128,12 +138,10 @@
       </div>
 
       <!-- View All Button -->
-      <router-link
-        to="/debts"
-        class="mt-4 flex items-center justify-center gap-2 rounded-lg border border-neutral-300 bg-white px-4 py-3 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50 dark:border-neutral-600 dark:bg-dark-bg dark:text-neutral-300 dark:hover:bg-neutral-800"
-      >
+      <router-link to="/debts"
+        class="mt-4 flex items-center justify-center gap-2 px-4 py-3 -mx-1 rounded-xl border border-neutral-200 dark:border-dark-border bg-neutral-50 dark:bg-dark-surface text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-dark-hover transition-all duration-200 group">
         View All Debts
-        <ArrowRightIcon class="size-4" />
+        <ArrowRightIcon class="w-4 h-4 transition-transform group-hover:translate-x-1" />
       </router-link>
     </div>
   </AppCard>
@@ -179,32 +187,6 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-})
-
-const netPositionPrefix = computed(() => {
-  return props.netPosition >= 0 ? '+' : ''
-})
-
-const netPositionBorderClass = computed(() => {
-  return props.netPosition >= 0
-    ? 'border-green-300 dark:border-green-700'
-    : 'border-red-300 dark:border-red-700'
-})
-
-const netPositionIconBgClass = computed(() => {
-  return props.netPosition >= 0 ? 'bg-green-100 dark:bg-green-900/20' : 'bg-red-100 dark:bg-red-900/20'
-})
-
-const netPositionIconClass = computed(() => {
-  return props.netPosition >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
-})
-
-const netPositionTextClass = computed(() => {
-  return props.netPosition >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
-})
-
-const netPositionAmountClass = computed(() => {
-  return props.netPosition >= 0 ? 'text-green-700 dark:text-green-300' : 'text-red-700 dark:text-red-300'
 })
 
 function formatCurrency(amount) {
